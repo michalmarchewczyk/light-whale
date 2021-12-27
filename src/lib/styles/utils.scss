@@ -1,0 +1,30 @@
+$shadow-color: rgb(0 0 0 / 0.1);
+
+@layer utilities {
+
+  .shadow-b {
+    box-shadow: 0 -5px 3px 6px $shadow-color, 0 -5px 2px 5px $shadow-color;
+  }
+  .shadow-b-md {
+    box-shadow: 0 -9px 6px 12px $shadow-color, 0 -11px 4px 11px $shadow-color;
+  }
+  .shadow-b-lg {
+    box-shadow: 0 -23px 15px 30px $shadow-color, 0 -29px 6px 29px $shadow-color;
+  }
+  .shadow-b-xl {
+    box-shadow: 0 -35px 25px 50px $shadow-color, 0 -47px 10px 49px $shadow-color;
+  }
+
+  .shadow-r {
+    box-shadow: -5px 0 3px 6px $shadow-color, -5px 0 2px 5px $shadow-color;
+  }
+  .shadow-r-md {
+    box-shadow: -9px 0 6px 12px $shadow-color, -11px 0 4px 11px $shadow-color;
+  }
+  .shadow-r-lg {
+    box-shadow: -23px 0 15px 30px $shadow-color, -29px 0 6px 29px $shadow-color;
+  }
+  .shadow-r-xl {
+    box-shadow: -35px 0 25px 50px $shadow-color, -47px 0 10px 49px $shadow-color;
+  }
+}
