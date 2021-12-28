@@ -1,8 +1,8 @@
 import {v4 as uuidv4} from 'uuid';
 
 interface Session {
-	id: string,
-	expires: number,
+	id:string,
+	expires:number,
 }
 
 const sessions = [];
@@ -18,12 +18,12 @@ export const createSession = ():Session => {
 	return newSession;
 };
 
-export const getSavedSession = (id: string):Session|null => {
+export const getSavedSession = (id:string):Session | null => {
 	return sessions.find(s => s.id === id);
 };
 
-export const invalidateSession = (id: string):void => {
+export const invalidateSession = (id:string):void => {
 	const session = sessions.find(s => s.id === id);
-	if(!session) return;
+	if (!session) return;
 	session.expires = 0;
 };

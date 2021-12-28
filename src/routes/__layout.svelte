@@ -2,14 +2,14 @@
 	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
 
 	export async function load({session}:LoadInput):Promise<LoadOutput> {
-		if(!session.id){
+		if (!session.id) {
 			return {
 				status: 302,
 				redirect: '/login'
 			};
 		}
 		return {
-			props:{}
+			props: {}
 		};
 	}
 </script>
@@ -23,7 +23,7 @@
 </script>
 
 <svelte:head>
-  <title>Docker Control Panel</title>
+	<title>Docker Control Panel</title>
 </svelte:head>
 
 <div class="flex flex-col w-screen h-screen overflow-hidden">
@@ -38,5 +38,5 @@
 </div>
 
 <style lang="scss" global>
-	@use '../lib/styles/main';
+  @use '../lib/styles/main';
 </style>

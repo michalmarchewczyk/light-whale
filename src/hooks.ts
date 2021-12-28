@@ -5,12 +5,12 @@ import cookie from 'cookie';
 
 export function getSession(request:ServerRequest):Record<string, unknown> {
 	const sessionCookie = request.headers['cookie'];
-	if(!sessionCookie){
+	if (!sessionCookie) {
 		return {};
 	}
 	const id = cookie.parse(sessionCookie).sessionId;
 	const session = getSavedSession(id);
-	if(!session || Date.now() > session.expires){
+	if (!session || Date.now() > session.expires) {
 		return {};
 	}
 	return {

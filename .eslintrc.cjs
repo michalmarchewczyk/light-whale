@@ -33,5 +33,6 @@ module.exports = {
 		],
 		'@typescript-eslint/no-explicit-any': 2,
 		'no-console': 1,
+		'no-inline-comments': 1,
 	}
 };

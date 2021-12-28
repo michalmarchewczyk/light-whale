@@ -5,13 +5,13 @@ import {login} from '$lib/auth/login';
 
 export async function post({body}:Request):Promise<EndpointOutput> {
 	const {password} = JSON.parse(<string>body);
-	if(!password){
+	if (!password) {
 		return {
 			status: 401,
 			body: JSON.stringify({msg: 'empty password'}),
 		};
 	}
-	if(!login(password)){
+	if (!login(password)) {
 		return {
 			status: 401,
 			body: JSON.stringify({msg: 'wrong password'}),

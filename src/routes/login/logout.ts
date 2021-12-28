@@ -4,7 +4,7 @@ import {invalidateSession} from '$lib/auth/sessions';
 
 export async function get({headers}:Request):Promise<EndpointOutput> {
 	const sessionCookie = headers['cookie'];
-	if(!sessionCookie){
+	if (!sessionCookie) {
 		return {status: 400};
 	}
 	const id = cookie.parse(sessionCookie).sessionId;
