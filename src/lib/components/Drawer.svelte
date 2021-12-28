@@ -8,7 +8,7 @@
 	};
 </script>
 
-<div class="drawer-side lg:shadow-r-lg lg:border-r-2 lg:border-base-300">
+<div class="drawer-side lg:shadow-r-lg">
 	<div class="drawer-overlay" on:click={changeDrawerOpen}></div>
 	<DrawerMenu on:navigate={changeDrawerOpen}/>
 </div>

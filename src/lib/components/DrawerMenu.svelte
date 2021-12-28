@@ -6,7 +6,7 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none">
+<ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300">
 	<li>
 		<a href="/" class:bg-base-300="{$page.path === '/'}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
