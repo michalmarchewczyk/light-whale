@@ -1,10 +1,13 @@
 <script lang="ts">
 	import {page} from '$app/stores';
+	import {createEventDispatcher} from 'svelte';
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none">
 	<li>
-		<a href="/" class:bg-base-300="{$page.path === '/'}">
+		<a href="/" class:bg-base-300="{$page.path === '/'}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -14,7 +17,7 @@
 		</a>
 	</li>
 	<li>
-		<a href="/stats" class:bg-base-300="{$page.path.startsWith('/stats')}">
+		<a href="/stats" class:bg-base-300="{$page.path.startsWith('/stats')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,7 +32,7 @@
 	  </span>
 	</li>
 	<li>
-		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}">
+		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,7 +42,7 @@
 		</a>
 	</li>
 	<li>
-		<a href="/images" class:bg-base-300="{$page.path.startsWith('/images')}">
+		<a href="/images" class:bg-base-300="{$page.path.startsWith('/images')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,7 +54,7 @@
 		</a>
 	</li>
 	<li>
-		<a href="/volumes" class:bg-base-300="{$page.path.startsWith('/volumes')}">
+		<a href="/volumes" class:bg-base-300="{$page.path.startsWith('/volumes')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,7 +69,7 @@
 	  </span>
 	</li>
 	<li>
-		<a href="/sites" class:bg-base-300="{$page.path.startsWith('/sites')}">
+		<a href="/sites" class:bg-base-300="{$page.path.startsWith('/sites')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -76,7 +79,7 @@
 		</a>
 	</li>
 	<li>
-		<a href="/settings" class:bg-base-300="{$page.path.startsWith('/settings')}">
+		<a href="/settings" class:bg-base-300="{$page.path.startsWith('/settings')}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

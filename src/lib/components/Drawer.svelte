@@ -10,7 +10,7 @@
 
 <div class="drawer-side lg:shadow-r-lg">
 	<div class="drawer-overlay" on:click={changeDrawerOpen}></div>
-	<DrawerMenu/>
+	<DrawerMenu on:navigate={changeDrawerOpen}/>
 </div>
 
 
