@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {goto} from '$app/navigation';
 	import {session} from '$app/stores';
-	import {fetchDockerAvailable} from '$lib/stores/docker';
+	import {forceUpdateEverything, updateEverything} from '$lib/stores/docker';
 	import {onMount} from 'svelte';
 
 	export let drawerOpen = false;
@@ -19,11 +19,15 @@
 	};
 
 	onMount(() => {
-		const pingInterval = setInterval(async () => {
-			await fetchDockerAvailable();
-		}, 1000);
+		const updateInterval = setInterval(async () => {
+			await updateEverything();
+		}, 400);
+		const forceUpdateInterval = setInterval(async () => {
+			await forceUpdateEverything();
+		}, 30000);
 		return () => {
-			clearInterval(pingInterval);
+			clearInterval(updateInterval);
+			clearInterval(forceUpdateInterval);
 		};
 	});
 
