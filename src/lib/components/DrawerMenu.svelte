@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
 	import {createEventDispatcher} from 'svelte';
+	import {dockerAvailable} from '$lib/stores/docker';
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -26,10 +27,13 @@
 			<span class="mx-3">Statistics</span>
 		</a>
 	</li>
-	<li class="menu-title mt-4 mb-2">
-	  <span>
-		  Docker
-	  </span>
+	<li class="menu-title mt-4 mb-2 flex-row">
+		<span>
+			Docker
+		</span>
+		<div class="badge mt-0.5 {$dockerAvailable ? 'badge-success' : 'badge-error'}">
+			{$dockerAvailable ? 'Connected' : 'Disconnected'}
+		</div>
 	</li>
 	<li>
 		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}" on:click={() => dispatch('navigate')}>
