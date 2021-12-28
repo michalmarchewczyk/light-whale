@@ -1,1 +1,1 @@
-export const dockerUrl = 'http://localhost:2375/';
+export const dockerUrl = 'http://localhost:2375';
