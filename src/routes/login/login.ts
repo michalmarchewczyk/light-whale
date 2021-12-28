@@ -1,6 +1,7 @@
 import type {EndpointOutput, Request} from '@sveltejs/kit';
 import {createSession} from '$lib/auth/sessions';
 import cookie from 'cookie';
+import {login} from '$lib/auth/login';
 
 export async function post({body}:Request):Promise<EndpointOutput> {
 	const {password} = JSON.parse(<string>body);
@@ -10,8 +11,7 @@ export async function post({body}:Request):Promise<EndpointOutput> {
 			body: JSON.stringify({msg: 'empty password'}),
 		};
 	}
-	const ENV_PASSWORD = process.env.DOCKER_CONTROL_PANEL_PASSWORD ?? '';
-	if(password !== ENV_PASSWORD || ENV_PASSWORD === ''){
+	if(!login(password)){
 		return {
 			status: 401,
 			body: JSON.stringify({msg: 'wrong password'}),
