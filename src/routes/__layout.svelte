@@ -1,3 +1,19 @@
+<script context="module" lang="ts">
+	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
+
+	export async function load({session}:LoadInput):Promise<LoadOutput> {
+		if(!session.id){
+			return {
+				status: 302,
+				redirect: '/login'
+			};
+		}
+		return {
+			props:{}
+		};
+	}
+</script>
+
 <script lang="ts">
 	import NavBar from '$lib/components/NavBar.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
