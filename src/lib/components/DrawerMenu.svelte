@@ -95,3 +95,10 @@
 		</a>
 	</li>
 </ul>
+
+
+<style lang="scss">
+	.menu li {
+	  	@apply mb-2;
+	}
+</style>
