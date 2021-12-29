@@ -6,6 +6,7 @@
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
 	<div class="mx-3 w-16 sm:w-24  flex-shrink-0"
+		 class:text-info={container.state === 'created'}
 		 class:text-success={container.state === 'running'}
 		 class:text-warning={container.state === 'paused'}
 		 class:text-error={container.state === 'dead' || container.state === 'removing'}
