@@ -17,10 +17,27 @@
 <script lang="ts">
 	import NavBar from '$lib/components/NavBar.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
+	import {onMount} from 'svelte';
+	import {browser} from '$app/env';
 
 	let drawerOpen = false;
 
 	let currentTheme:'default-light'|'default-dark' = 'default-light';
+
+	let loaded = false;
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme');
+		if(savedTheme === 'default-light' || savedTheme === 'default-dark'){
+			currentTheme = savedTheme;
+		}
+		loaded = true;
+	});
+
+	$: {
+		if(browser && loaded){
+			localStorage.setItem('theme', currentTheme);
+		}
+	}
 
 </script>
 
