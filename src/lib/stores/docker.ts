@@ -33,13 +33,13 @@ export const fetchContainers = async ():Promise<void> => {
 
 
 export const updateEverything = async ():Promise<void> => {
+	await fetchDockerAvailable();
 	const res = await fetch('/docker/events');
 	const lastEvent = await res.json();
-	if(!lastEvent.time || lastEvent.time === get(lastUpdate) ){
+	if(!lastEvent?.time || lastEvent.time === get(lastUpdate) ){
 		return;
 	}
 	lastUpdate.set(lastEvent.time);
-	await fetchDockerAvailable();
 	await fetchContainers();
 };
 
