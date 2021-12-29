@@ -5,6 +5,7 @@ interface Container {
 	names:string[],
 	imageName:string,
 	imageId:string,
+	command:string,
 	created:Date,
 	state:string,
 	status:string,
@@ -18,6 +19,7 @@ export const getContainers = async ():Promise<Container[]> => {
 		names: container.Names ?? [],
 		imageName: container.Image ?? '',
 		imageId: container.ImageID ?? '',
+		command: container.Command ?? '',
 		created: new Date(container.Created*1000 ?? 0),
 		state: container.State ?? '',
 		status: container.Status ?? 4
