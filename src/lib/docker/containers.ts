@@ -9,6 +9,7 @@ interface Container {
 	created:Date,
 	state:string,
 	status:string,
+	compose:string|null,
 }
 
 export const getContainers = async ():Promise<Container[]> => {
@@ -22,7 +23,8 @@ export const getContainers = async ():Promise<Container[]> => {
 		command: container.Command ?? '',
 		created: new Date(container.Created*1000 ?? 0),
 		state: container.State ?? '',
-		status: container.Status ?? 4
+		status: container.Status ?? 4,
+		compose: container.Labels['com.docker.compose.project'] ?? null,
 	}));
 	return containers;
 };

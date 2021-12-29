@@ -8,7 +8,7 @@
 	<div class="mx-3 w-16 sm:w-24  flex-shrink-0"
 		 class:text-info={container.state === 'created'}
 		 class:text-success={container.state === 'running'}
-		 class:text-warning={container.state === 'paused'}
+		 class:text-warning={container.state === 'paused' || container.state === 'restarting'}
 		 class:text-error={container.state === 'dead' || container.state === 'removing'}
 	>
 		<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
