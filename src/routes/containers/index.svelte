@@ -23,12 +23,6 @@
 
 
 <div>
-	<!--{#each $composeApps as app}-->
-	<!--	<ComposeAppItem key="{app.name}" {app}/>-->
-	<!--{/each}-->
-	<!--{#each $containers as container}-->
-	<!--	<ContainerItem key={container.id} {container}/>-->
-	<!--{/each}-->
 	{#each appsAndContainers as appOrContainer}
 		{#if 'containers' in appOrContainer}
 			<ComposeAppItem key="{appOrContainer.name}" app={appOrContainer}/>

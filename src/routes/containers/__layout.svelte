@@ -4,7 +4,7 @@ import {containers} from '$lib/stores/docker';
 
 </script>
 
-<div class="max-w-5xl mx-auto">
+<div class="max-w-5xl mx-auto text-base-content">
 	<div class="bg-base-200 top-0 sticky z-40">
 		<div class="text-3xl font-bold pb-4 border-b-2 border-base-300 mx-8 pt-6">
 			Containers

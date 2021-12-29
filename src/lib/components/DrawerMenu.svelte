@@ -4,9 +4,11 @@
 	import {dockerAvailable} from '$lib/stores/docker';
 
 	const dispatch = createEventDispatcher();
+
+	export let currentTheme;
 </script>
 
-<ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300">
+<ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2">
 	<li>
 		<a href="/" class:bg-base-300="{$page.path === '/'}" on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -94,11 +96,20 @@
 			<span class="mx-3">Settings</span>
 		</a>
 	</li>
+	<li class="mt-auto">
+		<button class="btn btn-sm mt-4 text-xs btn-ghost" on:click={() => {
+			const newTheme = currentTheme === 'default-light' ? 'default-dark' : 'default-light';
+			dispatch('changeTheme', newTheme);
+		}}>
+			Change to {currentTheme === 'default-light' ? 'dark' : 'light'} theme
+		</button>
+	</li>
+
 </ul>
 
 
 <style lang="scss">
 	.menu li {
-	  	@apply mb-2;
+	  	@apply mb-2 text-base-content;
 	}
 </style>
