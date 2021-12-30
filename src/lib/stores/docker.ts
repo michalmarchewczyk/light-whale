@@ -84,6 +84,15 @@ export const restartContainer = async (id:string):Promise<void> => {
 	await forceUpdateEverything();
 };
 
+export const removeContainer = async (id:string):Promise<void> => {
+	await fetch('/docker/containers', {
+		method: 'PUT',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id, action:'remove'}),
+	});
+	await forceUpdateEverything();
+};
+
 
 
 export const updateEverything = async ():Promise<void> => {

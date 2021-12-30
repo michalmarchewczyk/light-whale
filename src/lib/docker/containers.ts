@@ -44,3 +44,8 @@ export const restartContainer = async(id:string):Promise<boolean> => {
 	const res = await fetch(dockerUrl+`/containers/${id}/restart`, {method: 'POST'});
 	return res.status === 204;
 };
+
+export const removeContainer = async(id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl+`/containers/${id}`, {method: 'DELETE'});
+	return res.status === 204;
+};

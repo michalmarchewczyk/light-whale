@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type {Container} from '$lib/stores/docker';
-	import {startContainer, stopContainer, restartContainer} from '$lib/stores/docker';
+	import {startContainer, stopContainer, restartContainer, removeContainer} from '$lib/stores/docker';
 
 	export let container:Container;
 	let loading = false;
+
+	let removeModal = false;
 
 	const start = async () => {
 		loading = true;
@@ -18,6 +20,21 @@
 	const restart = async () => {
 		loading = true;
 		await restartContainer(container.id);
+		loading = false;
+	};
+
+	const openRemoveModal = () => {
+		removeModal = true;
+	};
+
+	const closeRemoveModal = () => {
+		removeModal = false;
+	};
+
+	const remove = async () => {
+		removeModal = false;
+		loading = true;
+		await removeContainer(container.id);
 		loading = false;
 	};
 </script>
@@ -103,11 +120,34 @@
 					on:click={start} class:loading={loading} disabled={loading}>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
 					 stroke="currentColor" class:hidden={loading} stroke-width="2">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+					<path stroke-linecap="round" stroke-linejoin="round"
+						  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
 					<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 				</svg>
 				<span class="mt-[-0.25rem]">Start</span>
 			</button>
+			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
+					on:click={openRemoveModal} class:loading={loading} disabled={loading}>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+					 stroke="currentColor" class:hidden={loading} stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+				</svg>
+				<span class="mt-[-0.25rem]">Remove</span>
+			</button>
+			<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
+			<div class="modal">
+				<div class="modal-box">
+					<p>Do you really want to remove container
+						<span class="font-bold">{container.names[0].substring(1)}</span>
+						?
+					</p>
+					<div class="modal-action">
+						<button class="btn btn-primary" on:click={remove}>Remove</button>
+						<button class="btn" on:click={closeRemoveModal}>Cancel</button>
+					</div>
+				</div>
+			</div>
 		{/if}
 		{#if container.state === 'running'}
 			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"

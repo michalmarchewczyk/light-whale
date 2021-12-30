@@ -1,5 +1,5 @@
 import type {EndpointOutput, RequestHandler} from '@sveltejs/kit';
-import {getContainers, restartContainer, startContainer, stopContainer} from '$lib/docker/containers';
+import {getContainers, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/docker/containers';
 
 export async function get():Promise<EndpointOutput> {
 	const containers = await getContainers();
@@ -20,6 +20,8 @@ const put:RequestHandler<Promise<void>, {id:string, action:string}>
 			res = await stopContainer(id);
 		}else if(action === 'restart'){
 			res = await restartContainer(id);
+		}else if(action === 'remove'){
+			res = await removeContainer(id);
 		}
 		return {
 			status: 200,
