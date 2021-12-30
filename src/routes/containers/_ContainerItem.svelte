@@ -1,7 +1,25 @@
 <script lang="ts">
 	import type {Container} from '$lib/stores/docker';
+	import {startContainer, stopContainer, restartContainer} from '$lib/stores/docker';
 
 	export let container:Container;
+	let loading = false;
+
+	const start = async () => {
+		loading = true;
+		await startContainer(container.id);
+		loading = false;
+	};
+	const stop = async () => {
+		loading = true;
+		await stopContainer(container.id);
+		loading = false;
+	};
+	const restart = async () => {
+		loading = true;
+		await restartContainer(container.id);
+		loading = false;
+	};
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
@@ -39,7 +57,9 @@
 		</span>
 	</div>
 	<div class="block w-60 flex-auto w-60 overflow-hidden mr-3 pr-4">
-		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">{container.names.join(', ')}</span>
+		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
+			{container.names.map(n => n.substring(1)).join(', ')}
+		</span>
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-1.5">ID: {container.id}</span>
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-0.5">{container.status}</span>
 	</div>
@@ -77,8 +97,36 @@
 			</span>
 		</div>
 	</div>
-	<div class="block w-24 overflow-hidden">
-
+	<div class="block w-32 overflow-hidden flex-shrink-0">
+		{#if container.state === 'created' || container.state === 'exited'}
+			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
+					on:click={start} class:loading={loading} disabled={loading}>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+					 stroke="currentColor" class:hidden={loading} stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+					<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<span class="mt-[-0.25rem]">Start</span>
+			</button>
+		{/if}
+		{#if container.state === 'running'}
+			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
+					on:click={stop} class:loading={loading} disabled={loading}>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" stroke-width="2"
+					 viewBox="0 0 24 24" stroke="currentColor" class:hidden={loading}>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<span class="mt-[-0.25rem]">Stop</span>
+			</button>
+			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
+					on:click={restart} class:loading={loading} disabled={loading}>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+					 stroke="currentColor" class:hidden={loading} stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+				</svg>
+				<span class="mt-[-0.25rem]">Restart</span>
+			</button>
+		{/if}
 	</div>
 </div>
 

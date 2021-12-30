@@ -57,6 +57,35 @@ export const fetchContainers = async ():Promise<void> => {
 };
 
 
+export const startContainer = async (id:string):Promise<void> => {
+	await fetch('/docker/containers', {
+		method: 'PUT',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id, action:'start'}),
+	});
+	await forceUpdateEverything();
+};
+
+export const stopContainer = async (id:string):Promise<void> => {
+	await fetch('/docker/containers', {
+		method: 'PUT',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id, action:'stop'}),
+	});
+	await forceUpdateEverything();
+};
+
+export const restartContainer = async (id:string):Promise<void> => {
+	await fetch('/docker/containers', {
+		method: 'PUT',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id, action:'restart'}),
+	});
+	await forceUpdateEverything();
+};
+
+
+
 export const updateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	const res = await fetch('/docker/events');

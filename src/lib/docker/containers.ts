@@ -28,3 +28,19 @@ export const getContainers = async ():Promise<Container[]> => {
 	}));
 	return containers;
 };
+
+
+export const startContainer = async(id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl+`/containers/${id}/start`, {method: 'POST'});
+	return res.status === 204;
+};
+
+export const stopContainer = async(id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl+`/containers/${id}/stop`, {method: 'POST'});
+	return res.status === 204;
+};
+
+export const restartContainer = async(id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl+`/containers/${id}/restart`, {method: 'POST'});
+	return res.status === 204;
+};
