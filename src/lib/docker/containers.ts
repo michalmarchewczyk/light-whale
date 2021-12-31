@@ -9,11 +9,11 @@ interface Container {
 	created:Date,
 	state:string,
 	status:string,
-	compose:string|null,
+	compose:string | null,
 }
 
 export const getContainers = async ():Promise<Container[]> => {
-	const res = await fetch(dockerUrl+'/containers/json?all=true&size=true');
+	const res = await fetch(dockerUrl + '/containers/json?all=true&size=true');
 	const data = await res.json();
 	const containers:Container[] = data.map((container):Container => ({
 		id: container.Id ?? '',
@@ -21,7 +21,7 @@ export const getContainers = async ():Promise<Container[]> => {
 		imageName: container.Image ?? '',
 		imageId: container.ImageID ?? '',
 		command: container.Command ?? '',
-		created: new Date(container.Created*1000 ?? 0),
+		created: new Date(container.Created * 1000 ?? 0),
 		state: container.State ?? '',
 		status: container.Status ?? 4,
 		compose: container.Labels['com.docker.compose.project'] ?? null,
@@ -30,22 +30,22 @@ export const getContainers = async ():Promise<Container[]> => {
 };
 
 
-export const startContainer = async(id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl+`/containers/${id}/start`, {method: 'POST'});
+export const startContainer = async (id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/start`, {method: 'POST'});
 	return res.status === 204;
 };
 
-export const stopContainer = async(id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl+`/containers/${id}/stop`, {method: 'POST'});
+export const stopContainer = async (id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/stop`, {method: 'POST'});
 	return res.status === 204;
 };
 
-export const restartContainer = async(id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl+`/containers/${id}/restart`, {method: 'POST'});
+export const restartContainer = async (id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/restart`, {method: 'POST'});
 	return res.status === 204;
 };
 
-export const removeContainer = async(id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl+`/containers/${id}`, {method: 'DELETE'});
+export const removeContainer = async (id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + `/containers/${id}`, {method: 'DELETE'});
 	return res.status === 204;
 };

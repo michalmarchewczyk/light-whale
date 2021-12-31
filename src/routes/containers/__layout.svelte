@@ -1,7 +1,5 @@
 <script lang="ts">
-import {containers} from '$lib/stores/docker';
-
-
+	import {containers} from '$lib/stores/containers';
 </script>
 
 <div class="max-w-5xl mx-auto text-base-content">

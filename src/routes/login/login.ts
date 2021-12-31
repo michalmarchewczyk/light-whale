@@ -1,10 +1,10 @@
-import type {EndpointOutput, Request} from '@sveltejs/kit';
+import type {RequestHandler} from '@sveltejs/kit';
 import {createSession} from '$lib/auth/sessions';
 import cookie from 'cookie';
 import {login} from '$lib/auth/login';
 
-export async function post({body}:Request):Promise<EndpointOutput> {
-	const {password} = JSON.parse(<string>body);
+const post:RequestHandler<Promise<void>, {password:string}> = async ({body}) => {
+	const {password} = body;
 	if (!password) {
 		return {
 			status: 401,
@@ -30,4 +30,8 @@ export async function post({body}:Request):Promise<EndpointOutput> {
 			'Set-Cookie': sessionCookie,
 		}
 	};
-}
+};
+
+export {
+	post
+};

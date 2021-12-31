@@ -23,8 +23,11 @@
 	let error = '';
 
 	const submit = async () => {
-		const body = JSON.stringify({password});
-		const res = await fetch('/login/login', {method: 'POST', body});
+		const res = await fetch('/login/login', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({password})
+		});
 		const data = await res.json();
 		if (res.status !== 200) {
 			error = 'Wrong password';

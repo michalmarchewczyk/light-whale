@@ -22,19 +22,19 @@
 
 	let drawerOpen = false;
 
-	let currentTheme:'default-light'|'default-dark' = 'default-light';
+	let currentTheme:'default-light' | 'default-dark' = 'default-light';
 
 	let loaded = false;
 	onMount(() => {
 		const savedTheme = localStorage.getItem('theme');
-		if(savedTheme === 'default-light' || savedTheme === 'default-dark'){
+		if (savedTheme === 'default-light' || savedTheme === 'default-dark') {
 			currentTheme = savedTheme;
 		}
 		loaded = true;
 	});
 
 	$: {
-		if(browser && loaded){
+		if (browser && loaded) {
 			localStorage.setItem('theme', currentTheme);
 		}
 	}

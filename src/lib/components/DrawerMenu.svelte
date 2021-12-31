@@ -38,7 +38,8 @@
 		</div>
 	</li>
 	<li>
-		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}" on:click={() => dispatch('navigate')}>
+		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}"
+		   on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,7 +61,8 @@
 		</a>
 	</li>
 	<li>
-		<a href="/volumes" class:bg-base-300="{$page.path.startsWith('/volumes')}" on:click={() => dispatch('navigate')}>
+		<a href="/volumes" class:bg-base-300="{$page.path.startsWith('/volumes')}"
+		   on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,7 +87,8 @@
 		</a>
 	</li>
 	<li>
-		<a href="/settings" class:bg-base-300="{$page.path.startsWith('/settings')}" on:click={() => dispatch('navigate')}>
+		<a href="/settings" class:bg-base-300="{$page.path.startsWith('/settings')}"
+		   on:click={() => dispatch('navigate')}>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
 				 stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -109,7 +112,7 @@
 
 
 <style lang="scss">
-	.menu li {
-	  	@apply mb-2 text-base-content;
-	}
+  .menu li {
+	@apply mb-2 text-base-content;
+  }
 </style>

@@ -5,7 +5,7 @@ let lastEvent = null;
 export const getEvents = async ():Promise<Record<string, unknown>[]> => {
 	try {
 		const timestamp = Math.floor(Date.now() / 1000);
-		const res = await fetch(dockerUrl + '/events' + `?since=${timestamp - 60*60*24}&until=${timestamp}`,
+		const res = await fetch(dockerUrl + '/events' + `?since=${timestamp - 60 * 60 * 24}&until=${timestamp}`,
 			{mode: 'no-cors'}
 		);
 		const data = (await res.text()).split('\n');
@@ -14,7 +14,7 @@ export const getEvents = async ():Promise<Record<string, unknown>[]> => {
 			if (!v) continue;
 			events.push(JSON.parse(v));
 		}
-		if(events.length > 0){
+		if (events.length > 0) {
 			lastEvent = events[events.length - 1];
 		}
 		return events;

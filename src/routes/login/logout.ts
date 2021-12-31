@@ -1,8 +1,8 @@
-import type {EndpointOutput, Request} from '@sveltejs/kit';
+import type {RequestHandler} from '@sveltejs/kit';
 import cookie from 'cookie';
 import {invalidateSession} from '$lib/auth/sessions';
 
-export async function get({headers}:Request):Promise<EndpointOutput> {
+const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	const sessionCookie = headers['cookie'];
 	if (!sessionCookie) {
 		return {status: 400};
@@ -12,4 +12,8 @@ export async function get({headers}:Request):Promise<EndpointOutput> {
 	return {
 		status: 200,
 	};
-}
+};
+
+export {
+	get
+};
