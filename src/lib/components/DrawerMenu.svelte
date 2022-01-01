@@ -75,7 +75,7 @@
 			const newTheme = currentTheme === 'default-light' ? 'default-dark' : 'default-light';
 			dispatch('changeTheme', newTheme);
 		}}>
-			Change to {currentTheme === 'default-light' ? 'dark' : 'light'} theme
+			Switch to {currentTheme === 'default-light' ? 'dark' : 'light'} theme
 		</button>
 	</li>
 </ul>

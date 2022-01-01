@@ -41,7 +41,7 @@
 	};
 
 </script>
-<div class="navbar bg-primary text-neutral-content shadow-b-xl z-50">
+<div class="navbar bg-navbar text-primary-content shadow-b-xl z-50">
 	<div class="flex-none">
 		<button class="btn btn-square btn-ghost lg:hidden" on:click={changeDrawerOpen}>
 			{#if drawerOpen}
@@ -65,3 +65,20 @@
 		</button>
 	</div>
 </div>
+
+<style lang="scss">
+	.bg-navbar {
+	  background: #0c5bf7;
+	  background: linear-gradient(90deg, #0c5bf7 0%, #0925b3 100%);
+	}
+	:global([data-theme='default-dark']) .bg-navbar {
+	  background: #256cfa;
+	  background: linear-gradient(90deg, #256cfa 0%, rgb(31, 59, 204) 100%);
+	}
+</style>
+
+
+
+
+
+
