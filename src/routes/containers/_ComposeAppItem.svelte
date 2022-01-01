@@ -17,7 +17,7 @@
 		</span>
 	</div>
 	{#each app.containers as container}
-		<ContainerItem key={container.id} {container}/>
+		<ContainerItem {container}/>
 	{/each}
 </div>
 

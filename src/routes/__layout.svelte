@@ -41,15 +41,12 @@
 
 </script>
 
-<svelte:head>
-	<title>Docker Control Panel</title>
-</svelte:head>
 
 <div class="flex flex-col w-screen h-screen overflow-hidden" data-theme={currentTheme}>
 	<NavBar bind:drawerOpen={drawerOpen}/>
 	<div class="drawer drawer-mobile flex-1">
 		<input type="checkbox" class="drawer-toggle" bind:checked={drawerOpen}>
-		<div class="drawer-content bg-base-200">
+		<div class="drawer-content bg-base-200" style="overflow-y: scroll;">
 			<slot></slot>
 		</div>
 		<Drawer bind:drawerOpen={drawerOpen} bind:currentTheme={currentTheme}/>
