@@ -90,12 +90,31 @@
 	</div>
 </div>
 
+<div class="card shadow-md bg-base-100 mb-6">
+	<div class="card-body p-6 pt-5">
+		<h2 class="card-title text-xl">Information</h2>
+		<p>
+			Names({container?.names.length}):
+			<span class="font-bold">{container?.names.map(n => n.substring(1)).join(', ')}</span>
+		</p>
+		<p>
+			ID:
+			<span class="font-bold">{container?.id}</span>
+		</p>
+	</div>
+</div>
 
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">Image</h2>
-		<p>Name: {container?.imageName}</p>
-		<p>ID: {container?.imageId}</p>
+		<p>
+			Name:
+			<span class="font-bold">{container?.imageName}</span>
+		</p>
+		<p>
+			ID:
+			<span class="font-bold">{container?.imageId}</span>
+		</p>
 	</div>
 </div>
 
