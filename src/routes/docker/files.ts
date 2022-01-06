@@ -26,12 +26,14 @@ const get:RequestHandler = async ({query}) => {
 	lines.slice(1).forEach(line => {
 		const fileData = line.split(/[ ]+/);
 		if(fileData.length < 9) return;
+		if(!fileData[0].startsWith('d') && !fileData[0].startsWith('l') && !fileData[0].startsWith('-')) return;
 		res.push({
 			directory: fileData[0].substring(0,1) === 'd',
 			symlink: fileData[0].substring(0,1) === 'l',
 			name: fileData[8],
 			size: fileData[4],
 			date: fileData[5],
+			other: fileData
 		});
 	});
 	return {
