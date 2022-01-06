@@ -1,6 +1,13 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {containers, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/stores/containers';
+	import {
+		Container,
+		containers,
+		removeContainer,
+		restartContainer,
+		startContainer,
+		stopContainer
+	} from '$lib/stores/containers';
 	import {goto} from '$app/navigation';
 
 	import RefreshIcon from '$icons/refresh.svg';
@@ -8,6 +15,7 @@
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
 
+	let container:Container = null;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
 

@@ -1,11 +1,13 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {containers} from '$lib/stores/containers';
+	import {Container, containers} from '$lib/stores/containers';
 
 	import CubeIcon from '$icons/cube.svg';
 	import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import FolderIcon from '$icons/folder.svg';
 	import DownloadIcon from '$icons/download.svg';
+
+	let container:Container;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
 
