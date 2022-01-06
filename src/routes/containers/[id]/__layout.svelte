@@ -18,7 +18,7 @@
 </svelte:head>
 
 
-<div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
+<div class="bg-base-200 top-0 sticky z-40 rounded-b-xl pb-4">
 	<div class="text-3xl font-bold pb-4 mx-8 pt-6">
 		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/containers">Containers / </a>
 		{$page.params.id}
@@ -31,8 +31,8 @@
 		</div>
 	</div>
 </div>
-<div class="mx-4">
-	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-4">
+<div class="mx-4 sticky top-[5.75rem] z-50">
+	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
 		<li class:bordered={$page.path === `/containers/${$page.params.id}`}>
 			<a href="/containers/{$page.params.id}/">
 				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
@@ -60,7 +60,7 @@
 	</ul>
 </div>
 
-<div class="mx-4 mt-8">
+<div class="mx-4 mt-8 mb-8">
 	<slot></slot>
 </div>
 
