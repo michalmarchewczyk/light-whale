@@ -46,7 +46,7 @@
 {#if container?.state === 'running'}
 	<FileBrowser path={$page.params.id+': '+currentPath} files={files} loading={loading} on:open={openFile}/>
 {:else}
-	<p>Container has to be running</p>
+	<p class="w-full text-center text-2xl pt-8 opacity-80">Container has to be running to view files</p>
 {/if}
 
 

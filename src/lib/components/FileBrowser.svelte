@@ -11,12 +11,12 @@
 	const dispatch = createEventDispatcher();
 
 </script>
-<div class="card shadow-md bg-base-100 p-2">
-	<span class="mx-2 p-1 font-bold text-lg pb-2 border-b-2 mb-2">{path}</span>
+<div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
+	<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">{path}</span>
 	{#if loading}
 		<p class="p-6 text-xl text-center">Loading...</p>
 	{:else}
-		<ul class="menu p-0 compact">
+		<ul class="menu p-2 compact overflow-y-scroll">
 			{#each files as file}
 				<li>
 					<button
