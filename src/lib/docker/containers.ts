@@ -49,3 +49,57 @@ export const removeContainer = async (id:string):Promise<boolean> => {
 	const res = await fetch(dockerUrl + `/containers/${id}`, {method: 'DELETE'});
 	return res.status === 204;
 };
+
+
+export const inspectContainer = async (id:string):Promise<unknown> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/json?size=true`);
+	if(res.status !== 200){
+		return {};
+	}
+	const data = await res.json();
+	return data;
+};
+
+interface ContainerStats {
+	cpu_stats: {
+		cpu_usage: {
+			total_usage: number,
+			system_cpu_usage: number;
+		},
+		system_cpu_usage: number,
+		online_cpus: number,
+	},
+	precpu_stats: {
+		cpu_usage: {
+			total_usage: number,
+			system_cpu_usage: number;
+		},
+		system_cpu_usage: number,
+		online_cpus: number,
+	},
+	memory_stats: {
+		usage: number,
+		stats: {
+			cache: number,
+		}
+	},
+	networks: unknown
+}
+
+export const getContainerStats = async (id:string):Promise<ContainerStats|null> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/stats?stream=false`);
+	if(res.status !== 200){
+		return null;
+	}
+	const data = await res.json();
+	return data;
+};
+
+export const getContainerProcesses = async (id:string):Promise<unknown> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
+	if(res.status !== 200){
+		return {};
+	}
+	const data = await res.json();
+	return data;
+};
