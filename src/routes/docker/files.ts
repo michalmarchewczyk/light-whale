@@ -1,7 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {execCommand} from '$lib/docker/exec';
 import {checkSession} from '$lib/auth/sessions';
-
+import validator from 'validator';
 
 const get:RequestHandler = async ({query, headers}) => {
 	if(!checkSession(headers)){
@@ -9,11 +9,19 @@ const get:RequestHandler = async ({query, headers}) => {
 			status: 401,
 		};
 	}
-	const id = query.get('id');
-	const path = query.get('path');
+	const id = query.get('id') ?? '';
+	const path = query.get('path') ?? '';
 	if (!id) {
 		return {
 			status: 400
+		};
+	}
+	if(!validator.isAlphanumeric(id) || !validator.isURL(path, {
+		require_valid_protocol: false,
+		require_host: false,
+	})){
+		return {
+			status: 400,
 		};
 	}
 	const data = await execCommand(id, `ls -lha --time-style=full-iso --group-directories-first ${path}`);

@@ -1,6 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {getContainers, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/docker/containers';
 import {checkSession} from '$lib/auth/sessions';
+import validator from 'validator';
 
 const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	if(!checkSession(headers)){
@@ -22,6 +23,11 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 		};
 	}
 	const {id, action} = body;
+	if(!validator.isAlphanumeric(id ?? '') || !validator.isAlphanumeric(action ?? '')){
+		return {
+			status: 400,
+		};
+	}
 	let res = false;
 	if (action === 'start') {
 		res = await startContainer(id);
