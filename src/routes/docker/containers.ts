@@ -1,7 +1,13 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {getContainers, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/docker/containers';
+import {checkSession} from '$lib/auth/sessions';
 
-const get:RequestHandler<Promise<void>, void> = async () => {
+const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
+	if(!checkSession(headers)){
+		return {
+			status: 401,
+		};
+	}
 	const containers = await getContainers();
 	return {
 		status: 200,
@@ -9,7 +15,12 @@ const get:RequestHandler<Promise<void>, void> = async () => {
 	};
 };
 
-const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({body}) => {
+const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({body, headers}) => {
+	if(!checkSession(headers)){
+		return {
+			status: 401,
+		};
+	}
 	const {id, action} = body;
 	let res = false;
 	if (action === 'start') {

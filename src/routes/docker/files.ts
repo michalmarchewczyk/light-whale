@@ -1,8 +1,14 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {execCommand} from '$lib/docker/exec';
+import {checkSession} from '$lib/auth/sessions';
 
 
-const get:RequestHandler = async ({query}) => {
+const get:RequestHandler = async ({query, headers}) => {
+	if(!checkSession(headers)){
+		return {
+			status: 401,
+		};
+	}
 	const id = query.get('id');
 	const path = query.get('path');
 	if (!id) {
