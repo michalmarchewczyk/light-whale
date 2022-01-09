@@ -51,7 +51,7 @@
 		</span>
 	</div>
 	<a class="block w-60 flex-auto w-60 overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
-	   href="/images/{image.id}">
+	   href="/images/{shortId}">
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
 			{image.tags.join(', ')}
 		</span>

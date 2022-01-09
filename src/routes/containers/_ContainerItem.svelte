@@ -10,8 +10,14 @@
 	import TerminalIcon from '$icons/terminal.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
+	import {Image, images} from '$lib/stores/images';
 
 	export let container:Container;
+
+	let image:Image;
+
+	$: image = $images.find(i => i.id === container.imageId);
+
 	let loading = false;
 
 	let removeModal = false;
@@ -91,9 +97,9 @@
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
 			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{container.imageName}
-			</span>
+			<a href="/images/{image.id.substring(7, 19)}" class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+				{image.tags.join(',')}
+			</a>
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Command">
 			<TerminalIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
