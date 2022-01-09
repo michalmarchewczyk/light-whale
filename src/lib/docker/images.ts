@@ -19,3 +19,8 @@ export const getImages = async ():Promise<Image[]> => {
 		size: image.Size ?? 0,
 	}));
 };
+
+export const removeImage = async (id:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + `/images/${id}`, {method: 'DELETE'});
+	return res.status === 200;
+};

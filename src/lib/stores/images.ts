@@ -1,4 +1,5 @@
 import {writable} from 'svelte/store';
+import {forceUpdateEverything} from '$lib/stores/docker';
 
 export interface Image {
 	id:string,
@@ -14,4 +15,13 @@ export const fetchImages = async ():Promise<void> => {
 	const res = await fetch('/docker/images');
 	const data = await res.json();
 	images.set(data ?? []);
+};
+
+export const removeImage = async (id:string):Promise<void> => {
+	await fetch('/docker/images', {
+		method: 'DELETE',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id}),
+	});
+	await forceUpdateEverything();
 };

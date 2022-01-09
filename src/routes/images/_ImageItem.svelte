@@ -8,11 +8,34 @@
 	import PuzzleIcon from '$icons/puzzle.svg';
 	import type {Image} from '$lib/stores/images';
 	import {bytesToHuman} from '$lib/utils/bytesToHuman';
-
+	import {removeImage} from '$lib/stores/images';
 	export let image:Image;
 
 	$: countContainers = $containers.filter(c => c.imageId === image.id).length;
 	$: shortId = image?.id.substring(7, 19) ?? '';
+
+	let removeModal = false;
+
+	let loading = false;
+
+	const create = async () => {
+		// create container
+	};
+
+	const openRemoveModal = () => {
+		removeModal = true;
+	};
+
+	const closeRemoveModal = () => {
+		removeModal = false;
+	};
+
+	const remove = async () => {
+		removeModal = false;
+		loading = true;
+		await removeImage(image?.id);
+		loading = false;
+	};
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-[5.5rem] overflow-hidden">
@@ -46,17 +69,29 @@
 			</span>
 		</div>
 	</div>
-	<div class="block w-28 md:w-60 overflow-hidden flex-shrink-0 self-center">
-		<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-				>
-			<PlusIcon class="h-6 w-6 mr-2 stroke-2"/>
-			<span class="mt-[-0.25rem]">Create</span>
+	<div class="block w-28 md:w-56 overflow-hidden flex-shrink-0 self-center">
+		<button class="btn btn-primary w-28 md:w-24 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
+				on:click={create} class:loading={loading} disabled={loading}>
+			{#if !loading}<PlusIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+			<span class="mt-[-0.25rem]">New</span>
 		</button>
 		<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
-		>
-			<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
+				on:click={openRemoveModal} class:loading={loading} disabled={loading || countContainers > 0}>
+			{#if !loading}<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
 			<span class="mt-[-0.25rem]">Delete</span>
 		</button>
+		<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
+		<div class="modal">
+			<div class="modal-box">
+				<p>Do you really want to remove image
+					<span class="font-bold">{shortId}</span>?
+				</p>
+				<div class="modal-action">
+					<button class="btn btn-primary" on:click={remove}>Remove</button>
+					<button class="btn" on:click={closeRemoveModal}>Cancel</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
