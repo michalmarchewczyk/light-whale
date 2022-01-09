@@ -19,7 +19,7 @@
 	let stats = {};
 
 	const getStats = async () => {
-		if(!container?.id) return;
+		if(!container?.id || container?.state !== 'running') return;
 		const res = await fetch(`/docker/container?id=${container.id}`);
 		if(res.status !== 200) return;
 		const data = await res.json();

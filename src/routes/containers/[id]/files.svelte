@@ -15,6 +15,7 @@
 	let files = [];
 
 	const getFiles = async () => {
+		if(!container?.id || container?.state !== 'running') return;
 		loading = true;
 		const res = await fetch(`/docker/files?id=${container?.id}&path=${currentPath}`);
 		if(res.status !== 200){
