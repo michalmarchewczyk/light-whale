@@ -118,7 +118,7 @@
 </div>
 
 <div class="card shadow-md bg-base-100 mb-6">
-	<a href="/image/{image.id.substring(7, 19)}" class="card-body p-6 pt-5 hover:text-primary-focus">
+	<a href="/images/{image.id.substring(7, 19)}" class="card-body p-6 pt-5 hover:text-primary-focus">
 		<h2 class="card-title text-xl">Image</h2>
 		<p>
 			Name:
