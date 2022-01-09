@@ -14,10 +14,15 @@
 	import PauseIcon from '$icons/pause.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
+	import {Image, images} from '$lib/stores/images';
 
 	let container:Container = null;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
+
+	let image:Image;
+
+	$: image = $images.find(i => i.id === container.imageId);
 
 	let loading = false;
 
@@ -113,17 +118,17 @@
 </div>
 
 <div class="card shadow-md bg-base-100 mb-6">
-	<div class="card-body p-6 pt-5">
+	<a href="/image/{image.id.substring(7, 19)}" class="card-body p-6 pt-5 hover:text-primary-focus">
 		<h2 class="card-title text-xl">Image</h2>
 		<p>
 			Name:
-			<span class="font-bold">{container?.imageName}</span>
+			<span class="font-bold">{image.tags.join(',')}</span>
 		</p>
 		<p>
 			ID:
 			<span class="font-bold">{container?.imageId}</span>
 		</p>
-	</div>
+	</a>
 </div>
 
 <style lang="scss">
