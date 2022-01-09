@@ -60,6 +60,16 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 	return data;
 };
 
+export const createContainer = async (imageId:string):Promise<boolean> => {
+	const res = await fetch(dockerUrl + '/containers/create', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({Image: imageId}),
+	});
+	return res.status === 201;
+};
+
+
 interface ContainerStats {
 	cpu_stats: {
 		cpu_usage: {

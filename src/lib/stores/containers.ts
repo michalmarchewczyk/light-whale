@@ -80,3 +80,13 @@ export const removeContainer = async (id:string):Promise<void> => {
 	});
 	await forceUpdateEverything();
 };
+
+
+export const createContainer = async (imageId:string):Promise<void> => {
+	await fetch('/docker/containers', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({imageId}),
+	});
+	await forceUpdateEverything();
+};

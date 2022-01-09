@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {containers} from '$lib/stores/containers';
+	import {containers, createContainer} from '$lib/stores/containers';
 
 	import CalendarIcon from '$icons/calendar.svg';
 	import DiscIcon from '$lib/assets/icons/disc.svg';
@@ -19,7 +19,9 @@
 	let loading = false;
 
 	const create = async () => {
-		// create container
+		loading = true;
+		await createContainer(image?.id);
+		loading = false;
 	};
 
 	const openRemoveModal = () => {

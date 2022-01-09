@@ -1,5 +1,12 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {getContainers, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/docker/containers';
+import {
+	createContainer,
+	getContainers,
+	removeContainer,
+	restartContainer,
+	startContainer,
+	stopContainer
+} from '$lib/docker/containers';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
@@ -44,7 +51,32 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 	};
 };
 
+const post:RequestHandler<Promise<void>, {imageId:string}> = async ({body, headers}) => {
+	if(!checkSession(headers)){
+		return {
+			status: 401,
+		};
+	}
+	const {imageId} = body;
+	if(!validator.isHash(imageId.substring(7) ?? '', 'sha256')){
+		return {
+			status: 400,
+		};
+	}
+	const res = await createContainer(imageId);
+	if(res){
+		return {
+			status: 200
+		};
+	}else{
+		return {
+			status: 500,
+		};
+	}
+};
+
 export {
 	get,
-	put
+	put,
+	post
 };
