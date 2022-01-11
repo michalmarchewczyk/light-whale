@@ -97,8 +97,8 @@
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
 			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<a href="/images/{image.id.substring(7, 19)}" class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{image.tags.join(',')}
+			<a href="/images/{image?.id.substring(7, 19)}" class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+				{image?.tags.join(',')}
 			</a>
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Command">
