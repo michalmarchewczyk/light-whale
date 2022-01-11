@@ -24,11 +24,18 @@
 	};
 
 	onMount(() => {
+		let ready = true;
 		const updateInterval = setInterval(async () => {
+			if(!ready) return;
+			ready = false;
 			await updateEverything();
+			ready = true;
 		}, 400);
 		const forceUpdateInterval = setInterval(async () => {
+			if(!ready) return;
+			ready = false;
 			await forceUpdateEverything();
+			ready = true;
 		}, 30000);
 		return () => {
 			clearInterval(updateInterval);

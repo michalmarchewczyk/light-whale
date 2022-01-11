@@ -1,9 +1,11 @@
 <script lang="ts">
 	import {fetchContainers} from '$lib/stores/containers';
 	import {onMount} from 'svelte';
+	import {fetchImages} from '$lib/stores/images';
 
 	onMount(async () => {
 		await fetchContainers();
+		await fetchImages();
 	});
 </script>
 
