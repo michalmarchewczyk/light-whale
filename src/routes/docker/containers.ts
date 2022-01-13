@@ -51,19 +51,20 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 	};
 };
 
-const post:RequestHandler<Promise<void>, {imageId:string}> = async ({body, headers}) => {
+const post:RequestHandler<Promise<void>, {imageId:string, name:string, command:string}> = async ({body, headers}) => {
 	if(!checkSession(headers)){
 		return {
 			status: 401,
 		};
 	}
-	const {imageId} = body;
-	if(!validator.isHash(imageId.substring(7) ?? '', 'sha256')){
+	const {imageId, name, command} = body;
+	if(!validator.isHash(imageId.substring(7) ?? '', 'sha256')
+		|| !(validator.matches(name, /^\/?[a-zA-Z0-9][a-zA-Z0-9_.-]+$/) || name === '')){
 		return {
 			status: 400,
 		};
 	}
-	const res = await createContainer(imageId);
+	const res = await createContainer(imageId, name, command);
 	if(res){
 		return {
 			status: 200

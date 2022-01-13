@@ -60,11 +60,15 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 	return data;
 };
 
-export const createContainer = async (imageId:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + '/containers/create', {
+export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
+	const query = name ? '?name='+name : '';
+	const res = await fetch(dockerUrl + '/containers/create'+query, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({Image: imageId}),
+		body: JSON.stringify({
+			Image: imageId,
+			Cmd: command ? command.split(' ') : null
+		}),
 	});
 	return res.status === 201;
 };

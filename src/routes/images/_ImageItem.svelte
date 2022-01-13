@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {containers, createContainer} from '$lib/stores/containers';
+	import {containers} from '$lib/stores/containers';
 
 	import CalendarIcon from '$icons/calendar.svg';
 	import DiscIcon from '$lib/assets/icons/disc.svg';
@@ -9,7 +9,11 @@
 	import type {Image} from '$lib/stores/images';
 	import {bytesToHuman} from '$lib/utils/bytesToHuman';
 	import {removeImage} from '$lib/stores/images';
+	import {goto} from '$app/navigation';
 	export let image:Image;
+
+	let countContainers:number;
+	let shortId:string;
 
 	$: countContainers = $containers.filter(c => c.imageId === image.id).length;
 	$: shortId = image?.id.substring(7, 19) ?? '';
@@ -20,7 +24,7 @@
 
 	const create = async () => {
 		loading = true;
-		await createContainer(image?.id);
+		await goto(`/images/${image?.id.substring(7, 19)}/create`);
 		loading = false;
 	};
 
