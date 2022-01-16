@@ -117,3 +117,13 @@ export const getContainerProcesses = async (id:string):Promise<unknown> => {
 	const data = await res.json();
 	return data;
 };
+
+
+export const getContainerLogs = async (id:string):Promise<string> => {
+	const res = await fetch(dockerUrl + `/containers/${id}/logs?stdout=true&tail=1000`);
+	if(res.status !== 200){
+		return '';
+	}
+	const data = await res.text();
+	return data;
+};

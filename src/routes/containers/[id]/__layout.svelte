@@ -5,6 +5,7 @@
 	import CubeIcon from '$icons/cube.svg';
 	import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import FolderIcon from '$icons/folder.svg';
+	import ViewListIcon from '$icons/view-list.svg';
 
 	let container:Container;
 
@@ -48,6 +49,12 @@
 			<a href="/containers/{$page.params.id}/files">
 				<FolderIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Files
+			</a>
+		</li>
+		<li class:bordered={$page.path === `/containers/${$page.params.id}/logs`}>
+			<a href="/containers/{$page.params.id}/logs">
+				<ViewListIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
+				Logs
 			</a>
 		</li>
 	</ul>
