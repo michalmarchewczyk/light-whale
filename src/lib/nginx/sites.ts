@@ -5,6 +5,8 @@ export interface Site {
 	id:string,
 	containerId:string,
 	domain:string,
+	paused:boolean,
+	created:Date,
 }
 
 export interface SiteConfig {
@@ -23,11 +25,16 @@ export const getSites = async ():Promise<Site[]> => {
 			continue;
 		}
 		const lines = content.split('\r\n');
+		if(!lines[1].startsWith('# site')){
+			continue;
+		}
 		files.push({
 			site: {
-				id: lines[1].split(':')[1].trim(),
-				containerId: lines[2].split(':')[1].trim(),
-				domain: lines[3].split(':')[1].trim(),
+				id: lines[1].split(' ')[2].trim(),
+				containerId: lines[2].split(' ')[2].trim(),
+				domain: lines[3].split(' ')[2].trim(),
+				paused: lines[4].split(' ')[2].trim() === 'true',
+				created: new Date(lines[5].split(' ')[2].trim()),
 			},
 			content: content,
 		});

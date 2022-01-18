@@ -1,5 +1,6 @@
 <script lang="ts">
-
+	import {sites} from '$lib/stores/sites';
+	import SiteItem from './_SiteItem.svelte';
 </script>
 
 <svelte:head>
@@ -10,12 +11,14 @@
 	<div class="text-3xl font-bold pb-4 border-b-2 border-base-300 mx-8 pt-6">
 		Sites
 		<div class="badge badge-lg float-right mt-1 text-lg h-8">
-			sites
+			{$sites.length} site{$sites.length!==1?'s':''}
 		</div>
 	</div>
 </div>
 <div class="p-8 pt-2">
-
+	{#each $sites as site}
+		<SiteItem site={site}/>
+	{/each}
 </div>
 
 <style lang="scss">

@@ -2,10 +2,12 @@
 	import {fetchContainers} from '$lib/stores/containers';
 	import {onMount} from 'svelte';
 	import {fetchImages} from '$lib/stores/images';
+	import {fetchSites} from '$lib/stores/sites';
 
 	onMount(async () => {
 		await fetchContainers();
 		await fetchImages();
+		await fetchSites();
 	});
 </script>
 

@@ -1,6 +1,7 @@
 import {get, writable} from 'svelte/store';
 import {fetchContainers} from '$lib/stores/containers';
 import {fetchImages} from '$lib/stores/images';
+import {fetchSites} from '$lib/stores/sites';
 
 export const dockerAvailable = writable(false);
 export const lastUpdate = writable<number>(0);
@@ -26,12 +27,14 @@ export const updateEverything = async ():Promise<void> => {
 	lastUpdate.set(lastEvent.time);
 	await fetchContainers();
 	await fetchImages();
+	await fetchSites();
 };
 
 export const forceUpdateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	await fetchContainers();
 	await fetchImages();
+	await fetchSites();
 };
 
 
