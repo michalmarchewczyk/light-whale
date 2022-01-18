@@ -27,9 +27,10 @@
 		}
 	}
 
-	onMount(async () => {
-		await getLogs();
-		loading = false;
+	onMount(() => {
+		getLogs().then(() => {
+			loading = false;
+		});
 		const interval = setInterval(getLogs, 1000);
 		return () => {
 			clearInterval(interval);
