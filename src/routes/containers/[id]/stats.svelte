@@ -38,7 +38,7 @@
 {#if container?.state === 'running'}
 
 	<div class="w-full shadow-md bg-base-100 stats grid-cols-3">
-		<StatsCard icon={ChipIcon} title="CPU Usage" value={stats.cpu ? stats.cpu?.toFixed(2)+' %' : '-'}/>
+		<StatsCard icon={ChipIcon} title="CPU Usage" value={stats.cpu>=0 ? stats.cpu?.toFixed(2)+' %' : '-'}/>
 		<StatsCard icon={ChipIcon} title="Active CPU Cores" value={stats.cores ?? '-'}/>
 		<StatsCard icon={ServerIcon} title="Memory Usage" value={stats.memory ? bytesToHuman(stats.memory) : '-'}/>
 	</div>
@@ -46,9 +46,9 @@
 	<div class="w-full shadow-md bg-base-100 stats grid-cols-3 mt-8">
 		<StatsCard icon={PuzzleIcon} title="Container Size" value={stats.size ? bytesToHuman(stats.size) : '-'}/>
 		<StatsCard icon={CloudUploadIcon} title="Network Receive"
-				   value={stats.input ? bytesToHuman(stats.input) : '-'}/>
+				   value={stats.input>=0 ? bytesToHuman(stats.input ?? 0) : '-'}/>
 		<StatsCard icon={CloudDownloadIcon} title="Network Transmit"
-				   value={stats.output ? bytesToHuman(stats.output) : '-'}/>
+				   value={stats.output>=0 ? bytesToHuman(stats.output ?? 0) : '-'}/>
 	</div>
 
 	<div class="card shadow-md bg-base-100 mt-8 p-4 pt-1">
