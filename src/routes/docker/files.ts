@@ -3,14 +3,14 @@ import {execCommand} from '$lib/docker/exec';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
-const get:RequestHandler = async ({query, headers}) => {
+const get:RequestHandler = async ({url, headers}) => {
 	if(!checkSession(headers)){
 		return {
 			status: 401,
 		};
 	}
-	const id = query.get('id') ?? '';
-	const path = query.get('path') ?? '';
+	const id = url.searchParams.get('id') ?? '';
+	const path = url.searchParams.get('path') ?? '';
 	if (!id) {
 		return {
 			status: 400
