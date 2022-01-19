@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Docker Control Panel</title>
+	<title>Light-Whale</title>
 </svelte:head>
 
 

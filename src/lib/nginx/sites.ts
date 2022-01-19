@@ -21,7 +21,7 @@ export const getSites = async ():Promise<Site[]> => {
 	const files:SiteConfig[] = [];
 	for await (const fileName of fileNames){
 		const content = await fs.readFile(path.join(nginxPath, fileName), {encoding: 'utf8'});
-		if(!content.startsWith('# docker-control-panel')){
+		if(!content.startsWith('# light-whale')){
 			continue;
 		}
 		const lines = content.split('\r\n');

@@ -41,7 +41,7 @@
 </script>
 
 <svelte:head>
-	<title>Login - Docker Control Panel</title>
+	<title>Light-Whale</title>
 </svelte:head>
 
 <div class="flex w-screen h-screen justify-center items-center">

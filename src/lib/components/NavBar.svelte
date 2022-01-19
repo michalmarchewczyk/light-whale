@@ -60,7 +60,7 @@
 	</div>
 	<div class="flex-1 px-2 mx-2">
 		<span class="text-lg font-bold">
-			Docker Control Panel
+			Light-Whale
 		</span>
 	</div>
 	<div class="flex-none">

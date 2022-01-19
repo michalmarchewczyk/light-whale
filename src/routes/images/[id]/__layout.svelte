@@ -32,19 +32,19 @@
 </div>
 <div class="mx-4 sticky top-[5.75rem] z-50">
 	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
-		<li class:bordered={$page.path === `/images/${$page.params.id}`}>
+		<li class:bordered={$page.url.pathname === `/images/${$page.params.id}`}>
 			<a href="/images/{$page.params.id}/">
 				<DiscIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				General
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/images/${$page.params.id}/containers`}>
+		<li class:bordered={$page.url.pathname === `/images/${$page.params.id}/containers`}>
 			<a href="/images/{$page.params.id}/containers">
 				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Containers
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/images/${$page.params.id}/create`}>
+		<li class:bordered={$page.url.pathname === `/images/${$page.params.id}/create`}>
 			<a href="/images/{$page.params.id}/create">
 				<PlusIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				New Container

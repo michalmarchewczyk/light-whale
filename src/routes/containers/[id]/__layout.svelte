@@ -34,31 +34,31 @@
 </div>
 <div class="mx-4 sticky top-[5.75rem] z-50">
 	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
-		<li class:bordered={$page.path === `/containers/${$page.params.id}`}>
+		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}`}>
 			<a href="/containers/{$page.params.id}/">
 				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				General
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/containers/${$page.params.id}/network`}>
+		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/network`}>
 			<a href="/containers/{$page.params.id}/network">
 				<GlobeAltIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Network
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/containers/${$page.params.id}/stats`}>
+		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/stats`}>
 			<a href="/containers/{$page.params.id}/stats">
 				<ChartSquareBarIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Statistics
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/containers/${$page.params.id}/files`}>
+		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/files`}>
 			<a href="/containers/{$page.params.id}/files">
 				<FolderIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Files
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/containers/${$page.params.id}/logs`}>
+		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/logs`}>
 			<a href="/containers/{$page.params.id}/logs">
 				<ViewListIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Logs

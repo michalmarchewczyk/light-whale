@@ -9,7 +9,7 @@
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
 
-	$: network = container?.networks['docker-control-panel-network'] ?? null;
+	$: network = container?.networks['light-whale-network'] ?? null;
 
 </script>
 
@@ -17,7 +17,7 @@
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">Network</h2>
 		<p class="text-lg">
-			Connected to docker-control-panel's internal network:
+			Connected to Light-Whale's internal network:
 			<span class="font-bold">{!!network}</span>
 		</p>
 		{#if network}

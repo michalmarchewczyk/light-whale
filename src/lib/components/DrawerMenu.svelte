@@ -17,13 +17,13 @@
 
 <ul class="menu p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2">
 	<li>
-		<a href="/" class:bg-base-300="{$page.path === '/'}" on:click={() => dispatch('navigate')}>
+		<a href="/" class:bg-base-300="{$page.url.pathname === '/'}" on:click={() => dispatch('navigate')}>
 			<HomeIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Home</span>
 		</a>
 	</li>
 	<li>
-		<a href="/stats" class:bg-base-300="{$page.path.startsWith('/stats')}" on:click={() => dispatch('navigate')}>
+		<a href="/stats" class:bg-base-300="{$page.url.pathname.startsWith('/stats')}" on:click={() => dispatch('navigate')}>
 			<ChartSquareBarIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Statistics</span>
 		</a>
@@ -35,20 +35,20 @@
 		</div>
 	</li>
 	<li>
-		<a href="/containers" class:bg-base-300="{$page.path.startsWith('/containers')}"
+		<a href="/containers" class:bg-base-300="{$page.url.pathname.startsWith('/containers')}"
 		   on:click={() => dispatch('navigate')}>
 			<CubeIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Containers</span>
 		</a>
 	</li>
 	<li>
-		<a href="/images" class:bg-base-300="{$page.path.startsWith('/images')}" on:click={() => dispatch('navigate')}>
+		<a href="/images" class:bg-base-300="{$page.url.pathname.startsWith('/images')}" on:click={() => dispatch('navigate')}>
 			<DiscIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Images</span>
 		</a>
 	</li>
 	<li>
-		<a href="/volumes" class:bg-base-300="{$page.path.startsWith('/volumes')}"
+		<a href="/volumes" class:bg-base-300="{$page.url.pathname.startsWith('/volumes')}"
 		   on:click={() => dispatch('navigate')}>
 			<DatabaseIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Volumes</span>
@@ -58,13 +58,13 @@
 	  <span>Networking</span>
 	</li>
 	<li>
-		<a href="/sites" class:bg-base-300="{$page.path.startsWith('/sites')}" on:click={() => dispatch('navigate')}>
+		<a href="/sites" class:bg-base-300="{$page.url.pathname.startsWith('/sites')}" on:click={() => dispatch('navigate')}>
 			<GlobeAltIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Sites</span>
 		</a>
 	</li>
 	<li>
-		<a href="/settings" class:bg-base-300="{$page.path.startsWith('/settings')}"
+		<a href="/settings" class:bg-base-300="{$page.url.pathname.startsWith('/settings')}"
 		   on:click={() => dispatch('navigate')}>
 			<CogIcon class="h-6 w-6 stroke-2"/>
 			<span class="mx-3">Settings</span>

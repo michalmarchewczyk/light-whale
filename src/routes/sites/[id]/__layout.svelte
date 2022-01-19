@@ -21,13 +21,13 @@
 </div>
 <div class="mx-4 sticky top-[5.75rem] z-50">
 	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
-		<li class:bordered={$page.path === `/sites/${$page.params.id}`}>
+		<li class:bordered={$page.url.pathname === `/sites/${$page.params.id}`}>
 			<a href="/sites/{$page.params.id}/">
 				<GlobeAltIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				General
 			</a>
 		</li>
-		<li class:bordered={$page.path === `/sites/${$page.params.id}/test`}>
+		<li class:bordered={$page.url.pathname === `/sites/${$page.params.id}/test`}>
 			<a href="/sites/{$page.params.id}/test">
 				<ClipboardCheckIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Test
