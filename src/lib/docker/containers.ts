@@ -55,7 +55,7 @@ export const removeContainer = async (id:string):Promise<boolean> => {
 
 export const inspectContainer = async (id:string):Promise<unknown> => {
 	const res = await fetch(dockerUrl + `/containers/${id}/json?size=true`);
-	if(res.status !== 200){
+	if (res.status !== 200) {
 		return {};
 	}
 	const data = await res.json();
@@ -63,8 +63,8 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 };
 
 export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
-	const query = name ? '?name='+name : '';
-	const res = await fetch(dockerUrl + '/containers/create'+query, {
+	const query = name ? '?name=' + name : '';
+	const res = await fetch(dockerUrl + '/containers/create' + query, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -77,34 +77,34 @@ export const createContainer = async (imageId:string, name:string, command:strin
 
 
 interface ContainerStats {
-	cpu_stats: {
-		cpu_usage: {
-			total_usage: number,
-			system_cpu_usage: number;
+	cpu_stats:{
+		cpu_usage:{
+			total_usage:number,
+			system_cpu_usage:number;
 		},
-		system_cpu_usage: number,
-		online_cpus: number,
+		system_cpu_usage:number,
+		online_cpus:number,
 	},
-	precpu_stats: {
-		cpu_usage: {
-			total_usage: number,
-			system_cpu_usage: number;
+	precpu_stats:{
+		cpu_usage:{
+			total_usage:number,
+			system_cpu_usage:number;
 		},
-		system_cpu_usage: number,
-		online_cpus: number,
+		system_cpu_usage:number,
+		online_cpus:number,
 	},
-	memory_stats: {
-		usage: number,
-		stats: {
-			cache: number,
+	memory_stats:{
+		usage:number,
+		stats:{
+			cache:number,
 		}
 	},
-	networks: unknown
+	networks:unknown
 }
 
-export const getContainerStats = async (id:string):Promise<ContainerStats|null> => {
+export const getContainerStats = async (id:string):Promise<ContainerStats | null> => {
 	const res = await fetch(dockerUrl + `/containers/${id}/stats?stream=false`);
-	if(res.status !== 200){
+	if (res.status !== 200) {
 		return null;
 	}
 	const data = await res.json();
@@ -113,7 +113,7 @@ export const getContainerStats = async (id:string):Promise<ContainerStats|null> 
 
 export const getContainerProcesses = async (id:string):Promise<unknown> => {
 	const res = await fetch(dockerUrl + `/containers/${id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
-	if(res.status !== 200){
+	if (res.status !== 200) {
 		return {};
 	}
 	const data = await res.json();
@@ -123,7 +123,7 @@ export const getContainerProcesses = async (id:string):Promise<unknown> => {
 
 export const getContainerLogs = async (id:string):Promise<string> => {
 	const res = await fetch(dockerUrl + `/containers/${id}/logs?stdout=true&tail=1000`);
-	if(res.status !== 200){
+	if (res.status !== 200) {
 		return '';
 	}
 	const data = await res.text();

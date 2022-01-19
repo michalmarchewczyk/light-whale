@@ -15,10 +15,10 @@
 	let files = [];
 
 	const getFiles = async () => {
-		if(!container?.id || container?.state !== 'running') return;
+		if (!container?.id || container?.state !== 'running') return;
 		loading = true;
 		const res = await fetch(`/docker/files?id=${container?.id}&path=${currentPath}`);
-		if(res.status !== 200){
+		if (res.status !== 200) {
 			loading = false;
 			loadedPath = currentPath;
 			return;
@@ -31,7 +31,7 @@
 
 	const openFile = async (event) => {
 		const file = event.detail;
-		if(file.directory){
+		if (file.directory) {
 			currentPath = path.join(currentPath, file.name);
 		}
 	};

@@ -6,7 +6,7 @@
 
 <div class="stat">
 	<div class="stat-figure text-primary">
-		<svelte:component this={icon} class="inline-block w-8 h-8 stroke-[1.5px]"/>
+		<svelte:component class="inline-block w-8 h-8 stroke-[1.5px]" this={icon}/>
 	</div>
 	<div class="stat-title">{title}</div>
 	<div class="stat-value text-primary">{value}</div>

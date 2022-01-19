@@ -13,16 +13,16 @@
 	let scrollContainer;
 
 	const getLogs = async () => {
-		if(!container?.id || container?.state !== 'running') return;
+		if (!container?.id || container?.state !== 'running') return;
 		const res = await fetch(`/docker/containerLogs?id=${container.id}`);
-		if(res.status !== 200) return;
+		if (res.status !== 200) return;
 		const data = await res.text();
 		logsData = data;
 		logs = data.split('\n');
 	};
 
 	$: {
-		if(scrollContainer) {
+		if (scrollContainer) {
 			scrollContainer.scrollTop = logsData.length * 100;
 		}
 	}
@@ -48,7 +48,8 @@
 			<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
 				<div class="w-max">
 					{#each logs as log, i}
-						<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content" class:bg-base-200={i%2===0}>{log}</p>
+						<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
+						   class:bg-base-200={i%2===0}>{log}</p>
 					{/each}
 				</div>
 			</div>

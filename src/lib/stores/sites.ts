@@ -11,7 +11,7 @@ export interface Site {
 export const sites = writable<Site[]>([]);
 
 
-export const fetchSites = async ():Promise<void>=> {
+export const fetchSites = async ():Promise<void> => {
 	const res = await fetch('/network/sites');
 	const data = await res.json();
 	sites.set(data ?? []);

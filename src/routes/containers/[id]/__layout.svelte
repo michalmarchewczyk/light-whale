@@ -24,10 +24,10 @@
 		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/containers">Containers / </a>
 		{$page.params.id}
 		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
+			 class:bg-error={container?.state === 'dead' || container?.state === 'removing'}
 			 class:bg-info={container?.state === 'created'}
 			 class:bg-success={container?.state === 'running'}
-			 class:bg-warning={container?.state === 'paused' || container?.state === 'restarting'}
-			 class:bg-error={container?.state === 'dead' || container?.state === 'removing'}>
+			 class:bg-warning={container?.state === 'paused' || container?.state === 'restarting'}>
 			{container?.state}
 		</div>
 	</div>

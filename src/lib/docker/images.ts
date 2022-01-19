@@ -2,7 +2,7 @@ import {dockerUrl} from '$lib/docker/config';
 
 export interface Image {
 	id:string,
-	created: Date,
+	created:Date,
 	tags:string[],
 	digests:string[],
 	size:number,

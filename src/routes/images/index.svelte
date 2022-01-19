@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {images} from '$lib/stores/images';
-	import ImageItem from './_ImageItem.svelte';
-
+	import ImageItem from '$lib/components/images/ImageItem.svelte';
 </script>
 
 <svelte:head>

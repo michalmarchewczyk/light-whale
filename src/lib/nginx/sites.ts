@@ -19,13 +19,13 @@ const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-conf
 export const getSites = async ():Promise<Site[]> => {
 	const fileNames = await fs.readdir(nginxPath);
 	const files:SiteConfig[] = [];
-	for await (const fileName of fileNames){
+	for await (const fileName of fileNames) {
 		const content = await fs.readFile(path.join(nginxPath, fileName), {encoding: 'utf8'});
-		if(!content.startsWith('# light-whale')){
+		if (!content.startsWith('# light-whale')) {
 			continue;
 		}
 		const lines = content.split('\r\n');
-		if(!lines[1].startsWith('# site')){
+		if (!lines[1].startsWith('# site')) {
 			continue;
 		}
 		files.push({

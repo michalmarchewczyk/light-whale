@@ -3,7 +3,7 @@ import {forceUpdateEverything} from '$lib/stores/docker';
 
 export interface Image {
 	id:string,
-	created: Date,
+	created:Date,
 	tags:string[],
 	digests:string[],
 	size:number,

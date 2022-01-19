@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type {Container} from '$lib/stores/containers';
+	import {containers} from '$lib/stores/containers';
 	import {Image, images} from '$lib/stores/images';
 	import {page} from '$app/stores';
-	import ContainerItem from '../../containers/_ContainerItem.svelte';
-	import {containers} from '$lib/stores/containers';
+	import ContainerItem from '$lib/components/containers/ContainerItem.svelte';
 
 	let image:Image;
 
-	$: image = $images.find(i => i.id.startsWith('sha256:'+$page.params.id));
+	$: image = $images.find(i => i.id.startsWith('sha256:' + $page.params.id));
 
 	let usedContainers:Container[];
 

@@ -26,13 +26,13 @@
 	onMount(() => {
 		let ready = true;
 		const updateInterval = setInterval(async () => {
-			if(!ready) return;
+			if (!ready) return;
 			ready = false;
 			await updateEverything();
 			ready = true;
 		}, 400);
 		const forceUpdateInterval = setInterval(async () => {
-			if(!ready) return;
+			if (!ready) return;
 			ready = false;
 			await forceUpdateEverything();
 			ready = true;
@@ -74,14 +74,15 @@
 </div>
 
 <style lang="scss">
-	.bg-navbar {
-	  background: #0c5bf7;
-	  background: linear-gradient(90deg, #0c5bf7 0%, #0925b3 100%);
-	}
-	:global([data-theme='default-dark']) .bg-navbar {
-	  background: #256cfa;
-	  background: linear-gradient(90deg, #256cfa 0%, rgb(31, 59, 204) 100%);
-	}
+  .bg-navbar {
+	background: #0c5bf7;
+	background: linear-gradient(90deg, #0c5bf7 0%, #0a28bf 100%);
+  }
+
+  :global([data-theme='default-dark']) .bg-navbar {
+	background: #256cfa;
+	background: linear-gradient(90deg, #256cfa 0%, rgb(31, 59, 204) 100%);
+  }
 </style>
 
 

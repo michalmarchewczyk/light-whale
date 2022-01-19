@@ -9,7 +9,7 @@
 
 	let image:Image;
 
-	$: image = $images.find(i => i.id.startsWith('sha256:'+$page.params.id));
+	$: image = $images.find(i => i.id.startsWith('sha256:' + $page.params.id));
 
 	$: countContainers = $containers.filter(c => c.imageId === image.id).length;
 
@@ -25,7 +25,7 @@
 		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/images">Images / </a>
 		{image?.tags.join(',') ?? $page.params.id}
 		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
-			class:bg-success={countContainers > 0}>
+			 class:bg-success={countContainers > 0}>
 			{countContainers > 0 ? 'used' : 'unused'}
 		</div>
 	</div>

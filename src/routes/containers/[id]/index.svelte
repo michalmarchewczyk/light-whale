@@ -68,26 +68,35 @@
 		<p>Status: {container?.status}</p>
 		<div class="card-actions">
 			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					on:click={start} class:loading={loading} disabled={loading || container?.state === 'running'}>
-				{#if !loading}<PlayIcon class="h-6 w-6 mr-3 stroke-2"/>{/if}
+					class:loading={loading} disabled={loading || container?.state === 'running'} on:click={start}>
+				{#if !loading}
+					<PlayIcon class="h-6 w-6 mr-3 stroke-2"/>
+				{/if}
 				<span class="mt-0 mr-2">Start</span>
 			</button>
 			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					on:click={stop} class:loading={loading} disabled={loading || container?.state !== 'running'}>
-				{#if !loading}<PauseIcon class="h-6 w-6 mr-3 stroke-2"/>{/if}
+					class:loading={loading} disabled={loading || container?.state !== 'running'} on:click={stop}>
+				{#if !loading}
+					<PauseIcon class="h-6 w-6 mr-3 stroke-2"/>
+				{/if}
 				<span class="mt-0 mr-2">Stop</span>
 			</button>
 			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					on:click={restart} class:loading={loading} disabled={loading || container?.state !== 'running'}>
-				{#if !loading}<RefreshIcon class="h-6 w-6 mr-3 stroke-2"/>{/if}
+					class:loading={loading} disabled={loading || container?.state !== 'running'} on:click={restart}>
+				{#if !loading}
+					<RefreshIcon class="h-6 w-6 mr-3 stroke-2"/>
+				{/if}
 				<span class="mt-0 mr-2">Restart</span>
 			</button>
 			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					on:click={openRemoveModal} class:loading={loading} disabled={loading || container?.state === 'running'}>
-				{#if !loading}<TrashIcon class="h-6 w-6 mr-3 stroke-2"/>{/if}
+					class:loading={loading} disabled={loading || container?.state === 'running'}
+					on:click={openRemoveModal}>
+				{#if !loading}
+					<TrashIcon class="h-6 w-6 mr-3 stroke-2"/>
+				{/if}
 				<span class="mt-0 mr-2">Remove</span>
 			</button>
-			<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
+			<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
 			<div class="modal">
 				<div class="modal-box">
 					<p>Do you really want to remove container
@@ -118,7 +127,7 @@
 </div>
 
 <div class="card shadow-md bg-base-100 mb-6">
-	<a href="/images/{image?.id.substring(7, 19)}" class="card-body p-6 pt-5 hover:text-primary-focus">
+	<a class="card-body p-6 pt-5 hover:text-primary-focus" href="/images/{image?.id.substring(7, 19)}">
 		<h2 class="card-title text-xl">Image</h2>
 		<p>
 			Name:

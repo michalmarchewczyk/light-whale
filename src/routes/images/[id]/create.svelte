@@ -7,7 +7,7 @@
 
 	let image:Image;
 
-	$: image = $images.find(i => i.id.startsWith('sha256:'+$page.params.id));
+	$: image = $images.find(i => i.id.startsWith('sha256:' + $page.params.id));
 
 	let error = '';
 	let name = '';
@@ -26,7 +26,7 @@
 			{#if error}
 				<div class="alert alert-error my-2">
 					<div class="flex-1">
-						<ExclamationIcon class="h-6 w-6 mx-2 stroke-2" />
+						<ExclamationIcon class="h-6 w-6 mx-2 stroke-2"/>
 						<span>{error}</span>
 					</div>
 				</div>
@@ -36,8 +36,8 @@
 					<span class="label pl-0">
 						<span class="label-text text-lg mb-0">Container name: </span>
 					</span>
-					<input type="text" placeholder="name" class="input input-bordered w-full"
-						   bind:value={name}>
+					<input bind:value={name} class="input input-bordered w-full" placeholder="name"
+						   type="text">
 				</label>
 			</div>
 			<div class="form-control">
@@ -45,12 +45,12 @@
 					<span class="label pl-0">
 						<span class="label-text text-lg mb-0">Command: </span>
 					</span>
-					<input type="text" placeholder="command" class="input input-bordered w-full"
-						   bind:value={command}>
+					<input bind:value={command} class="input input-bordered w-full" placeholder="command"
+						   type="text">
 				</label>
 			</div>
 			<div class="card-actions">
-				<input type="submit" value="Create" class="btn btn-primary"/>
+				<input class="btn btn-primary" type="submit" value="Create"/>
 			</div>
 		</form>
 	</div>

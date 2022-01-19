@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContainerItem from './_ContainerItem.svelte';
-	import ComposeAppItem from './_ComposeAppItem.svelte';
+	import ContainerItem from '$lib/components/containers/ContainerItem.svelte';
+	import ComposeAppItem from '$lib/components/containers/ComposeAppItem.svelte';
 	import {ComposeApp, composeApps, Container, containers} from '$lib/stores/containers';
 
 	let appsAndContainers:(ComposeApp | Container)[];

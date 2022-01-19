@@ -1,31 +1,28 @@
 <script lang="ts">
+	import type {Site} from '$lib/stores/sites';
+
+	import StatusOnlineIcon from '$icons/status-online.svg';
+	import StatusOfflineIcon from '$icons/status-offline.svg';
+	import CalendarIcon from '$icons/calendar.svg';
+	import CubeIcon from '$icons/cube.svg';
+	import TrashIcon from '$icons/trash.svg';
+	import PauseIcon from '$icons/pause.svg';
+	import type {Container} from '$lib/stores/containers';
 	import {containers} from '$lib/stores/containers';
 
-	import CalendarIcon from '$icons/calendar.svg';
-	import DiscIcon from '$lib/assets/icons/disc.svg';
-	import TrashIcon from '$icons/trash.svg';
-	import PlusIcon from '$icons/plus.svg';
-	import PuzzleIcon from '$icons/puzzle.svg';
-	import type {Image} from '$lib/stores/images';
-	import {bytesToHuman} from '$lib/utils/bytesToHuman';
-	import {removeImage} from '$lib/stores/images';
-	import {goto} from '$app/navigation';
-	export let image:Image;
-
-	let countContainers:number;
-	let shortId:string;
-
-	$: countContainers = $containers.filter(c => c.imageId === image.id).length;
-	$: shortId = image?.id.substring(7, 19) ?? '';
-
-	let removeModal = false;
+	export let site:Site;
 
 	let loading = false;
+	let removeModal = false;
 
-	const create = async () => {
-		loading = true;
-		await goto(`/images/${image?.id.substring(7, 19)}/create`);
-		loading = false;
+	let online = site?.paused === false;
+
+	let container:Container;
+
+	$: container = $containers?.find(c => c.id.startsWith(site?.containerId));
+
+	const pause = async () => {
+		// pause
 	};
 
 	const openRemoveModal = () => {
@@ -39,58 +36,68 @@
 	const remove = async () => {
 		removeModal = false;
 		loading = true;
-		await removeImage(image?.id);
+		// remove site
 		loading = false;
 	};
+
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-[5.5rem] overflow-hidden">
 	<div class="mx-1 sm:mx-2 w-16 sm:w-20 flex-shrink-0"
-		 class:text-success={countContainers > 0}
+		 class:text-error={!online}
+		 class:text-success={online}
 	>
-		<DiscIcon class="w-8 h-8 sm:h-10 sm:w-10 mx-auto mt-0 stroke-[1.5px]"/>
+		{#if online}
+			<StatusOnlineIcon class="w-8 h-8 sm:h-10 sm:w-10 mx-auto mt-0 stroke-[1.5px]"/>
+		{:else}
+			<StatusOfflineIcon class="w-8 h-8 sm:h-10 sm:w-10 mx-auto mt-0 stroke-[1.5px]"/>
+		{/if}
 		<span class="uppercase w-full text-center mt-1 block font-bold text-sm sm:text-base
 		 overflow-hidden overflow-ellipsis sm:overflow-visible whitespace-nowrap">
-			{countContainers > 0 ? 'used' : 'unused'}
+			{online ? 'Online' : 'Offline'}
 		</span>
 	</div>
 	<a class="block w-60 flex-auto w-60 overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
-	   href="/images/{shortId}">
+	   href="/sites/{site.domain}">
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
-			{image.tags.join(', ')}
+			{site.domain}
 		</span>
-		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-1.5">ID: {image.id}</span>
+		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-1.5">ID: {site.id}</span>
 	</a>
 	<div class="block w-40 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4 mt-1">
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Created">
 			<CalendarIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{new Date(image.created).toLocaleDateString()}
+				{new Date(site.created ?? 0).toLocaleDateString()}
 			</span>
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
-			<PuzzleIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+			<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{bytesToHuman(image.size)}
+				{container?.names[0].substring(1) ?? '-'}
 			</span>
 		</div>
 	</div>
-	<div class="block w-28 md:w-56 overflow-hidden flex-shrink-0 self-center">
-		<button class="btn btn-primary w-28 md:w-24 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-				on:click={create} class:loading={loading} disabled={loading}>
-			{#if !loading}<PlusIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
-			<span class="mt-[-0.25rem]">New</span>
+	<div class="block w-28 md:w-64 overflow-hidden flex-shrink-0 self-center">
+		<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
+				class:loading={loading} disabled={loading} on:click={pause}>
+			{#if !loading}
+				<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
+			{/if}
+			<span class="mt-[-0.25rem]">Disable</span>
 		</button>
 		<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
-				on:click={openRemoveModal} class:loading={loading} disabled={loading || countContainers > 0}>
-			{#if !loading}<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+				class:loading={loading} disabled={loading} on:click={openRemoveModal}>
+			{#if !loading}
+				<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
+			{/if}
 			<span class="mt-[-0.25rem]">Delete</span>
 		</button>
-		<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
+		<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
 		<div class="modal">
 			<div class="modal-box">
-				<p>Do you really want to remove image
-					<span class="font-bold">{shortId}</span>?
+				<p>Do you really want to remove site
+					<span class="font-bold">{site.domain}</span>?
 				</p>
 				<div class="modal-action">
 					<button class="btn btn-primary" on:click={remove}>Remove</button>

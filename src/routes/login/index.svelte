@@ -52,7 +52,7 @@
 				{#if error}
 					<div class="alert alert-error my-2">
 						<div class="flex-1">
-							<ExclamationIcon class="h-6 w-6 mx-2 stroke-2" />
+							<ExclamationIcon class="h-6 w-6 mx-2 stroke-2"/>
 							<span>{error}</span>
 						</div>
 					</div>
@@ -62,12 +62,12 @@
 					<span class="label pl-0">
 						<span class="label-text text-lg mb-0">Password: </span>
 					</span>
-						<input type="password" placeholder="password" class="input input-bordered w-full"
-							   bind:value={password}>
+						<input bind:value={password} class="input input-bordered w-full" placeholder="password"
+							   type="password">
 					</label>
 				</div>
 				<div class="card-actions">
-					<input type="submit" value="Login" class="btn btn-primary"/>
+					<input class="btn btn-primary" type="submit" value="Login"/>
 				</div>
 			</form>
 		</div>

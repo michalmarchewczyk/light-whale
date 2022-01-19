@@ -4,7 +4,7 @@ import validator from 'validator';
 import {getContainerLogs} from '$lib/docker/containers';
 
 const get:RequestHandler = async ({url, headers}) => {
-	if(!checkSession(headers)){
+	if (!checkSession(headers)) {
 		return {
 			status: 401,
 		};
@@ -15,7 +15,7 @@ const get:RequestHandler = async ({url, headers}) => {
 			status: 400
 		};
 	}
-	if(!validator.isAlphanumeric(id)){
+	if (!validator.isAlphanumeric(id)) {
 		return {
 			status: 400,
 		};

@@ -15,7 +15,7 @@
 
 <div class="drawer-side lg:shadow-r-lg">
 	<div class="drawer-overlay" on:click={changeDrawerOpen}></div>
-	<DrawerMenu on:navigate={changeDrawerOpen} on:changeTheme={changeCurrentTheme} currentTheme={currentTheme}/>
+	<DrawerMenu currentTheme={currentTheme} on:changeTheme={changeCurrentTheme} on:navigate={changeDrawerOpen}/>
 </div>
 
 

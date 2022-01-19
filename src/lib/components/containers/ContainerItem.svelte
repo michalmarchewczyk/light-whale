@@ -56,10 +56,10 @@
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
 	<div class="mx-2 sm:mx-3 w-16 sm:w-24 flex-shrink-0"
+		 class:text-error={container.state === 'dead' || container.state === 'removing'}
 		 class:text-info={container.state === 'created'}
 		 class:text-success={container.state === 'running'}
 		 class:text-warning={container.state === 'paused' || container.state === 'restarting'}
-		 class:text-error={container.state === 'dead' || container.state === 'removing'}
 	>
 		{#if container.state === 'created'}
 			<CubeTransparentIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
@@ -97,7 +97,8 @@
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
 			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<a href="/images/{image?.id.substring(7, 19)}" class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+			<a class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left"
+			   href="/images/{image?.id.substring(7, 19)}">
 				{image?.tags.join(',')}
 			</a>
 		</div>
@@ -112,12 +113,16 @@
 		{#if container.state === 'created' || container.state === 'exited'}
 			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
 					on:click={start} class:loading={loading} disabled={loading}>
-				{#if !loading}<PlayIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+				{#if !loading}
+					<PlayIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
 				<span class="mt-[-0.25rem]">Start</span>
 			</button>
 			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
 					on:click={openRemoveModal} class:loading={loading} disabled={loading}>
-				{#if !loading}<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+				{#if !loading}
+					<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
 				<span class="mt-[-0.25rem]">Remove</span>
 			</button>
 			<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
@@ -136,12 +141,16 @@
 		{#if container.state === 'running' || container.state === 'paused'}
 			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
 					on:click={stop} class:loading={loading} disabled={loading}>
-				{#if !loading}<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+				{#if !loading}
+					<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
 				<span class="mt-[-0.25rem]">Stop</span>
 			</button>
 			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
 					on:click={restart} class:loading={loading} disabled={loading}>
-				{#if !loading}<RefreshIcon class="h-6 w-6 mr-2 stroke-2"/>{/if}
+				{#if !loading}
+					<RefreshIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
 				<span class="mt-[-0.25rem]">Restart</span>
 			</button>
 		{/if}

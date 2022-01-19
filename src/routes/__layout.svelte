@@ -45,14 +45,14 @@
 <div class="flex flex-col w-screen h-screen overflow-hidden" data-theme={currentTheme}>
 	<NavBar bind:drawerOpen={drawerOpen}/>
 	<div class="drawer drawer-mobile flex-1">
-		<input type="checkbox" class="drawer-toggle" bind:checked={drawerOpen}>
+		<input bind:checked={drawerOpen} class="drawer-toggle" type="checkbox">
 		<div class="drawer-content bg-base-200" style="overflow-y: scroll;">
 			<slot></slot>
 		</div>
-		<Drawer bind:drawerOpen={drawerOpen} bind:currentTheme={currentTheme}/>
+		<Drawer bind:currentTheme={currentTheme} bind:drawerOpen={drawerOpen}/>
 	</div>
 </div>
 
-<style lang="scss" global>
+<style global lang="scss">
   @use '../lib/styles/main';
 </style>

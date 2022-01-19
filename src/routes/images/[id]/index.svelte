@@ -5,7 +5,7 @@
 
 	let image:Image;
 
-	$: image = $images.find(i => i.id.startsWith('sha256:'+$page.params.id));
+	$: image = $images.find(i => i.id.startsWith('sha256:' + $page.params.id));
 
 </script>
 

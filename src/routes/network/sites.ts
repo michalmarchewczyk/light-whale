@@ -5,7 +5,7 @@ import {checkContainer} from '$lib/nginx/setup';
 
 const get:RequestHandler<Promise<void>, void> = async () => {
 	const isContainer = await checkContainer();
-	if(!isContainer){
+	if (!isContainer) {
 		return {
 			status: 500,
 			body: [],

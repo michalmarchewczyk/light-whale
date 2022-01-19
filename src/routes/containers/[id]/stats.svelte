@@ -10,7 +10,7 @@
 	import {onMount} from 'svelte';
 	import {bytesToHuman} from '$lib/utils/bytesToHuman';
 
-	import StatsCard from './_StatsCard.svelte';
+	import StatsCard from '$lib/components/containers/StatsCard.svelte';
 
 	let container:Container;
 
@@ -19,9 +19,9 @@
 	let stats = {};
 
 	const getStats = async () => {
-		if(!container?.id || container?.state !== 'running') return;
+		if (!container?.id || container?.state !== 'running') return;
 		const res = await fetch(`/docker/container?id=${container.id}`);
-		if(res.status !== 200) return;
+		if (res.status !== 200) return;
 		const data = await res.json();
 		stats = data;
 	};
@@ -45,8 +45,10 @@
 
 	<div class="w-full shadow-md bg-base-100 stats grid-cols-3 mt-8">
 		<StatsCard icon={PuzzleIcon} title="Container Size" value={stats.size ? bytesToHuman(stats.size) : '-'}/>
-		<StatsCard icon={CloudUploadIcon} title="Network Receive" value={stats.input ? bytesToHuman(stats.input) : '-'}/>
-		<StatsCard icon={CloudDownloadIcon} title="Network Transmit" value={stats.output ? bytesToHuman(stats.output) : '-'}/>
+		<StatsCard icon={CloudUploadIcon} title="Network Receive"
+				   value={stats.input ? bytesToHuman(stats.input) : '-'}/>
+		<StatsCard icon={CloudDownloadIcon} title="Network Transmit"
+				   value={stats.output ? bytesToHuman(stats.output) : '-'}/>
 	</div>
 
 	<div class="card shadow-md bg-base-100 mt-8 p-4 pt-1">

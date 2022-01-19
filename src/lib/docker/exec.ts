@@ -1,8 +1,8 @@
 import {dockerUrl} from '$lib/docker/config';
 
 
-export const execCommand = async (containerId:string, command:string):Promise<string|null> => {
-	const resCreate = await fetch(dockerUrl+`/containers/${containerId}/exec`, {
+export const execCommand = async (containerId:string, command:string):Promise<string | null> => {
+	const resCreate = await fetch(dockerUrl + `/containers/${containerId}/exec`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -13,12 +13,12 @@ export const execCommand = async (containerId:string, command:string):Promise<st
 			'Cmd': [...command.split(' ')]
 		})
 	});
-	if(resCreate.status !== 201){
+	if (resCreate.status !== 201) {
 		return null;
 	}
 	const dataCreate = await resCreate.json();
 	const execId = dataCreate.Id;
-	const resStart = await fetch(dockerUrl+`/exec/${execId}/start`, {
+	const resStart = await fetch(dockerUrl + `/exec/${execId}/start`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -26,7 +26,7 @@ export const execCommand = async (containerId:string, command:string):Promise<st
 			'Tty': true,
 		})
 	});
-	if(resStart.status !== 200){
+	if (resStart.status !== 200) {
 		return null;
 	}
 	const data = await resStart.text();

@@ -3,7 +3,7 @@ import {createSession} from '$lib/auth/sessions';
 import cookie from 'cookie';
 import {login} from '$lib/auth/login';
 
-const post:RequestHandler<Promise<void>, {password:string}> = async ({body}) => {
+const post:RequestHandler<Promise<void>, { password:string }> = async ({body}) => {
 	const {password} = body;
 	if (!password) {
 		return {

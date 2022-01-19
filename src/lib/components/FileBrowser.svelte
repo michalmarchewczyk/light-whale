@@ -20,8 +20,8 @@
 			{#each files as file}
 				<li>
 					<button
-						class="btn btn-ghost normal-case text-base text-left justify-start h-6 min-h-8 items-center no-animation"
-						on:click={() => {dispatch('open', file);}}>
+							class="btn btn-ghost normal-case text-base text-left justify-start h-6 min-h-8 items-center no-animation"
+							on:click={() => {dispatch('open', file);}}>
 						{#if file.directory}
 							<FolderIcon class="w-6 h-6 mr-2 stroke-2 opacity-80"/>
 						{:else}

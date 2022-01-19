@@ -1,11 +1,8 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {
-		Container,
-		containers,
-	} from '$lib/stores/containers';
+	import {Container, containers,} from '$lib/stores/containers';
 
-	let container:Container = null;
+	let container:Container;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
 

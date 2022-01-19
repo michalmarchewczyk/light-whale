@@ -4,7 +4,7 @@ import {getContainerProcesses, getContainerStats, inspectContainer} from '$lib/d
 import {checkSession} from '$lib/auth/sessions';
 
 const get:RequestHandler = async ({url, headers}) => {
-	if(!checkSession(headers)){
+	if (!checkSession(headers)) {
 		return {
 			status: 401,
 		};
@@ -15,7 +15,7 @@ const get:RequestHandler = async ({url, headers}) => {
 			status: 400
 		};
 	}
-	if(!validator.isAlphanumeric(id)){
+	if (!validator.isAlphanumeric(id)) {
 		return {
 			status: 400,
 		};
@@ -24,13 +24,13 @@ const get:RequestHandler = async ({url, headers}) => {
 		const data = await getContainerStats(id);
 		const data2 = await inspectContainer(id);
 		const data3 = await getContainerProcesses(id);
-		if(!data || !data2 || !data3){
+		if (!data || !data2 || !data3) {
 			return {
 				status: 500,
 			};
 		}
 		const cpu_delta = data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
-		const system_cpu_delta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage ;
+		const system_cpu_delta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
 		const number_cpus = data.cpu_stats.online_cpus;
 		const used_memory = data.memory_stats.usage - data.memory_stats.stats.cache;
 		const input = Object.values(data.networks)[0]?.['rx_bytes'];
@@ -38,7 +38,7 @@ const get:RequestHandler = async ({url, headers}) => {
 		const stats = {
 			cpu: (cpu_delta / system_cpu_delta) * number_cpus * 100,
 			cores: number_cpus,
-			memory:	used_memory,
+			memory: used_memory,
 			size: data2['SizeRootFs'],
 			input,
 			output,
@@ -49,7 +49,7 @@ const get:RequestHandler = async ({url, headers}) => {
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(stats),
 		};
-	}catch(e){
+	} catch (e) {
 		return {
 			status: 500
 		};

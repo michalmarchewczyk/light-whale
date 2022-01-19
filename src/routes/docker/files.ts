@@ -4,7 +4,7 @@ import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
 const get:RequestHandler = async ({url, headers}) => {
-	if(!checkSession(headers)){
+	if (!checkSession(headers)) {
 		return {
 			status: 401,
 		};
@@ -16,22 +16,22 @@ const get:RequestHandler = async ({url, headers}) => {
 			status: 400
 		};
 	}
-	if(!validator.isAlphanumeric(id) || !validator.isURL(path, {
+	if (!validator.isAlphanumeric(id) || !validator.isURL(path, {
 		require_valid_protocol: false,
 		require_host: false,
-	})){
+	})) {
 		return {
 			status: 400,
 		};
 	}
 	const data = await execCommand(id, `ls -lha --time-style=full-iso --group-directories-first ${path}`);
-	if(!data) {
+	if (!data) {
 		return {
 			status: 400,
 		};
 	}
 	const lines = data.split('\r\n');
-	if(!lines[0].startsWith('total')){
+	if (!lines[0].startsWith('total')) {
 		return {
 			status: 400
 		};
@@ -39,11 +39,11 @@ const get:RequestHandler = async ({url, headers}) => {
 	const res = [];
 	lines.slice(1).forEach(line => {
 		const fileData = line.split(/[ ]+/);
-		if(fileData.length < 9) return;
-		if(!fileData[0].startsWith('d') && !fileData[0].startsWith('l') && !fileData[0].startsWith('-')) return;
+		if (fileData.length < 9) return;
+		if (!fileData[0].startsWith('d') && !fileData[0].startsWith('l') && !fileData[0].startsWith('-')) return;
 		res.push({
-			directory: fileData[0].substring(0,1) === 'd',
-			symlink: fileData[0].substring(0,1) === 'l',
+			directory: fileData[0].substring(0, 1) === 'd',
+			symlink: fileData[0].substring(0, 1) === 'l',
 			name: fileData[8],
 			size: fileData[4],
 			date: fileData[5],
