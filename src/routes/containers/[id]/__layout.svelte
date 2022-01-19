@@ -6,6 +6,7 @@
 	import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import FolderIcon from '$icons/folder.svg';
 	import ViewListIcon from '$icons/view-list.svg';
+	import GlobeAltIcon from '$icons/globe-alt.svg';
 
 	let container:Container;
 
@@ -37,6 +38,12 @@
 			<a href="/containers/{$page.params.id}/">
 				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				General
+			</a>
+		</li>
+		<li class:bordered={$page.path === `/containers/${$page.params.id}/network`}>
+			<a href="/containers/{$page.params.id}/network">
+				<GlobeAltIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
+				Network
 			</a>
 		</li>
 		<li class:bordered={$page.path === `/containers/${$page.params.id}/stats`}>

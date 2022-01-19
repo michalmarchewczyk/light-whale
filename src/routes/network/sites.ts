@@ -8,6 +8,7 @@ const get:RequestHandler<Promise<void>, void> = async () => {
 	if(!isContainer){
 		return {
 			status: 500,
+			body: [],
 		};
 	}
 	const sites:Site[] = await getSites();

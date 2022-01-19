@@ -10,6 +10,7 @@ export interface Container {
 	state:string,
 	status:string,
 	compose:string,
+	networks:Record<string, unknown>,
 }
 
 export interface ComposeApp {

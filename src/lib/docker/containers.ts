@@ -10,6 +10,7 @@ interface Container {
 	state:string,
 	status:string,
 	compose:string | null,
+	networks:Record<string, unknown>,
 }
 
 export const getContainers = async ():Promise<Container[]> => {
@@ -25,6 +26,7 @@ export const getContainers = async ():Promise<Container[]> => {
 		state: container.State ?? '',
 		status: container.Status ?? 4,
 		compose: container.Labels['com.docker.compose.project'] ?? null,
+		networks: container.NetworkSettings['Networks'] ?? {},
 	}));
 	return containers;
 };
