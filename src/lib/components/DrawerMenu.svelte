@@ -9,6 +9,7 @@
 	import DatabaseIcon from '$icons/database.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import CogIcon from '$icons/cog.svg';
+	import {networkAvailable} from '$lib/stores/network';
 
 	const dispatch = createEventDispatcher();
 
@@ -56,8 +57,11 @@
 			<span class="mx-3">Volumes</span>
 		</a>
 	</li>
-	<li class="menu-title mt-4 mb-2">
-		<span>Networking</span>
+	<li class="menu-title mt-4 mb-2 flex-row">
+		<span>Network</span>
+		<div class="badge mt-0.5 {$networkAvailable ? 'badge-success' : 'badge-error'}">
+			{$networkAvailable ? 'Working' : 'Not working'}
+		</div>
 	</li>
 	<li>
 		<a class:bg-base-300="{$page.url.pathname.startsWith('/sites')}" href="/sites"

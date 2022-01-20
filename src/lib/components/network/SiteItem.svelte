@@ -15,11 +15,13 @@
 	let loading = false;
 	let removeModal = false;
 
-	let online = site?.paused === false;
-
 	let container:Container;
 
 	$: container = $containers?.find(c => c.id.startsWith(site?.containerId));
+
+	let online:boolean;
+
+	$: online = site?.paused === false && container?.state === 'running';
 
 	const pause = async () => {
 		// pause
@@ -73,8 +75,9 @@
 		</div>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
 			<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{container?.names[0].substring(1) ?? '-'}
+			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left"
+			class:italic={!container}>
+				{container?.names[0].substring(1) ?? 'not found'}
 			</span>
 		</div>
 	</div>
