@@ -3,7 +3,8 @@ import {getSites, Site} from '$lib/nginx/sites';
 
 
 const get:RequestHandler<Promise<void>, void> = async () => {
-	const sites:Site[] = await getSites();
+	let sites:Site[] = await getSites();
+	sites = sites.sort((a, b) => b.created.getTime() - a.created.getTime());
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},
