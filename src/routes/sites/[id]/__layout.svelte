@@ -4,16 +4,24 @@
 
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import ClipboardCheckIcon from '$icons/clipboard-check.svg';
+	import ExternalLinkIcon from '$icons/external-link.svg';
 
 	let site:Site;
 
 	$: site = $sites.find(s => s.domain === $page.params.id);
 </script>
 
+<svelte:head>
+	<title>Sites</title>
+</svelte:head>
+
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl pb-4">
 	<div class="text-3xl font-bold pb-4 mx-8 pt-6">
 		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/sites">Sites / </a>
-		{site?.domain}
+		<a class="text-3xl hover:text-primary-focus" href="http://{site?.domain}" target="_blank">
+			<span>{site?.domain}</span>
+			<ExternalLinkIcon class="inline-block w-8 h-8 stroke-2 align-top mt-0.5"/>
+		</a>
 		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none">
 			Running
 		</div>
