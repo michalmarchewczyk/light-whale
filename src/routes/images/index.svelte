@@ -18,6 +18,8 @@
 <div class="p-8 pt-2">
 	{#each $images as image}
 		<ImageItem image={image}/>
+	{:else}
+		<p class="w-full text-center text-3xl pt-12 opacity-50">No images</p>
 	{/each}
 </div>
 

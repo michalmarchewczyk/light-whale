@@ -29,6 +29,8 @@
 		{:else}
 			<ContainerItem container={appOrContainer}/>
 		{/if}
+	{:else}
+		<p class="w-full text-center text-3xl pt-12 opacity-50">No containers</p>
 	{/each}
 </div>
 
