@@ -123,6 +123,10 @@
 			ID:
 			<span class="font-bold">{container?.id}</span>
 		</p>
+		<p>
+			Short ID:
+			<span class="font-bold">{container?.id.substring(0,12)}</span>
+		</p>
 	</div>
 </div>
 
