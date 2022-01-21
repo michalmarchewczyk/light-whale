@@ -5,10 +5,19 @@
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import ClipboardCheckIcon from '$icons/clipboard-check.svg';
 	import ExternalLinkIcon from '$icons/external-link.svg';
+	import {Container, containers} from '$lib/stores/containers';
 
 	let site:Site;
 
 	$: site = $sites.find(s => s.domain === $page.params.id);
+
+	let container:Container;
+
+	$: container = $containers?.find(c => c.id.startsWith(site?.containerId));
+
+	let online:boolean;
+
+	$: online = site?.paused === false && container?.state === 'running';
 </script>
 
 <svelte:head>
@@ -22,8 +31,10 @@
 			<span>{site?.domain}</span>
 			<ExternalLinkIcon class="inline-block w-8 h-8 stroke-2 align-top mt-0.5"/>
 		</a>
-		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none">
-			Running
+		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
+			class:bg-success={online}
+			class:bg-error={!online}>
+			{site?.paused ? 'Disabled' : online ? 'Online' : 'Offline'}
 		</div>
 	</div>
 </div>
