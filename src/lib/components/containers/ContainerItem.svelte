@@ -95,13 +95,13 @@
 				{new Date(container.created).toLocaleDateString()}
 			</span>
 		</div>
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
+		<a href="/images/{image?.id.substring(7, 19)}"
+		   class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left hover:text-primary-focus" data-tip="Image">
 			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<a class="hover:text-primary-focus inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left"
-			   href="/images/{image?.id.substring(7, 19)}">
+			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
 				{image?.tags.join(',')}
-			</a>
-		</div>
+			</span>
+		</a>
 		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Command">
 			<TerminalIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
