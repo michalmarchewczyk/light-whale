@@ -7,8 +7,11 @@
 	import CubeIcon from '$icons/cube.svg';
 	import TrashIcon from '$icons/trash.svg';
 	import PauseIcon from '$icons/pause.svg';
+	import PlayIcon from '$icons/play.svg';
+	import ExternalLinkIcon from '$icons/external-link.svg';
 	import type {Container} from '$lib/stores/containers';
 	import {containers} from '$lib/stores/containers';
+	import {pauseSite, unpauseSite} from '$lib/stores/sites';
 
 	export let site:Site;
 
@@ -24,7 +27,15 @@
 	$: online = site?.paused === false && container?.state === 'running';
 
 	const pause = async () => {
-		// pause
+		loading = true;
+		await pauseSite(site?.id);
+		loading = false;
+	};
+
+	const unpause = async () => {
+		loading = true;
+		await unpauseSite(site?.id);
+		loading = false;
 	};
 
 	const openRemoveModal = () => {
@@ -56,7 +67,7 @@
 		{/if}
 		<span class="uppercase w-full text-center mt-1 block font-bold text-sm sm:text-base
 		 overflow-hidden overflow-ellipsis sm:overflow-visible whitespace-nowrap">
-			{online ? 'Online' : 'Offline'}
+			{site?.paused ? 'Disabled' : online ? 'Online' : 'Offline'}
 		</span>
 	</div>
 	<a class="block w-60 flex-auto w-60 overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
@@ -82,32 +93,48 @@
 		</div>
 	</div>
 	<div class="block w-28 md:w-64 overflow-hidden flex-shrink-0 self-center">
-		<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-				class:loading={loading} disabled={loading} on:click={pause}>
-			{#if !loading}
-				<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
-			{/if}
-			<span class="mt-[-0.25rem]">Disable</span>
-		</button>
-		<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
-				class:loading={loading} disabled={loading} on:click={openRemoveModal}>
-			{#if !loading}
-				<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
-			{/if}
-			<span class="mt-[-0.25rem]">Delete</span>
-		</button>
-		<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
-		<div class="modal">
-			<div class="modal-box">
-				<p>Do you really want to remove site
-					<span class="font-bold">{site.domain}</span>?
-				</p>
-				<div class="modal-action">
-					<button class="btn btn-primary" on:click={remove}>Remove</button>
-					<button class="btn" on:click={closeRemoveModal}>Cancel</button>
+		{#if site?.paused}
+			<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
+					class:loading={loading} disabled={loading} on:click={unpause}>
+				{#if !loading}
+					<PlayIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
+				<span class="mt-[-0.25rem]">Enable</span>
+			</button>
+			<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
+					class:loading={loading} disabled={loading} on:click={openRemoveModal}>
+				{#if !loading}
+					<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
+				<span class="mt-[-0.25rem]">Delete</span>
+			</button>
+			<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
+			<div class="modal">
+				<div class="modal-box">
+					<p>Do you really want to remove site
+						<span class="font-bold">{site.domain}</span>?
+					</p>
+					<div class="modal-action">
+						<button class="btn btn-primary" on:click={remove}>Remove</button>
+						<button class="btn" on:click={closeRemoveModal}>Cancel</button>
+					</div>
 				</div>
 			</div>
-		</div>
+		{:else}
+			<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
+					class:loading={loading} disabled={loading} on:click={pause}>
+				{#if !loading}
+					<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
+				{/if}
+				<span class="mt-[-0.25rem]">Disable</span>
+			</button>
+			<a href="http://{site?.domain}" target="_blank"
+			   class="btn btn-ghost w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0">
+				<ExternalLinkIcon class="h-6 w-6 mr-2 stroke-2"/>
+				<span class="mt-[-0.25rem]">Open</span>
+			</a>
+		{/if}
+
 	</div>
 </div>
 

@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkContainer, NGINX_CONTAINER_NAME} from '$lib/nginx/setup';
+import {checkContainer, NGINX_CONTAINER_NAME} from '$lib/network/nginx';
 
 
 const get:RequestHandler = async () => {
