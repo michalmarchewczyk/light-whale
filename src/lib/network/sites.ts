@@ -82,3 +82,16 @@ export const pauseSite = async (id:string):Promise<boolean> => {
 	await reloadNginx();
 	return true;
 };
+
+
+export const removeSite = async (id:string):Promise<boolean> => {
+	const content = await fs.readFile(path.join(nginxPath, 'site-'+id+'.conf'), {encoding: 'utf8'});
+	if (!isContentSiteConfig(content)){
+		return false;
+	}
+
+	await fs.rm(path.join(nginxPath, 'site-'+id+'.conf'));
+
+	await reloadNginx();
+	return true;
+};

@@ -35,3 +35,12 @@ export const pauseSite = async (id:string):Promise<void> => {
 	});
 	await forceUpdateEverything();
 };
+
+export const removeSite = async (id:string):Promise<void> => {
+	await fetch('/network/sites', {
+		method: 'DELETE',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id}),
+	});
+	await forceUpdateEverything();
+};

@@ -11,7 +11,7 @@
 	import ExternalLinkIcon from '$icons/external-link.svg';
 	import type {Container} from '$lib/stores/containers';
 	import {containers} from '$lib/stores/containers';
-	import {pauseSite, unpauseSite} from '$lib/stores/sites';
+	import {pauseSite, removeSite, unpauseSite} from '$lib/stores/sites';
 
 	export let site:Site;
 
@@ -49,7 +49,7 @@
 	const remove = async () => {
 		removeModal = false;
 		loading = true;
-		// remove site
+		await removeSite(site?.id);
 		loading = false;
 	};
 

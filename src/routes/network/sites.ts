@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {getSites, pauseSite, Site, unpauseSite} from '$lib/network/sites';
+import {getSites, pauseSite, removeSite, Site, unpauseSite} from '$lib/network/sites';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
@@ -38,7 +38,28 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 	};
 };
 
+
+const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers}) => {
+	if (!checkSession(headers)) {
+		return {
+			status: 401,
+		};
+	}
+	const {id} = body;
+	if (!validator.isAlphanumeric(id ?? '')) {
+		return {
+			status: 400,
+		};
+	}
+	const res = await removeSite(id);
+	return {
+		status: 200,
+		body: JSON.stringify({success: res})
+	};
+};
+
 export {
 	get,
-	put
+	put,
+	del
 };
