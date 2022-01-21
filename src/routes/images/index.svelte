@@ -1,6 +1,10 @@
 <script lang="ts">
 	import {images} from '$lib/stores/images';
 	import ImageItem from '$lib/components/images/ImageItem.svelte';
+	import {containers} from '$lib/stores/containers';
+
+	let usedCount:number;
+	$: usedCount = $images.filter(i => $containers.filter(c => c.imageId === i.id).length > 0).length;
 </script>
 
 <svelte:head>
@@ -11,7 +15,7 @@
 	<div class="text-3xl font-bold pb-4 border-b-2 border-base-300 mx-8 pt-6">
 		Images
 		<div class="badge badge-lg float-right mt-1 text-lg h-8">
-			{$images.length} images
+			{usedCount} / {$images.length} used
 		</div>
 	</div>
 </div>
