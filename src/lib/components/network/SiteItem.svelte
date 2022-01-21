@@ -84,13 +84,21 @@
 				{new Date(site.created ?? 0).toLocaleDateString()}
 			</span>
 		</div>
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
-			<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left"
-			class:italic={!container}>
-				{container?.names[0].substring(1) ?? 'not found'}
-			</span>
-		</div>
+		{#if container}
+			<a href='/containers/{container?.names[0].substring(1)}' class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
+				<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+					{container?.names[0].substring(1) ?? ' - '}
+				</span>
+			</a>
+		{:else}
+			<div  class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
+				<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left italic">
+					not found
+				</span>
+			</div>
+		{/if}
 	</div>
 	<div class="block w-28 md:w-64 overflow-hidden flex-shrink-0 self-center">
 		{#if site?.paused}
