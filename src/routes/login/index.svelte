@@ -59,9 +59,9 @@
 				{/if}
 				<div class="form-control">
 					<label>
-					<span class="label pl-0">
-						<span class="label-text text-lg mb-0">Password: </span>
-					</span>
+						<span class="label pl-0">
+							<span class="label-text text-base mb-0">Password: </span>
+						</span>
 						<input bind:value={password} class="input input-bordered w-full" placeholder="password"
 							   type="password">
 					</label>

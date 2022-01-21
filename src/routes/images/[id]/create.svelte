@@ -21,7 +21,7 @@
 
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
-		<h2 class="card-title text-xl">Create container</h2>
+		<h2 class="card-title">Create container</h2>
 		<form on:submit|preventDefault={submit}>
 			{#if error}
 				<div class="alert alert-error my-2">
@@ -31,19 +31,19 @@
 					</div>
 				</div>
 			{/if}
-			<div class="form-control">
+			<div class="form-control mb-2">
 				<label>
 					<span class="label pl-0">
-						<span class="label-text text-lg mb-0">Container name: </span>
+						<span class="label-text text-base mb-0">Container name: </span>
 					</span>
 					<input bind:value={name} class="input input-bordered w-full" placeholder="name"
 						   type="text">
 				</label>
 			</div>
-			<div class="form-control">
+			<div class="form-control mb-2">
 				<label>
 					<span class="label pl-0">
-						<span class="label-text text-lg mb-0">Command: </span>
+						<span class="label-text text-base mb-0">Command: </span>
 					</span>
 					<input bind:value={command} class="input input-bordered w-full" placeholder="command"
 						   type="text">
