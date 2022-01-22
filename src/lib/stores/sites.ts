@@ -44,3 +44,12 @@ export const removeSite = async (id:string):Promise<void> => {
 	});
 	await forceUpdateEverything();
 };
+
+export const addSite = async (containerId: string, domain:string, port:number):Promise<void> => {
+	await fetch('/network/sites', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({containerId, domain, port}),
+	});
+	await forceUpdateEverything();
+};

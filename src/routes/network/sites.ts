@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {getSites, pauseSite, removeSite, Site, unpauseSite} from '$lib/network/sites';
+import {createSite, getSites, pauseSite, removeSite, Site, unpauseSite} from '$lib/network/sites';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
@@ -58,8 +58,29 @@ const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers})
 	};
 };
 
+
+const post:RequestHandler<void, {containerId:string, domain:string, port:number}> = async ({body, headers}) => {
+	if (!checkSession(headers)) {
+		return {
+			status: 401,
+		};
+	}
+	const {containerId, domain, port} = body;
+	if (!validator.isFQDN(domain ?? '') || !validator.isAlphanumeric(containerId) || !validator.isPort(port.toString())) {
+		return {
+			status: 400,
+		};
+	}
+	const res = await createSite(containerId, domain, port);
+	return {
+		status: 200,
+		body: JSON.stringify({success: res})
+	};
+};
+
 export {
 	get,
 	put,
-	del
+	del,
+	post
 };

@@ -36,7 +36,7 @@
 					<span class="label pl-0">
 						<span class="label-text text-base mb-0">Container name: </span>
 					</span>
-					<input bind:value={name} class="input input-bordered w-full" placeholder="name"
+					<input bind:value={name} class="input input-bordered w-full text-base" placeholder="name"
 						   type="text">
 				</label>
 			</div>
@@ -45,7 +45,7 @@
 					<span class="label pl-0">
 						<span class="label-text text-base mb-0">Command: </span>
 					</span>
-					<input bind:value={command} class="input input-bordered w-full" placeholder="command"
+					<input bind:value={command} class="input input-bordered w-full text-base" placeholder="command"
 						   type="text">
 				</label>
 			</div>

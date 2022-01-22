@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {reloadNginx} from '$lib/network/nginx';
+import template from './template.conf?raw';
+import crypto from 'crypto';
 
 export interface Site {
 	id:string,
@@ -91,6 +93,31 @@ export const removeSite = async (id:string):Promise<boolean> => {
 	}
 
 	await fs.rm(path.join(nginxPath, 'site-'+id+'.conf'));
+
+	await reloadNginx();
+	return true;
+};
+
+export const createSite = async (containerId:string, domain:string, port:number):Promise<boolean> => {
+	const sites = await getSites();
+	if(sites.map(s => s.domain).includes(domain)){
+		return false;
+	}
+	const newSite:Site = {
+		id: crypto.randomBytes(6).toString('hex'),
+		containerId,
+		domain,
+		paused: false,
+		created: new Date()
+	};
+	const newContent = template
+		.replaceAll('[site_id]', newSite.id)
+		.replaceAll('[container_id]', newSite.containerId.substring(0,12))
+		.replaceAll('[domain]', newSite.domain)
+		.replaceAll('[created]', newSite.created.toISOString())
+		.replaceAll('[port]', port.toString());
+
+	await fs.writeFile(path.join(nginxPath, 'site-'+newSite.id+'.conf'), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
 	return true;

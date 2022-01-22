@@ -28,6 +28,7 @@ const config = {
 					$icons: path.resolve('./node_modules/heroicons/outline')
 				}
 			},
+			assetsInclude: ['**/*.conf'],
 			plugins: [
 				svelteSVG({
 					svgo: {
