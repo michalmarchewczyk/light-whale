@@ -78,7 +78,7 @@
 		</a>
 	</li>
 	<li class="mt-auto">
-		<button class="btn btn-sm mt-4 text-xs btn-ghost" on:click={() => {
+		<button class="btn btn-sm mt-4 text-xs btn-ghost font-semibold" on:click={() => {
 			const newTheme = currentTheme === 'default-light' ? 'default-dark' : 'default-light';
 			dispatch('changeTheme', newTheme);
 		}}>
@@ -90,6 +90,6 @@
 
 <style lang="scss">
   .menu li {
-	@apply mb-2 text-base-content;
+	@apply mb-2 text-base-content font-semibold;
   }
 </style>

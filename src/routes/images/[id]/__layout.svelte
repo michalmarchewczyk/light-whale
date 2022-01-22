@@ -42,6 +42,9 @@
 			<a href="/images/{$page.params.id}/containers">
 				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
 				Containers
+				<div class="badge ml-2 mt-0.5">
+					{countContainers}
+				</div>
 			</a>
 		</li>
 		<li class:bordered={$page.url.pathname === `/images/${$page.params.id}/create`}>
