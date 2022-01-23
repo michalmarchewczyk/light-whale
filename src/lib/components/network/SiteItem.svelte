@@ -5,6 +5,7 @@
 	import StatusOfflineIcon from '$icons/status-offline.svg';
 	import CalendarIcon from '$icons/calendar.svg';
 	import CubeIcon from '$icons/cube.svg';
+	import CubeTransparentIcon from '$icons/cube-transparent.svg';
 	import TrashIcon from '$icons/trash.svg';
 	import PauseIcon from '$icons/pause.svg';
 	import PlayIcon from '$icons/play.svg';
@@ -87,7 +88,11 @@
 		</div>
 		{#if container}
 			<a href='/containers/{container?.names[0].substring(1)}' class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
-				<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+				{#if container?.state === 'running'}
+					<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+				{:else}
+					<CubeTransparentIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
+				{/if}
 				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
 					{container?.names[0].substring(1) ?? ' - '}
 				</span>
