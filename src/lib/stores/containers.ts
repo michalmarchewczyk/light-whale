@@ -4,6 +4,7 @@ import {forceUpdateEverything} from '$lib/stores/docker';
 export interface Container {
 	id:string,
 	names:string[],
+	name:string,
 	imageName:string,
 	imageId:string,
 	created:Date,
@@ -26,6 +27,7 @@ export const composeApps = writable<ComposeApp[]>([]);
 export const fetchContainers = async ():Promise<void> => {
 	const res = await fetch('/docker/containers');
 	const data = await res.json();
+	data?.forEach(c => c.name = c?.names[0]?.substring(1) ?? '-');
 	containers.set(data ?? []);
 	const apps:ComposeApp[] = [];
 	for (const container of data) {
