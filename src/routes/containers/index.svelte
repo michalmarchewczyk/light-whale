@@ -10,21 +10,27 @@
 	$: {
 		let filteredApps = $composeApps;
 		let filteredContainers = $containers.filter(c => !c.compose);
-		if($page.url.searchParams.get('filter')){
-			let filterName = $page.url.searchParams.get('filter');
-			if(filterName === 'running'){
+		if($page.url.searchParams.get('state')){
+			let stateName = $page.url.searchParams.get('state');
+			if(stateName === 'running'){
 				filteredContainers = filteredContainers.filter(c => c.state === 'running');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'running'));
-			}else if(filterName === 'created'){
+			}else if(stateName === 'created'){
 				filteredContainers = filteredContainers.filter(c => c.state === 'created');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'created'));
-			}else if(filterName === 'exited'){
+			}else if(stateName === 'exited'){
 				filteredContainers = filteredContainers.filter(c => c.state === 'exited');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'exited'));
-			}else if(filterName === 'other'){
+			}else if(stateName === 'other'){
 				filteredContainers = filteredContainers.filter(c => c.state !== 'running' && c.state !== 'created' && c.state !== 'exited');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state !== 'running' && c.state !== 'created' && c.state !== 'exited'));
 			}
+		}
+		if($page.url.searchParams.get('type') === 'container'){
+			filteredApps = [];
+		}
+		if($page.url.searchParams.get('type') === 'app'){
+			filteredContainers = [];
 		}
 		appsAndContainers = [...filteredApps, ...filteredContainers].sort((a, b) => new Date(b.created) - new Date(a.created));
 		if($page.url.searchParams.get('sort')){
@@ -52,54 +58,79 @@
 		<div class="badge badge-lg float-right mt-1 text-lg h-8">
 			{$containers.filter(c => c.state === 'running').length} / {$containers.length} running
 		</div>
-		<div class="w-full mt-4 text-base font-normal">
-			<span class="text-lg font-semibold align-middle">Sort:</span>
-			<div class="dropdown">
-				<button class="select select-bordered bg-base-100 align-middle ml-2 w-44 capitalize">
-					{#if $page.url.searchParams.get('sort')}
-						<span class="mt-2 text-base">{$page.url.searchParams.get('sort')} ({$page.url.searchParams.get('order')})</span>
-					{:else}
-						<span class="mt-2 text-base">Created (desc)</span>
-					{/if}
-				</button>
-				<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-44 ml-2">
-					<li><a href="{paramsToLink($page.url.search, {sort: 'created', order: 'asc'})}">
-						Created (asc)
-					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {sort: 'created', order: 'desc'})}">
-						Created (desc)
-					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {sort: 'name', order: 'asc'})}">
-						Name (asc)
-					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {sort: 'name', order: 'desc'})}">
-						Name (desc)
-					</a></li>
-				</ul>
+		<div class="w-full mt-6 text-base font-normal">
+			<div class="float-right">
+				<span class="text-lg font-semibold align-middle">Sort:</span>
+				<div class="dropdown">
+					<button class="select select-bordered bg-base-100 align-middle ml-2 w-44 capitalize">
+						{#if $page.url.searchParams.get('sort')}
+							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')} ({$page.url.searchParams.get('order')})</span>
+						{:else}
+							<span class="mt-2 text-base">Created (desc)</span>
+						{/if}
+					</button>
+					<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-44 ml-2">
+						<li><a href="{paramsToLink($page.url.search, {sort: 'created', order: 'asc'})}">
+							Created (asc)
+						</a></li>
+						<li><a href="{paramsToLink($page.url.search, {sort: 'created', order: 'desc'})}">
+							Created (desc)
+						</a></li>
+						<li><a href="{paramsToLink($page.url.search, {sort: 'name', order: 'asc'})}">
+							Name (asc)
+						</a></li>
+						<li><a href="{paramsToLink($page.url.search, {sort: 'name', order: 'desc'})}">
+							Name (desc)
+						</a></li>
+					</ul>
+				</div>
 			</div>
-			<span class="text-lg font-semibold align-middle ml-4">Filter:</span>
+
+			<span class="text-lg font-semibold align-middle">Type:</span>
 			<div class="dropdown">
 				<button class="select select-bordered bg-base-100 align-middle ml-2 w-36 capitalize">
-					{#if $page.url.searchParams.get('filter')}
-						<span class="mt-2 text-base">{$page.url.searchParams.get('filter')}</span>
+					{#if $page.url.searchParams.get('type')}
+						<span class="mt-2 text-base">{$page.url.searchParams.get('type')}</span>
 					{:else}
 						<span class="mt-2 text-base">All</span>
 					{/if}
 				</button>
 				<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-36 ml-2">
-					<li><a href="{paramsToLink($page.url.search, {filter: 'all'})}">
+					<li><a href="{paramsToLink($page.url.search, {type: 'all'})}">
 						All
 					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {filter: 'running'})}">
+					<li><a href="{paramsToLink($page.url.search, {type: 'container'})}">
+						Container
+					</a></li>
+					<li><a href="{paramsToLink($page.url.search, {type: 'app'})}">
+						App
+					</a></li>
+				</ul>
+			</div>
+
+			<span class="text-lg font-semibold align-middle ml-4">State:</span>
+			<div class="dropdown">
+				<button class="select select-bordered bg-base-100 align-middle ml-2 w-36 capitalize">
+					{#if $page.url.searchParams.get('state')}
+						<span class="mt-2 text-base">{$page.url.searchParams.get('state')}</span>
+					{:else}
+						<span class="mt-2 text-base">All</span>
+					{/if}
+				</button>
+				<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-36 ml-2">
+					<li><a href="{paramsToLink($page.url.search, {state: 'all'})}">
+						All
+					</a></li>
+					<li><a href="{paramsToLink($page.url.search, {state: 'running'})}">
 						Running
 					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {filter: 'created'})}">
+					<li><a href="{paramsToLink($page.url.search, {state: 'created'})}">
 						Created
 					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {filter: 'exited'})}">
+					<li><a href="{paramsToLink($page.url.search, {state: 'exited'})}">
 						Exited
 					</a></li>
-					<li><a href="{paramsToLink($page.url.search, {filter: 'other'})}">
+					<li><a href="{paramsToLink($page.url.search, {state: 'other'})}">
 						Other
 					</a></li>
 				</ul>
