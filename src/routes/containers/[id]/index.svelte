@@ -22,7 +22,7 @@
 
 	let image:Image;
 
-	$: image = $images.find(i => i.id === container.imageId);
+	$: image = $images.find(i => i.id === container?.imageId);
 
 	let loading = false;
 
