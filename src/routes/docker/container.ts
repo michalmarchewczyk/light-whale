@@ -12,7 +12,7 @@ const get:RequestHandler = async ({url, headers}) => {
 	const id = url.searchParams.get('id') ?? '';
 	if (!id) {
 		return {
-			status: 400
+			status: 400,
 		};
 	}
 	if (!validator.isAlphanumeric(id)) {
@@ -29,20 +29,20 @@ const get:RequestHandler = async ({url, headers}) => {
 				status: 500,
 			};
 		}
-		const cpu_delta = data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
-		const system_cpu_delta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
-		const number_cpus = data.cpu_stats.online_cpus;
-		const used_memory = data.memory_stats.usage - data.memory_stats.stats.cache;
+		const cpuDelta = data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
+		const systemCpuDelta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
+		const numberOfCpus = data.cpu_stats.online_cpus;
+		const usedMemory = data.memory_stats.usage - data.memory_stats.stats.cache;
 		const input = Object.values(data.networks)[0]?.['rx_bytes'];
 		const output = Object.values(data.networks)[0]?.['tx_bytes'];
 		const stats = {
-			cpu: (cpu_delta / system_cpu_delta) * number_cpus * 100,
-			cores: number_cpus,
-			memory: used_memory,
+			cpu: (cpuDelta / systemCpuDelta) * numberOfCpus * 100,
+			cores: numberOfCpus,
+			memory: usedMemory,
 			size: data2['SizeRootFs'],
+			processes: data3,
 			input,
 			output,
-			processes: data3
 		};
 		return {
 			status: 200,
@@ -51,11 +51,11 @@ const get:RequestHandler = async ({url, headers}) => {
 		};
 	} catch (e) {
 		return {
-			status: 500
+			status: 500,
 		};
 	}
 };
 
 export {
-	get
+	get,
 };

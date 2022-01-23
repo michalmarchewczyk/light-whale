@@ -62,7 +62,8 @@
 						<span class="label pl-0">
 							<span class="label-text text-base mb-0">Password: </span>
 						</span>
-						<input bind:value={password} class="input input-bordered w-full text-base" placeholder="password"
+						<input bind:value={password} class="input input-bordered w-full text-base"
+							   placeholder="password"
 							   type="password">
 					</label>
 				</div>

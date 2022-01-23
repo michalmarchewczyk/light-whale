@@ -58,18 +58,17 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 	if (res.status !== 200) {
 		return {};
 	}
-	const data = await res.json();
-	return data;
+	return await res.json();
 };
 
 export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
 	const query = name ? '?name=' + name : '';
-	const res = await fetch(dockerUrl + '/containers/create' + query, {
+	const res = await fetch(`${dockerUrl}/containers/create${query}`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
 			Image: imageId,
-			Cmd: command ? command.split(' ') : null
+			Cmd: command ? command.split(' ') : null,
 		}),
 	});
 	return res.status === 201;
@@ -107,8 +106,7 @@ export const getContainerStats = async (id:string):Promise<ContainerStats | null
 	if (res.status !== 200) {
 		return null;
 	}
-	const data = await res.json();
-	return data;
+	return await res.json();
 };
 
 export const getContainerProcesses = async (id:string):Promise<unknown> => {
@@ -116,8 +114,7 @@ export const getContainerProcesses = async (id:string):Promise<unknown> => {
 	if (res.status !== 200) {
 		return {};
 	}
-	const data = await res.json();
-	return data;
+	return await res.json();
 };
 
 
@@ -126,6 +123,5 @@ export const getContainerLogs = async (id:string):Promise<string> => {
 	if (res.status !== 200) {
 		return '';
 	}
-	const data = await res.text();
-	return data;
+	return await res.text();
 };

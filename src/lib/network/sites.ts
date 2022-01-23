@@ -28,58 +28,57 @@ export const getSites = async ():Promise<Site[]> => {
 	const files:SiteConfig[] = [];
 	for await (const fileName of fileNames) {
 		const content = await fs.readFile(path.join(nginxPath, fileName), {encoding: 'utf8'});
-		if (!isContentSiteConfig(content)){
-			continue;
+		if (isContentSiteConfig(content)) {
+			const lines = content.split('\r\n');
+			files.push({
+				site: {
+					id: lines[1].split(' ')[2].trim(),
+					containerId: lines[2].split(' ')[2].trim(),
+					domain: lines[3].split(' ')[2].trim(),
+					paused: lines[4].split(' ')[2].trim() === 'true',
+					created: new Date(lines[5].split(' ')[2].trim()),
+				},
+				content,
+			});
 		}
-		const lines = content.split('\r\n');
-		files.push({
-			site: {
-				id: lines[1].split(' ')[2].trim(),
-				containerId: lines[2].split(' ')[2].trim(),
-				domain: lines[3].split(' ')[2].trim(),
-				paused: lines[4].split(' ')[2].trim() === 'true',
-				created: new Date(lines[5].split(' ')[2].trim()),
-			},
-			content: content,
-		});
 	}
 	return files.map(file => file.site);
 };
 
 
 export const unpauseSite = async (id:string):Promise<boolean> => {
-	const content = await fs.readFile(path.join(nginxPath, 'site-'+id+'.conf'), {encoding: 'utf8'});
-	if (!isContentSiteConfig(content)){
+	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
+	if (!isContentSiteConfig(content)) {
 		return false;
 	}
 	const lines = content.split('\r\n');
 
 	lines[4] = '# paused: false';
-	for(let i = 6; i < lines.length; i++){
+	for (let i = 6; i < lines.length; i++) {
 		lines[i] = lines[i].substring(2);
 	}
 
 	const newContent = lines.join('\r\n');
-	await fs.writeFile(path.join(nginxPath, 'site-'+id+'.conf'), newContent, {encoding: 'utf8'});
+	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
 	return true;
 };
 
 export const pauseSite = async (id:string):Promise<boolean> => {
-	const content = await fs.readFile(path.join(nginxPath, 'site-'+id+'.conf'), {encoding: 'utf8'});
-	if (!isContentSiteConfig(content)){
+	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
+	if (!isContentSiteConfig(content)) {
 		return false;
 	}
 	const lines = content.split('\r\n');
 
 	lines[4] = '# paused: true';
-	for(let i = 6; i < lines.length; i++){
+	for (let i = 6; i < lines.length; i++) {
 		lines[i] = '# ' + lines[i];
 	}
 
 	const newContent = lines.join('\r\n');
-	await fs.writeFile(path.join(nginxPath, 'site-'+id+'.conf'), newContent, {encoding: 'utf8'});
+	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
 	return true;
@@ -87,12 +86,12 @@ export const pauseSite = async (id:string):Promise<boolean> => {
 
 
 export const removeSite = async (id:string):Promise<boolean> => {
-	const content = await fs.readFile(path.join(nginxPath, 'site-'+id+'.conf'), {encoding: 'utf8'});
-	if (!isContentSiteConfig(content)){
+	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
+	if (!isContentSiteConfig(content)) {
 		return false;
 	}
 
-	await fs.rm(path.join(nginxPath, 'site-'+id+'.conf'));
+	await fs.rm(path.join(nginxPath, `site-${id}.conf`));
 
 	await reloadNginx();
 	return true;
@@ -100,24 +99,24 @@ export const removeSite = async (id:string):Promise<boolean> => {
 
 export const createSite = async (containerId:string, domain:string, port:number):Promise<boolean> => {
 	const sites = await getSites();
-	if(sites.map(s => s.domain).includes(domain)){
+	if (sites.map(s => s.domain).includes(domain)) {
 		return false;
 	}
 	const newSite:Site = {
 		id: crypto.randomBytes(6).toString('hex'),
+		paused: false,
+		created: new Date(),
 		containerId,
 		domain,
-		paused: false,
-		created: new Date()
 	};
 	const newContent = template
 		.replaceAll('[site_id]', newSite.id)
-		.replaceAll('[container_id]', newSite.containerId.substring(0,12))
+		.replaceAll('[container_id]', newSite.containerId.substring(0, 12))
 		.replaceAll('[domain]', newSite.domain)
 		.replaceAll('[created]', newSite.created.toISOString())
 		.replaceAll('[port]', port.toString());
 
-	await fs.writeFile(path.join(nginxPath, 'site-'+newSite.id+'.conf'), newContent, {encoding: 'utf8'});
+	await fs.writeFile(path.join(nginxPath, `site-${newSite.id}.conf`), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
 	return true;

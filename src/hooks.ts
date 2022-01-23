@@ -14,6 +14,6 @@ export function getSession(request:ServerRequest):Record<string, unknown> {
 		return {};
 	}
 	return {
-		id: session.id
+		id: session.id,
 	};
 }

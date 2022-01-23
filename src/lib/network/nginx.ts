@@ -10,8 +10,9 @@ export const checkContainer = async ():Promise<boolean> => {
 
 export const reloadNginx = async ():Promise<boolean> => {
 	const container = await inspectContainer(NGINX_CONTAINER_NAME);
-	if(!container['Id'] || container?.['State']?.['Status'] !== 'running'){
+	if (!container['Id'] || container?.['State']?.['Status'] !== 'running') {
 		return false;
 	}
 	await execCommand(container['Id'], 'nginx -s reload');
+	return true;
 };

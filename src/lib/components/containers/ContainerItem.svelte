@@ -95,8 +95,8 @@
 				{new Date(container.created).toLocaleDateString()}
 			</span>
 		</div>
-		<a href="/images/{image?.id.substring(7, 19)}"
-		   class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left hover:text-primary-focus" data-tip="Image">
+		<a class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left hover:text-primary-focus"
+		   data-tip="Image" href="/images/{image?.id.substring(7, 19)}">
 			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
 				{image?.tags.join(',')}

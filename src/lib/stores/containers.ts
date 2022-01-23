@@ -37,7 +37,7 @@ export const fetchContainers = async ():Promise<void> => {
 				app = {
 					name: container.compose,
 					containers: [],
-					created: new Date(0)
+					created: new Date(0),
 				};
 				apps.push(app);
 			}

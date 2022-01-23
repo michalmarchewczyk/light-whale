@@ -10,8 +10,8 @@ export const execCommand = async (containerId:string, command:string):Promise<st
 			'AttachStdout': true,
 			'AttachStderr': true,
 			'Tty': true,
-			'Cmd': [...command.split(' ')]
-		})
+			'Cmd': [...command.split(' ')],
+		}),
 	});
 	if (resCreate.status !== 201) {
 		return null;
@@ -24,11 +24,10 @@ export const execCommand = async (containerId:string, command:string):Promise<st
 		body: JSON.stringify({
 			'Detach': false,
 			'Tty': true,
-		})
+		}),
 	});
 	if (resStart.status !== 200) {
 		return null;
 	}
-	const data = await resStart.text();
-	return data;
+	return await resStart.text();
 };

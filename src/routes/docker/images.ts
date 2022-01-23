@@ -12,7 +12,7 @@ const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	const images = await getImages();
 	return {
 		status: 200,
-		body: JSON.stringify(images)
+		body: JSON.stringify(images),
 	};
 };
 
@@ -31,11 +31,11 @@ const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers})
 	const res = await removeImage(id);
 	return {
 		status: 200,
-		body: JSON.stringify({success: res})
+		body: JSON.stringify({success: res}),
 	};
 };
 
 export {
 	get,
-	del
+	del,
 };

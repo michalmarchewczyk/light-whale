@@ -10,38 +10,38 @@
 	$: {
 		let filteredApps = $composeApps;
 		let filteredContainers = $containers.filter(c => !c.compose);
-		if($page.url.searchParams.get('state')){
+		if ($page.url.searchParams.get('state')) {
 			let stateName = $page.url.searchParams.get('state');
-			if(stateName === 'running'){
+			if (stateName === 'running') {
 				filteredContainers = filteredContainers.filter(c => c.state === 'running');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'running'));
-			}else if(stateName === 'created'){
+			} else if (stateName === 'created') {
 				filteredContainers = filteredContainers.filter(c => c.state === 'created');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'created'));
-			}else if(stateName === 'exited'){
+			} else if (stateName === 'exited') {
 				filteredContainers = filteredContainers.filter(c => c.state === 'exited');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state === 'exited'));
-			}else if(stateName === 'other'){
+			} else if (stateName === 'other') {
 				filteredContainers = filteredContainers.filter(c => c.state !== 'running' && c.state !== 'created' && c.state !== 'exited');
 				filteredApps = filteredApps.filter(app => app.containers.some(c => c.state !== 'running' && c.state !== 'created' && c.state !== 'exited'));
 			}
 		}
-		if($page.url.searchParams.get('type') === 'container'){
+		if ($page.url.searchParams.get('type') === 'container') {
 			filteredApps = [];
 		}
-		if($page.url.searchParams.get('type') === 'app'){
+		if ($page.url.searchParams.get('type') === 'app') {
 			filteredContainers = [];
 		}
 		appsAndContainers = [...filteredApps, ...filteredContainers].sort((a, b) => new Date(b.created) - new Date(a.created));
-		if($page.url.searchParams.get('sort')){
+		if ($page.url.searchParams.get('sort')) {
 			let sortName = $page.url.searchParams.get('sort');
 			let sortOrder = $page.url.searchParams.get('order');
-			if(sortName === 'name'){
-				appsAndContainers = appsAndContainers.sort((a,b) => a.name < b.name ? 1 : -1);
-			}else if(sortName === 'created'){
-				appsAndContainers = appsAndContainers.sort((a,b) => a.created < b.created ? 1 : -1);
+			if (sortName === 'name') {
+				appsAndContainers = appsAndContainers.sort((a, b) => a.name < b.name ? 1 : -1);
+			} else if (sortName === 'created') {
+				appsAndContainers = appsAndContainers.sort((a, b) => a.created < b.created ? 1 : -1);
 			}
-			if(sortOrder === 'asc'){
+			if (sortOrder === 'asc') {
 				appsAndContainers = appsAndContainers.reverse();
 			}
 		}
@@ -64,7 +64,8 @@
 				<div class="dropdown">
 					<button class="select select-bordered bg-base-100 align-middle ml-2 w-44 capitalize">
 						{#if $page.url.searchParams.get('sort')}
-							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')} ({$page.url.searchParams.get('order')})</span>
+							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')}
+								({$page.url.searchParams.get('order')})</span>
 						{:else}
 							<span class="mt-2 text-base">Created (desc)</span>
 						{/if}

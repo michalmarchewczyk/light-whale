@@ -12,23 +12,23 @@
 
 	$: {
 		filteredImages = $images;
-		if($page.url.searchParams.get('used') === 'used'){
+		if ($page.url.searchParams.get('used') === 'used') {
 			filteredImages = filteredImages.filter(i => $containers.filter(c => c.imageId === i.id).length > 0);
 		}
-		if($page.url.searchParams.get('used') === 'unused'){
+		if ($page.url.searchParams.get('used') === 'unused') {
 			filteredImages = filteredImages.filter(i => $containers.filter(c => c.imageId === i.id).length === 0);
 		}
-		if($page.url.searchParams.get('sort')){
+		if ($page.url.searchParams.get('sort')) {
 			let sortName = $page.url.searchParams.get('sort');
 			let sortOrder = $page.url.searchParams.get('order');
-			if(sortName === 'name'){
-				filteredImages = filteredImages.sort((a,b) => a.tags[0] < b.tags[0] ? 1 : -1);
-			}else if(sortName === 'created'){
-				filteredImages = filteredImages.sort((a,b) => a.created < b.created ? 1 : -1);
-			}else if(sortName === 'size'){
-				filteredImages = filteredImages.sort((a,b) => b.size - a.size);
+			if (sortName === 'name') {
+				filteredImages = filteredImages.sort((a, b) => a.tags[0] < b.tags[0] ? 1 : -1);
+			} else if (sortName === 'created') {
+				filteredImages = filteredImages.sort((a, b) => a.created < b.created ? 1 : -1);
+			} else if (sortName === 'size') {
+				filteredImages = filteredImages.sort((a, b) => b.size - a.size);
 			}
-			if(sortOrder === 'asc'){
+			if (sortOrder === 'asc') {
 				filteredImages = filteredImages.reverse();
 			}
 		}
@@ -51,7 +51,8 @@
 				<div class="dropdown">
 					<button class="select select-bordered bg-base-100 align-middle ml-2 w-44 capitalize">
 						{#if $page.url.searchParams.get('sort')}
-							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')} ({$page.url.searchParams.get('order')})</span>
+							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')}
+								({$page.url.searchParams.get('order')})</span>
 						{:else}
 							<span class="mt-2 text-base">Created (desc)</span>
 						{/if}

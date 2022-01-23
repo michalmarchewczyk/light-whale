@@ -4,10 +4,10 @@ import {checkContainer, NGINX_CONTAINER_NAME} from '$lib/network/nginx';
 
 const get:RequestHandler = async () => {
 	const isContainer = await checkContainer();
-	if(!isContainer){
+	if (!isContainer) {
 		return {
 			status: 500,
-			body: `${NGINX_CONTAINER_NAME} is not running`
+			body: `${NGINX_CONTAINER_NAME} is not running`,
 		};
 	}
 	return {
@@ -17,5 +17,5 @@ const get:RequestHandler = async () => {
 };
 
 export {
-	get
+	get,
 };

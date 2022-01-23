@@ -14,24 +14,24 @@
 
 	$: {
 		filteredSites = $sites;
-		if($page.url.searchParams.get('status') === 'online'){
+		if ($page.url.searchParams.get('status') === 'online') {
 			filteredSites = filteredSites.filter(s => !s.paused && $containers?.find(c => c.id.startsWith(s.containerId))?.state === 'running');
 		}
-		if($page.url.searchParams.get('status') === 'disabled'){
+		if ($page.url.searchParams.get('status') === 'disabled') {
 			filteredSites = filteredSites.filter(s => s.paused);
 		}
-		if($page.url.searchParams.get('status') === 'offline'){
+		if ($page.url.searchParams.get('status') === 'offline') {
 			filteredSites = filteredSites.filter(s => !s.paused && $containers?.find(c => c.id.startsWith(s.containerId))?.state !== 'running');
 		}
-		if($page.url.searchParams.get('sort')){
+		if ($page.url.searchParams.get('sort')) {
 			let sortName = $page.url.searchParams.get('sort');
 			let sortOrder = $page.url.searchParams.get('order');
-			if(sortName === 'name'){
-				filteredSites = filteredSites.sort((a,b) => a.domain < b.domain ? 1 : -1);
-			}else if(sortName === 'created'){
-				filteredSites = filteredSites.sort((a,b) => a.created < b.created ? 1 : -1);
+			if (sortName === 'name') {
+				filteredSites = filteredSites.sort((a, b) => a.domain < b.domain ? 1 : -1);
+			} else if (sortName === 'created') {
+				filteredSites = filteredSites.sort((a, b) => a.created < b.created ? 1 : -1);
 			}
-			if(sortOrder === 'asc'){
+			if (sortOrder === 'asc') {
 				filteredSites = filteredSites.reverse();
 			}
 		}
@@ -55,7 +55,8 @@
 				<div class="dropdown">
 					<button class="select select-bordered bg-base-100 align-middle ml-2 w-44 capitalize">
 						{#if $page.url.searchParams.get('sort')}
-							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')} ({$page.url.searchParams.get('order')})</span>
+							<span class="mt-2 text-base">{$page.url.searchParams.get('sort')}
+								({$page.url.searchParams.get('order')})</span>
 						{:else}
 							<span class="mt-2 text-base">Created (desc)</span>
 						{/if}

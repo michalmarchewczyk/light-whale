@@ -15,5 +15,5 @@ const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 };
 
 export {
-	get
+	get,
 };

@@ -5,7 +5,7 @@ import {
 	removeContainer,
 	restartContainer,
 	startContainer,
-	stopContainer
+	stopContainer,
 } from '$lib/docker/containers';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
@@ -19,7 +19,7 @@ const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	const containers = await getContainers();
 	return {
 		status: 200,
-		body: JSON.stringify(containers)
+		body: JSON.stringify(containers),
 	};
 };
 
@@ -35,7 +35,7 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 			status: 400,
 		};
 	}
-	let res = false;
+	let res;
 	if (action === 'start') {
 		res = await startContainer(id);
 	} else if (action === 'stop') {
@@ -44,10 +44,12 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 		res = await restartContainer(id);
 	} else if (action === 'remove') {
 		res = await removeContainer(id);
+	} else {
+		res = false;
 	}
 	return {
 		status: 200,
-		body: JSON.stringify({success: res})
+		body: JSON.stringify({success: res}),
 	};
 };
 
@@ -67,7 +69,7 @@ const post:RequestHandler<Promise<void>, { imageId:string, name:string, command:
 	const res = await createContainer(imageId, name, command);
 	if (res) {
 		return {
-			status: 200
+			status: 200,
 		};
 	} else {
 		return {
@@ -79,5 +81,5 @@ const post:RequestHandler<Promise<void>, { imageId:string, name:string, command:
 export {
 	get,
 	put,
-	post
+	post,
 };

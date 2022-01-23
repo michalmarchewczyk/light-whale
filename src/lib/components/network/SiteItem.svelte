@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type {Site} from '$lib/stores/sites';
+	import {pauseSite, removeSite, unpauseSite} from '$lib/stores/sites';
 
 	import StatusOnlineIcon from '$icons/status-online.svg';
 	import StatusOfflineIcon from '$icons/status-offline.svg';
@@ -12,7 +13,6 @@
 	import ExternalLinkIcon from '$icons/external-link.svg';
 	import type {Container} from '$lib/stores/containers';
 	import {containers} from '$lib/stores/containers';
-	import {pauseSite, removeSite, unpauseSite} from '$lib/stores/sites';
 
 	export let site:Site;
 
@@ -87,7 +87,9 @@
 			</span>
 		</div>
 		{#if container}
-			<a href='/containers/{container?.names[0].substring(1)}' class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
+			<a href='/containers/{container?.names[0].substring(1)}'
+			   class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left"
+			   data-tip="Image">
 				{#if container?.state === 'running'}
 					<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 				{:else}
@@ -98,7 +100,8 @@
 				</span>
 			</a>
 		{:else}
-			<div  class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
+			<div class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left"
+				 data-tip="Image">
 				<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
 				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left italic">
 					not found

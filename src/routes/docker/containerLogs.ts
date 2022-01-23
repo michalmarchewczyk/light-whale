@@ -12,7 +12,7 @@ const get:RequestHandler = async ({url, headers}) => {
 	const id = url.searchParams.get('id') ?? '';
 	if (!id) {
 		return {
-			status: 400
+			status: 400,
 		};
 	}
 	if (!validator.isAlphanumeric(id)) {
@@ -28,5 +28,5 @@ const get:RequestHandler = async ({url, headers}) => {
 };
 
 export {
-	get
+	get,
 };

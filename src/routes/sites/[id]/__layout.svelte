@@ -32,8 +32,8 @@
 			<ExternalLinkIcon class="inline-block w-8 h-8 stroke-2 align-top mt-0.5"/>
 		</a>
 		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
-			class:bg-success={online}
-			class:bg-error={!online}>
+			 class:bg-error={!online}
+			 class:bg-success={online}>
 			{site?.paused ? 'Disabled' : online ? 'Online' : 'Offline'}
 		</div>
 	</div>

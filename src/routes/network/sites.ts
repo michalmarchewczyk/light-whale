@@ -26,15 +26,17 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 			status: 400,
 		};
 	}
-	let res = false;
+	let res;
 	if (action === 'unpause') {
 		res = await unpauseSite(id);
 	} else if (action === 'pause') {
 		res = await pauseSite(id);
+	} else {
+		res = false;
 	}
 	return {
 		status: 200,
-		body: JSON.stringify({success: res})
+		body: JSON.stringify({success: res}),
 	};
 };
 
@@ -54,12 +56,12 @@ const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers})
 	const res = await removeSite(id);
 	return {
 		status: 200,
-		body: JSON.stringify({success: res})
+		body: JSON.stringify({success: res}),
 	};
 };
 
 
-const post:RequestHandler<void, {containerId:string, domain:string, port:number}> = async ({body, headers}) => {
+const post:RequestHandler<void, { containerId:string, domain:string, port:number }> = async ({body, headers}) => {
 	if (!checkSession(headers)) {
 		return {
 			status: 401,
@@ -74,7 +76,7 @@ const post:RequestHandler<void, {containerId:string, domain:string, port:number}
 	const res = await createSite(containerId, domain, port);
 	return {
 		status: 200,
-		body: JSON.stringify({success: res})
+		body: JSON.stringify({success: res}),
 	};
 };
 
@@ -82,5 +84,5 @@ export {
 	get,
 	put,
 	del,
-	post
+	post,
 };

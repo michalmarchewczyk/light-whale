@@ -21,17 +21,17 @@ const post:RequestHandler<Promise<void>, { password:string }> = async ({body}) =
 	const sessionCookie = cookie.serialize('sessionId', session.id, {
 		httpOnly: true,
 		maxAge: 60 * 60 * 24,
-		path: '/'
+		path: '/',
 	});
 	return {
 		status: 200,
 		body: JSON.stringify({msg: 'logged in', session}),
 		headers: {
 			'Set-Cookie': sessionCookie,
-		}
+		},
 	};
 };
 
 export {
-	post
+	post,
 };

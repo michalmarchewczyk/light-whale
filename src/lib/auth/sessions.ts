@@ -14,7 +14,7 @@ export const createSession = ():Session => {
 	const newId = uuidv4();
 	const newSession = {
 		id: newId,
-		expires: Date.now() + 1000 * 60 * 60 * 24
+		expires: Date.now() + 1000 * 60 * 60 * 24,
 	};
 	sessions.push(newSession);
 	return newSession;
@@ -26,7 +26,9 @@ export const getSavedSession = (id:string):Session | null => {
 
 export const invalidateSession = (id:string):void => {
 	const session = sessions.find(s => s.id === id);
-	if (!session) return;
+	if (!session) {
+		return;
+	}
 	session.expires = 0;
 };
 
