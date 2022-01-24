@@ -14,6 +14,9 @@ export const sites = writable<Site[]>([]);
 
 export const fetchSites = async ():Promise<void> => {
 	const res = await fetch('/network/sites');
+	if(res.status !== 200){
+		return;
+	}
 	const data = await res.json();
 	sites.set(data ?? []);
 };

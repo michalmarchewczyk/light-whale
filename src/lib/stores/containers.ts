@@ -26,6 +26,9 @@ export const composeApps = writable<ComposeApp[]>([]);
 
 export const fetchContainers = async ():Promise<void> => {
 	const res = await fetch('/docker/containers');
+	if(res.status !== 200){
+		return;
+	}
 	const data = await res.json();
 	data?.forEach(c => c.name = c?.names[0]?.substring(1) ?? '-');
 	containers.set(data ?? []);

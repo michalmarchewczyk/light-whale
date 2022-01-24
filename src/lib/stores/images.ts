@@ -13,6 +13,9 @@ export const images = writable<Image[]>([]);
 
 export const fetchImages = async ():Promise<void> => {
 	const res = await fetch('/docker/images');
+	if(res.status !== 200){
+		return;
+	}
 	const data = await res.json();
 	images.set(data ?? []);
 };

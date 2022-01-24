@@ -22,6 +22,9 @@ export const updateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	await fetchNetworkAvailable();
 	const res = await fetch('/docker/events');
+	if(res.status !== 200){
+		return;
+	}
 	const lastEvent = await res.json();
 	if (!lastEvent?.time || lastEvent.time === get(lastUpdate)) {
 		return;
