@@ -2,8 +2,8 @@
 	import {goto} from '$app/navigation';
 	import {session} from '$app/stores';
 
-	import FormError from '$lib/components/FormError.svelte';
-	import FormPassword from '$lib/components/FormPassword.svelte';
+	import FormError from '$lib/components/forms/FormError.svelte';
+	import FormPassword from '$lib/components/forms/FormPassword.svelte';
 
 	let password = '';
 

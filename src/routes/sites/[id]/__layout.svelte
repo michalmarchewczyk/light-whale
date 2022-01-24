@@ -6,6 +6,9 @@
 	import ClipboardCheckIcon from '$icons/clipboard-check.svg';
 	import ExternalLinkIcon from '$icons/external-link.svg';
 	import {Container, containers} from '$lib/stores/containers';
+	import PageHeader from '$lib/components/page/PageHeader.svelte';
+	import PageMenu from '$lib/components/page/PageMenu.svelte';
+	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
 
 	let site:Site;
 
@@ -24,36 +27,24 @@
 	<title>Sites</title>
 </svelte:head>
 
-<div class="bg-base-200 top-0 sticky z-40 rounded-b-xl pb-4">
-	<div class="text-3xl font-bold pb-4 mx-8 pt-6">
-		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/sites">Sites / </a>
-		<a class="text-3xl hover:text-primary-focus" href="http://{site?.domain}" target="_blank">
-			<span>{site?.domain}</span>
-			<ExternalLinkIcon class="inline-block w-8 h-8 stroke-2 align-top mt-0.5"/>
-		</a>
-		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
-			 class:bg-error={!online}
-			 class:bg-success={online}>
-			{site?.paused ? 'Disabled' : online ? 'Online' : 'Offline'}
-		</div>
-	</div>
-</div>
-<div class="mx-4 sticky top-[5.75rem] z-50">
-	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
-		<li class:bordered={$page.url.pathname === `/sites/${$page.params.id}`}>
-			<a href="/sites/{$page.params.id}/">
-				<GlobeAltIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				General
-			</a>
-		</li>
-		<li class:bordered={$page.url.pathname === `/sites/${$page.params.id}/test`}>
-			<a href="/sites/{$page.params.id}/test">
-				<ClipboardCheckIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				Test
-			</a>
-		</li>
-	</ul>
-</div>
+<PageHeader badge="{site?.paused ? 'Disabled' : online ? 'Online' : 'Offline'}"
+			badgeClass="{online ? 'bg-success' : 'bg-error'}">
+	<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/sites">Sites / </a>
+	<a class="text-3xl hover:text-primary-focus" href="http://{site?.domain}" target="_blank">
+		<span>{site?.domain}</span>
+		<ExternalLinkIcon class="inline-block w-8 h-8 stroke-2 align-top mt-0.5"/>
+	</a>
+</PageHeader>
+
+<PageMenu>
+	<PageMenuItem icon={GlobeAltIcon} path="/sites/{$page.params.id}">
+		General
+	</PageMenuItem>
+	<PageMenuItem icon={ClipboardCheckIcon} path="/sites/{$page.params.id}/test">
+		Test
+	</PageMenuItem>
+</PageMenu>
+
 
 <div class="mx-4 mt-8 mb-8">
 	<slot></slot>

@@ -15,8 +15,8 @@
 </script>
 
 <script lang="ts">
-	import NavBar from '$lib/components/NavBar.svelte';
-	import Drawer from '$lib/components/Drawer.svelte';
+	import NavBar from '$lib/components/layout/NavBar.svelte';
+	import Drawer from '$lib/components/layout/Drawer.svelte';
 	import {onMount} from 'svelte';
 	import {browser} from '$app/env';
 

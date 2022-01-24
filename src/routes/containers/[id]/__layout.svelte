@@ -7,65 +7,47 @@
 	import FolderIcon from '$icons/folder.svg';
 	import ViewListIcon from '$icons/view-list.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
+	import PageHeader from '$lib/components/page/PageHeader.svelte';
+	import PageMenu from '$lib/components/page/PageMenu.svelte';
+	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
 
 	let container:Container;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
-
 </script>
 
 <svelte:head>
 	<title>Containers</title>
 </svelte:head>
 
+<PageHeader badge="{container?.state}"
+			badgeClass="
+			{container?.state === 'dead' || container?.state === 'removing' ? 'bg-error' : ''}
+			{container?.state === 'created' ? 'bg-info' : ''}
+			{container?.state === 'running' ? 'bg-success' : ''}
+			{container?.state === 'paused' || container?.state === 'restarting' ? 'bg-warning' : ''}">
 
-<div class="bg-base-200 top-0 sticky z-40 rounded-b-xl pb-4">
-	<div class="text-3xl font-bold pb-4 mx-8 pt-6">
-		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/containers">Containers / </a>
-		{$page.params.id}
-		<div class="badge badge-lg float-right mt-1 text-lg h-8 border-none"
-			 class:bg-error={container?.state === 'dead' || container?.state === 'removing'}
-			 class:bg-info={container?.state === 'created'}
-			 class:bg-success={container?.state === 'running'}
-			 class:bg-warning={container?.state === 'paused' || container?.state === 'restarting'}>
-			{container?.state}
-		</div>
-	</div>
-</div>
-<div class="mx-4 sticky top-[5.75rem] z-50">
-	<ul class="menu items-stretch px-6 shadow-lg bg-base-100 horizontal rounded-box w-full mt-0 z-30">
-		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}`}>
-			<a href="/containers/{$page.params.id}/">
-				<CubeIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				General
-			</a>
-		</li>
-		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/network`}>
-			<a href="/containers/{$page.params.id}/network">
-				<GlobeAltIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				Network
-			</a>
-		</li>
-		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/stats`}>
-			<a href="/containers/{$page.params.id}/stats">
-				<ChartSquareBarIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				Statistics
-			</a>
-		</li>
-		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/files`}>
-			<a href="/containers/{$page.params.id}/files">
-				<FolderIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				Files
-			</a>
-		</li>
-		<li class:bordered={$page.url.pathname === `/containers/${$page.params.id}/logs`}>
-			<a href="/containers/{$page.params.id}/logs">
-				<ViewListIcon class="w-6 h-6 stroke-2 inline-block mr-2 opacity-80"/>
-				Logs
-			</a>
-		</li>
-	</ul>
-</div>
+	<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/containers">Containers / </a>
+	{$page.params.id}
+</PageHeader>
+
+<PageMenu>
+	<PageMenuItem icon={CubeIcon} path="/containers/{$page.params.id}">
+		General
+	</PageMenuItem>
+	<PageMenuItem icon={GlobeAltIcon} path="/containers/{$page.params.id}/network">
+		Network
+	</PageMenuItem>
+	<PageMenuItem icon={ChartSquareBarIcon} path="/containers/{$page.params.id}/stats">
+		Statistics
+	</PageMenuItem>
+	<PageMenuItem icon={FolderIcon} path="/containers/{$page.params.id}/files">
+		Files
+	</PageMenuItem>
+	<PageMenuItem icon={ViewListIcon} path="/containers/{$page.params.id}/logs">
+		Logs
+	</PageMenuItem>
+</PageMenu>
 
 <div class="mx-4 mt-8 mb-8">
 	<slot></slot>

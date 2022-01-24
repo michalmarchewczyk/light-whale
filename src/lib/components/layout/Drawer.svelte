@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DrawerMenu from '$lib/components/DrawerMenu.svelte';
+	import DrawerMenu from '$lib/components/layout/DrawerMenu.svelte';
 
 	export let drawerOpen = false;
 	export let currentTheme;

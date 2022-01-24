@@ -2,9 +2,9 @@
 	import {Image, images} from '$lib/stores/images';
 	import ImageItem from '$lib/components/images/ImageItem.svelte';
 	import {containers} from '$lib/stores/containers';
-	import ListHeader from '$lib/components/ListHeader.svelte';
-	import SortMenu from '$lib/components/SortMenu.svelte';
-	import FilterMenu from '$lib/components/FilterMenu.svelte';
+	import ListHeader from '$lib/components/lists/ListHeader.svelte';
+	import SortMenu from '$lib/components/lists/SortMenu.svelte';
+	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
 
 	let usedCount:number;
 	$: usedCount = $images.filter(i => $containers.filter(c => c.imageId === i.id).length > 0).length;

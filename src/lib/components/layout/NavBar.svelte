@@ -84,9 +84,3 @@
 	background: linear-gradient(90deg, #256cfa 0%, rgb(31, 59, 204) 100%);
   }
 </style>
-
-
-
-
-
-

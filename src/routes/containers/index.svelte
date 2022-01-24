@@ -2,9 +2,9 @@
 	import ContainerItem from '$lib/components/containers/ContainerItem.svelte';
 	import ComposeAppItem from '$lib/components/containers/ComposeAppItem.svelte';
 	import {ComposeApp, composeApps, Container, containers} from '$lib/stores/containers';
-	import FilterMenu from '$lib/components/FilterMenu.svelte';
-	import SortMenu from '$lib/components/SortMenu.svelte';
-	import ListHeader from '$lib/components/ListHeader.svelte';
+	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
+	import SortMenu from '$lib/components/lists/SortMenu.svelte';
+	import ListHeader from '$lib/components/lists/ListHeader.svelte';
 
 	let appsAndContainers:(ComposeApp | Container)[];
 

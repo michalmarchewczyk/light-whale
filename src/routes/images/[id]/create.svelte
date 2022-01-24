@@ -3,8 +3,8 @@
 	import {page} from '$app/stores';
 	import {createContainer} from '$lib/stores/containers';
 	import {goto} from '$app/navigation';
-	import FormError from '$lib/components/FormError.svelte';
-	import FormInput from '$lib/components/FormInput.svelte';
+	import FormError from '$lib/components/forms/FormError.svelte';
+	import FormInput from '$lib/components/forms/FormInput.svelte';
 
 	let image:Image;
 

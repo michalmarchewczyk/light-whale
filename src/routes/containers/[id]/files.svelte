@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import FileBrowser from '$lib/components/FileBrowser.svelte';
+	import FileBrowser from '$lib/components/containers/FileBrowser.svelte';
 	import {Container, containers} from '$lib/stores/containers';
 	import * as path from 'path-browserify';
 

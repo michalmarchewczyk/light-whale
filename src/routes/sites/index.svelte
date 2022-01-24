@@ -2,9 +2,9 @@
 	import {Site, sites} from '$lib/stores/sites';
 	import SiteItem from '$lib/components/network/SiteItem.svelte';
 	import {containers} from '$lib/stores/containers';
-	import ListHeader from '$lib/components/ListHeader.svelte';
-	import SortMenu from '$lib/components/SortMenu.svelte';
-	import FilterMenu from '$lib/components/FilterMenu.svelte';
+	import ListHeader from '$lib/components/lists/ListHeader.svelte';
+	import SortMenu from '$lib/components/lists/SortMenu.svelte';
+	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
 
 
 	let onlineCount:number;
@@ -43,7 +43,7 @@
 </svelte:head>
 
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
-	<ListHeader title="Images" badge="{onlineCount} / {$sites.length} online">
+	<ListHeader title="Sites" badge="{onlineCount} / {$sites.length} online">
 		<SortMenu bind:value={sort} bind:order={order} values="{['created', 'name']}" class="float-right"/>
 		<FilterMenu name='used' bind:value={status} values="{['all', 'online', 'disabled', 'offline']}" class="mr-4"/>
 	</ListHeader>

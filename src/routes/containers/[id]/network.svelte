@@ -5,7 +5,7 @@
 	import {addSite, sites} from '$lib/stores/sites';
 	import SiteItem from '$lib/components/network/SiteItem.svelte';
 
-	import FormError from '$lib/components/FormError.svelte';
+	import FormError from '$lib/components/forms/FormError.svelte';
 
 	let container:Container;
 
