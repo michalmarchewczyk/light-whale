@@ -5,12 +5,13 @@
 	import {addSite, sites} from '$lib/stores/sites';
 	import SiteItem from '$lib/components/network/SiteItem.svelte';
 
-	import ExclamationIcon from '$icons/exclamation.svg';
+	import FormError from '$lib/components/FormError.svelte';
 
 	let container:Container;
 
 	$: container = $containers.find(c => c.names.includes('/' + $page.params.id));
 
+	let network;
 	$: network = container?.networks['light-whale-network'] ?? null;
 
 	let connectedSites:Site[];
@@ -49,14 +50,7 @@
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">Create Site</h2>
 		<form on:submit|preventDefault={submit}>
-			{#if error}
-				<div class="alert alert-error my-2">
-					<div class="flex-1">
-						<ExclamationIcon class="h-6 w-6 mx-2 stroke-2"/>
-						<span>{error}</span>
-					</div>
-				</div>
-			{/if}
+			<FormError error={error}/>
 			<div class="form-control mb-0 w-full">
 				<div class="flex space-x-4 mt-4 w-full">
 					<label class="pl-0 flex flex-1 space-x-4">

@@ -1,24 +1,9 @@
-<script context="module" lang="ts">
-	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
-
-	export async function load({session}:LoadInput):Promise<LoadOutput> {
-		if (session.id) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
-		return {
-			props: {}
-		};
-	}
-</script>
-
 <script lang="ts">
 	import {goto} from '$app/navigation';
 	import {session} from '$app/stores';
 
-	import ExclamationIcon from '$icons/exclamation.svg';
+	import FormError from '$lib/components/FormError.svelte';
+	import FormPassword from '$lib/components/FormPassword.svelte';
 
 	let password = '';
 
@@ -40,44 +25,19 @@
 	};
 </script>
 
-<svelte:head>
-	<title>Light-Whale</title>
-</svelte:head>
-
-<div class="flex w-screen h-screen justify-center items-center">
-	<div class="card shadow-lg w-80 bg-base-100">
-		<div class="card-body">
-			<h1 class="card-title">Login</h1>
-			<form on:submit|preventDefault={submit}>
-				{#if error}
-					<div class="alert alert-error my-2">
-						<div class="flex-1">
-							<ExclamationIcon class="h-6 w-6 mx-2 stroke-2"/>
-							<span>{error}</span>
-						</div>
-					</div>
-				{/if}
-				<div class="form-control">
-					<label>
-						<span class="label pl-0">
-							<span class="label-text text-base mb-0">Password: </span>
-						</span>
-						<input bind:value={password} class="input input-bordered w-full text-base"
-							   placeholder="password"
-							   type="password">
-					</label>
-				</div>
-				<div class="card-actions">
-					<input class="btn btn-primary" type="submit" value="Login"/>
-				</div>
-			</form>
-		</div>
+<div class="card shadow-lg w-80 bg-base-100">
+	<div class="card-body">
+		<h1 class="card-title">Login</h1>
+		<form on:submit|preventDefault={submit}>
+			<FormError error={error}/>
+			<FormPassword label="Password" placeholder="password" bind:value={password}/>
+			<div class="card-actions">
+				<input class="btn btn-primary" type="submit" value="Login"/>
+			</div>
+		</form>
 	</div>
 </div>
 
 
-<style lang="scss">
-  :global(body) {
-	@apply bg-base-200 w-screen h-screen;
-  }
-</style>
+
+

@@ -1,9 +1,10 @@
 <script lang="ts">
 	import {Image, images} from '$lib/stores/images';
 	import {page} from '$app/stores';
-	import ExclamationIcon from '$icons/exclamation.svg';
 	import {createContainer} from '$lib/stores/containers';
 	import {goto} from '$app/navigation';
+	import FormError from '$lib/components/FormError.svelte';
+	import FormInput from '$lib/components/FormInput.svelte';
 
 	let image:Image;
 
@@ -23,32 +24,9 @@
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title">Create container</h2>
 		<form on:submit|preventDefault={submit}>
-			{#if error}
-				<div class="alert alert-error my-2">
-					<div class="flex-1">
-						<ExclamationIcon class="h-6 w-6 mx-2 stroke-2"/>
-						<span>{error}</span>
-					</div>
-				</div>
-			{/if}
-			<div class="form-control mb-2">
-				<label>
-					<span class="label pl-0">
-						<span class="label-text text-base mb-0">Container name: </span>
-					</span>
-					<input bind:value={name} class="input input-bordered w-full text-base" placeholder="name"
-						   type="text">
-				</label>
-			</div>
-			<div class="form-control mb-2">
-				<label>
-					<span class="label pl-0">
-						<span class="label-text text-base mb-0">Command: </span>
-					</span>
-					<input bind:value={command} class="input input-bordered w-full text-base" placeholder="command"
-						   type="text">
-				</label>
-			</div>
+			<FormError error={error} />
+			<FormInput label="Container name" placeholder="name" bind:value={name}/>
+			<FormInput label="Command" placeholder="command" bind:value={command}/>
 			<div class="card-actions">
 				<input class="btn btn-primary" type="submit" value="Create"/>
 			</div>
