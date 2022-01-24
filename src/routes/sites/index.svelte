@@ -45,7 +45,7 @@
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
 	<ListHeader title="Sites" badge="{onlineCount} / {$sites.length} online">
 		<SortMenu bind:value={sort} bind:order={order} values="{['created', 'name']}" class="float-right"/>
-		<FilterMenu name='used' bind:value={status} values="{['all', 'online', 'disabled', 'offline']}" class="mr-4"/>
+		<FilterMenu name='status' bind:value={status} values="{['all', 'online', 'disabled', 'offline']}" class="mr-4"/>
 	</ListHeader>
 </div>
 

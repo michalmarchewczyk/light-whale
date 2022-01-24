@@ -2,7 +2,7 @@
 	import {containers} from '$lib/stores/containers';
 
 	import CalendarIcon from '$icons/calendar.svg';
-	import DiscIcon from '$lib/assets/icons/disc.svg';
+
 	import TrashIcon from '$icons/trash.svg';
 	import PlusIcon from '$icons/plus.svg';
 	import PuzzleIcon from '$icons/puzzle.svg';
@@ -13,6 +13,7 @@
 	import ActionButton from '$lib/components/ActionButton.svelte';
 	import ItemInfo from '$lib/components/ItemInfo.svelte';
 	import RemoveModal from '$lib/components/RemoveModal.svelte';
+	import ImageUsedIcon from '$lib/components/images/ImageUsedIcon.svelte';
 
 	export let image:Image;
 
@@ -40,15 +41,7 @@
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-[5.5rem] overflow-hidden">
-	<div class="mx-1 sm:mx-2 w-16 sm:w-20 flex-shrink-0"
-		 class:text-success={countContainers > 0}
-	>
-		<DiscIcon class="w-8 h-8 sm:h-10 sm:w-10 mx-auto mt-0 stroke-[1.5px]"/>
-		<span class="uppercase w-full text-center mt-1 block font-bold text-sm sm:text-base
-		 overflow-hidden overflow-ellipsis sm:overflow-visible whitespace-nowrap">
-			{countContainers > 0 ? 'used' : 'unused'}
-		</span>
-	</div>
+	<ImageUsedIcon used={countContainers > 0} class="flex-shrink-0"/>
 	<a class="block w-60 flex-auto w-60 overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
 	   href="/images/{shortId}">
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">

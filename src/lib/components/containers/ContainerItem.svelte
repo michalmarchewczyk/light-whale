@@ -1,8 +1,6 @@
 <script lang="ts">
 	import {Container, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/stores/containers';
 
-	import CubeIcon from '$icons/cube.svg';
-	import CubeTransparentIcon from '$icons/cube-transparent.svg';
 	import RefreshIcon from '$icons/refresh.svg';
 	import PauseIcon from '$icons/pause.svg';
 	import CalendarIcon from '$icons/calendar.svg';
@@ -14,6 +12,7 @@
 	import ActionButton from '$lib/components/ActionButton.svelte';
 	import ItemInfo from '$lib/components/ItemInfo.svelte';
 	import RemoveModal from '$lib/components/RemoveModal.svelte';
+	import ContainerStateIcon from '$lib/components/containers/ContainerStateIcon.svelte';
 
 	export let container:Container;
 
@@ -49,31 +48,7 @@
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
-	<div class="mx-2 sm:mx-3 w-16 sm:w-24 flex-shrink-0"
-		 class:text-error={container.state === 'dead' || container.state === 'removing'}
-		 class:text-info={container.state === 'created'}
-		 class:text-success={container.state === 'running'}
-		 class:text-warning={container.state === 'paused' || container.state === 'restarting'}
-	>
-		{#if container.state === 'created'}
-			<CubeTransparentIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'running'}
-			<CubeIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'restarting'}
-			<RefreshIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'paused'}
-			<PauseIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'exited'}
-			<CubeTransparentIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'removing'}
-			<CubeTransparentIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{:else if container.state === 'dead'}
-			<CubeTransparentIcon class="w-10 h-10 sm:h-12 sm:w-12 mx-auto mt-2 sm:mt-1 stroke-[1.5px]"/>
-		{/if}
-		<span class="uppercase w-full text-center mt-1.5 block font-bold text-sm sm:text-base overflow-hidden overflow-ellipsis sm:overflow-visible">
-			{container.state}
-		</span>
-	</div>
+	<ContainerStateIcon state="{container?.state}" class="flex-shrink-0"/>
 	<a class="block w-60 flex-auto w-60 overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
 	   href="/containers/{container.names[0].substring(1)}">
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
