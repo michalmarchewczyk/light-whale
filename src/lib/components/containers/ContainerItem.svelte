@@ -11,6 +11,9 @@
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
 	import {Image, images} from '$lib/stores/images';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import ItemInfo from '$lib/components/ItemInfo.svelte';
+	import RemoveModal from '$lib/components/RemoveModal.svelte';
 
 	export let container:Container;
 
@@ -38,16 +41,7 @@
 		loading = false;
 	};
 
-	const openRemoveModal = () => {
-		removeModal = true;
-	};
-
-	const closeRemoveModal = () => {
-		removeModal = false;
-	};
-
 	const remove = async () => {
-		removeModal = false;
 		loading = true;
 		await removeContainer(container.id);
 		loading = false;
@@ -89,74 +83,35 @@
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-0.5">{container.status}</span>
 	</a>
 	<div class="block w-52 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4">
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Created">
-			<CalendarIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{new Date(container.created).toLocaleDateString()}
-			</span>
-		</div>
-		<a class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left hover:text-primary-focus"
-		   data-tip="Image" href="/images/{image?.id.substring(7, 19)}">
-			<DiscIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+		<ItemInfo icon={CalendarIcon}>
+			{new Date(container.created).toLocaleDateString()}
+		</ItemInfo>
+		<a href="/images/{image?.id.substring(7, 19)}" class="hover:text-primary-focus">
+			<ItemInfo icon={DiscIcon}>
 				{image?.tags.join(',')}
-			</span>
+			</ItemInfo>
 		</a>
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Command">
-			<TerminalIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{container.command}
-			</span>
-		</div>
+		<ItemInfo icon={TerminalIcon}>
+			{container.command}
+		</ItemInfo>
 	</div>
 	<div class="block w-32 overflow-hidden flex-shrink-0">
 		{#if container.state === 'created' || container.state === 'exited'}
-			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
-					on:click={start} class:loading={loading} disabled={loading}>
-				{#if !loading}
-					<PlayIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Start</span>
-			</button>
-			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
-					on:click={openRemoveModal} class:loading={loading} disabled={loading}>
-				{#if !loading}
-					<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Remove</span>
-			</button>
-			<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={removeModal}>
-			<div class="modal">
-				<div class="modal-box">
-					<p>Do you really want to remove container
-						<span class="font-bold">{container.names[0].substring(1)}</span> ?
-					</p>
-					<div class="modal-action">
-						<button class="btn btn-primary" on:click={remove}>Remove</button>
-						<button class="btn" on:click={closeRemoveModal}>Cancel</button>
-					</div>
-				</div>
-			</div>
+			<ActionButton icon={PlayIcon} loading={loading} on:click={start} class="w-32 h-10">
+				Start
+			</ActionButton>
+			<ActionButton icon={TrashIcon} loading={loading} on:click={() => removeModal = true} class="w-32 h-10 mt-2">
+				Remove
+			</ActionButton>
+			<RemoveModal label="container" name="{container?.name}" remove={remove} bind:open={removeModal}/>
 		{/if}
 		{#if container.state === 'running' || container.state === 'paused'}
-			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2"
-					on:click={stop} class:loading={loading} disabled={loading}>
-				{#if !loading}
-					<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Stop</span>
-			</button>
-			<button class="btn btn-primary w-32 justify-start h-10 btn-block min-h-0 text-base px-2 mt-2"
-					on:click={restart} class:loading={loading} disabled={loading}>
-				{#if !loading}
-					<RefreshIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Restart</span>
-			</button>
+			<ActionButton icon={PauseIcon} loading={loading} on:click={stop} class="w-32 h-10">
+				Stop
+			</ActionButton>
+			<ActionButton icon={RefreshIcon} loading={loading} on:click={restart} class="w-32 h-10 mt-2">
+				Restart
+			</ActionButton>
 		{/if}
 	</div>
 </div>
-
-<style lang="scss">
-
-</style>

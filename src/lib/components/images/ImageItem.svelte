@@ -10,6 +10,9 @@
 	import {removeImage} from '$lib/stores/images';
 	import {bytesToHuman} from '$lib/utils/bytesToHuman';
 	import {goto} from '$app/navigation';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import ItemInfo from '$lib/components/ItemInfo.svelte';
+	import RemoveModal from '$lib/components/RemoveModal.svelte';
 
 	export let image:Image;
 
@@ -29,16 +32,7 @@
 		loading = false;
 	};
 
-	const openRemoveModal = () => {
-		removeModal = true;
-	};
-
-	const closeRemoveModal = () => {
-		removeModal = false;
-	};
-
 	const remove = async () => {
-		removeModal = false;
 		loading = true;
 		await removeImage(image?.id);
 		loading = false;
@@ -63,49 +57,21 @@
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-1.5">ID: {image.id}</span>
 	</a>
 	<div class="block w-40 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4 mt-1">
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Created">
-			<CalendarIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{new Date(image.created).toLocaleDateString()}
-			</span>
-		</div>
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Image">
-			<PuzzleIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{bytesToHuman(image.size)}
-			</span>
-		</div>
+		<ItemInfo icon={CalendarIcon}>
+			{new Date(image.created).toLocaleDateString()}
+		</ItemInfo>
+		<ItemInfo icon={PuzzleIcon}>
+			{bytesToHuman(image.size)}
+		</ItemInfo>
 	</div>
 	<div class="block w-28 md:w-56 overflow-hidden flex-shrink-0 self-center">
-		<button class="btn btn-primary w-28 md:w-24 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-				class:loading={loading} disabled={loading} on:click={create}>
-			{#if !loading}
-				<PlusIcon class="h-6 w-6 mr-2 stroke-2"/>
-			{/if}
-			<span class="mt-[-0.25rem]">New</span>
-		</button>
-		<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
-				class:loading={loading} disabled={loading || countContainers > 0} on:click={openRemoveModal}>
-			{#if !loading}
-				<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
-			{/if}
-			<span class="mt-[-0.25rem]">Delete</span>
-		</button>
-		<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
-		<div class="modal">
-			<div class="modal-box">
-				<p>Do you really want to remove image
-					<span class="font-bold">{shortId}</span>?
-				</p>
-				<div class="modal-action">
-					<button class="btn btn-primary" on:click={remove}>Remove</button>
-					<button class="btn" on:click={closeRemoveModal}>Cancel</button>
-				</div>
-			</div>
-		</div>
+		<ActionButton icon={PlusIcon} loading={loading} on:click={create} class="w-28 h-8 md:h-12 md:w-24 md:mr-2">
+			New
+		</ActionButton>
+		<ActionButton icon={TrashIcon} loading={loading} disabled={countContainers > 0} on:click={() => removeModal = true}
+					  class="w-28 h-8 md:h-12 mt-1 md:mt-0">
+			Delete
+		</ActionButton>
+		<RemoveModal label="image" name="{shortId}" remove={remove} bind:open={removeModal}/>
 	</div>
 </div>
-
-<style lang="scss">
-
-</style>

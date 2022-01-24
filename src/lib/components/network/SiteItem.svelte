@@ -13,6 +13,9 @@
 	import ExternalLinkIcon from '$icons/external-link.svg';
 	import type {Container} from '$lib/stores/containers';
 	import {containers} from '$lib/stores/containers';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import ItemInfo from '$lib/components/ItemInfo.svelte';
+	import RemoveModal from '$lib/components/RemoveModal.svelte';
 
 	export let site:Site;
 
@@ -39,16 +42,7 @@
 		loading = false;
 	};
 
-	const openRemoveModal = () => {
-		removeModal = true;
-	};
-
-	const closeRemoveModal = () => {
-		removeModal = false;
-	};
-
 	const remove = async () => {
-		removeModal = false;
 		loading = true;
 		await removeSite(site?.id);
 		loading = false;
@@ -80,71 +74,34 @@
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap mt-1.5">ID: {site.id}</span>
 	</a>
 	<div class="block w-40 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4 mt-1">
-		<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left" data-tip="Created">
-			<CalendarIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-			<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
-				{new Date(site.created ?? 0).toLocaleDateString()}
-			</span>
-		</div>
+		<ItemInfo icon={CalendarIcon}>
+			{new Date(site.created ?? 0).toLocaleDateString()}
+		</ItemInfo>
 		{#if container}
-			<a href='/containers/{container?.names[0].substring(1)}'
-			   class="hover:text-primary-focus block h-7 w-full float-left mb-0.5 tooltip tooltip-left"
-			   data-tip="Image">
-				{#if container?.state === 'running'}
-					<CubeIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-				{:else}
-					<CubeTransparentIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-				{/if}
-				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left">
+			<a href='/containers/{container?.names[0].substring(1)}' class="hover:text-primary-focus block">
+				<ItemInfo icon={container?.state === 'running' ? CubeIcon : CubeTransparentIcon}>
 					{container?.names[0].substring(1) ?? ' - '}
-				</span>
+				</ItemInfo>
 			</a>
 		{:else}
-			<div class="block h-7 w-full float-left mb-0.5 tooltip tooltip-left"
-				 data-tip="Image">
-				<CubeTransparentIcon class="h-6 w-6 inline-block float-left mt-0.5 stroke-2"/>
-				<span class="inline-block w-[calc(100%-2rem)] float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-left italic">
-					not found
-				</span>
-			</div>
+			<ItemInfo icon={CubeTransparentIcon} class="italic">
+				not found
+			</ItemInfo>
 		{/if}
 	</div>
 	<div class="block w-28 md:w-64 overflow-hidden flex-shrink-0 self-center">
 		{#if site?.paused}
-			<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-					class:loading={loading} disabled={loading} on:click={unpause}>
-				{#if !loading}
-					<PlayIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Enable</span>
-			</button>
-			<button class="btn btn-primary w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0"
-					class:loading={loading} disabled={loading} on:click={openRemoveModal}>
-				{#if !loading}
-					<TrashIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Delete</span>
-			</button>
-			<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
-			<div class="modal">
-				<div class="modal-box">
-					<p>Do you really want to remove site
-						<span class="font-bold">{site.domain}</span>?
-					</p>
-					<div class="modal-action">
-						<button class="btn btn-primary" on:click={remove}>Remove</button>
-						<button class="btn" on:click={closeRemoveModal}>Cancel</button>
-					</div>
-				</div>
-			</div>
+			<ActionButton icon={PlayIcon} loading={loading} on:click={unpause} class="h-8 md:h-12 w-28 md:w-32 md:mr-2">
+				Enable
+			</ActionButton>
+			<ActionButton icon={TrashIcon} loading={loading} on:click={() => removeModal = true} class="w-28 h-8 md:h-12 mt-1 md:mt-0">
+				Delete
+			</ActionButton>
+			<RemoveModal label="site" name="{site?.domain}" remove={remove} bind:open={removeModal}/>
 		{:else}
-			<button class="btn btn-primary w-28 md:w-32 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2"
-					class:loading={loading} disabled={loading} on:click={pause}>
-				{#if !loading}
-					<PauseIcon class="h-6 w-6 mr-2 stroke-2"/>
-				{/if}
-				<span class="mt-[-0.25rem]">Disable</span>
-			</button>
+			<ActionButton icon={PauseIcon} loading={loading} on:click={pause} class="h-8 md:h-12 w-28 md:w-32">
+				Disable
+			</ActionButton>
 			<a href="http://{site?.domain}" target="_blank"
 			   class="btn btn-ghost w-28 justify-start h-8 md:h-12 btn-block min-h-0 text-base px-2 md:ml-2 mt-1 md:mt-0">
 				<ExternalLinkIcon class="h-6 w-6 mr-2 stroke-2"/>

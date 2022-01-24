@@ -15,6 +15,8 @@
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
 	import {Image, images} from '$lib/stores/images';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import RemoveModal from '$lib/components/RemoveModal.svelte';
 
 	let container:Container = null;
 
@@ -44,16 +46,7 @@
 		loading = false;
 	};
 
-	const openRemoveModal = () => {
-		removeModal = true;
-	};
-
-	const closeRemoveModal = () => {
-		removeModal = false;
-	};
-
 	const remove = async () => {
-		removeModal = false;
 		loading = true;
 		await removeContainer(container.id);
 		loading = false;
@@ -67,47 +60,23 @@
 		<h2 class="card-title text-xl">State: {container?.state.toUpperCase()}</h2>
 		<p>Status: {container?.status}</p>
 		<div class="card-actions">
-			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					class:loading={loading} disabled={loading || container?.state === 'running'} on:click={start}>
-				{#if !loading}
-					<PlayIcon class="h-6 w-6 mr-3 stroke-2"/>
-				{/if}
-				<span class="mt-0 mr-2">Start</span>
-			</button>
-			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					class:loading={loading} disabled={loading || container?.state !== 'running'} on:click={stop}>
-				{#if !loading}
-					<PauseIcon class="h-6 w-6 mr-3 stroke-2"/>
-				{/if}
-				<span class="mt-0 mr-2">Stop</span>
-			</button>
-			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					class:loading={loading} disabled={loading || container?.state !== 'running'} on:click={restart}>
-				{#if !loading}
-					<RefreshIcon class="h-6 w-6 mr-3 stroke-2"/>
-				{/if}
-				<span class="mt-0 mr-2">Restart</span>
-			</button>
-			<button class="btn btn-primary justify-start px-3 text-lg mr-3"
-					class:loading={loading} disabled={loading || container?.state === 'running'}
-					on:click={openRemoveModal}>
-				{#if !loading}
-					<TrashIcon class="h-6 w-6 mr-3 stroke-2"/>
-				{/if}
-				<span class="mt-0 mr-2">Remove</span>
-			</button>
-			<input bind:checked={removeModal} class="modal-toggle" id="my-modal-2" type="checkbox">
-			<div class="modal">
-				<div class="modal-box">
-					<p>Do you really want to remove container
-						<span class="font-bold">{container?.names[0].substring(1)}</span> ?
-					</p>
-					<div class="modal-action">
-						<button class="btn btn-primary" on:click={remove}>Remove</button>
-						<button class="btn" on:click={closeRemoveModal}>Cancel</button>
-					</div>
-				</div>
-			</div>
+			<ActionButton icon={PlayIcon} on:click={start} loading={loading} disabled={container?.state === 'running'}
+				class="w-auto px-3">
+				Start
+			</ActionButton>
+			<ActionButton icon={PauseIcon} on:click={stop} loading={loading} disabled={container?.state !== 'running'}
+						  class="w-auto px-3">
+				Stop
+			</ActionButton>
+			<ActionButton icon={RefreshIcon} on:click={restart} loading={loading} disabled={container?.state !== 'running'}
+						  class="w-auto px-3">
+				Restart
+			</ActionButton>
+			<ActionButton icon={TrashIcon} on:click={() => removeModal = true} loading={loading} disabled={container?.state === 'running'}
+						  class="w-auto px-3">
+				Remove
+			</ActionButton>
+			<RemoveModal label="container" name="{container?.name}" remove={remove} bind:open={removeModal}/>
 		</div>
 	</div>
 </div>
