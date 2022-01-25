@@ -1,4 +1,4 @@
-import {dockerUrl} from '$lib/docker/config';
+import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/docker/config';
 
 interface Container {
 	id:string,
@@ -14,7 +14,7 @@ interface Container {
 }
 
 export const getContainers = async ():Promise<Container[]> => {
-	const res = await fetch(dockerUrl + '/containers/json?all=true&size=true');
+	const res = await fetch(DOCKER_URL + '/containers/json?all=true&size=true');
 	const data = await res.json();
 	const containers:Container[] = data.map((container):Container => ({
 		id: container.Id ?? '',
@@ -33,28 +33,28 @@ export const getContainers = async ():Promise<Container[]> => {
 
 
 export const startContainer = async (id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/start`, {method: 'POST'});
+	const res = await fetch(DOCKER_URL + `/containers/${id}/start`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const stopContainer = async (id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/stop`, {method: 'POST'});
+	const res = await fetch(DOCKER_URL + `/containers/${id}/stop`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const restartContainer = async (id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/restart`, {method: 'POST'});
+	const res = await fetch(DOCKER_URL + `/containers/${id}/restart`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const removeContainer = async (id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + `/containers/${id}`, {method: 'DELETE'});
+	const res = await fetch(DOCKER_URL + `/containers/${id}`, {method: 'DELETE'});
 	return res.status === 204;
 };
 
 
 export const inspectContainer = async (id:string):Promise<unknown> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/json?size=true`);
+	const res = await fetch(DOCKER_URL + `/containers/${id}/json?size=true`);
 	if (res.status !== 200) {
 		return {};
 	}
@@ -63,7 +63,7 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 
 export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
 	const query = name ? '?name=' + name : '';
-	const res = await fetch(`${dockerUrl}/containers/create${query}`, {
+	const res = await fetch(`${DOCKER_URL}/containers/create${query}`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -102,7 +102,7 @@ interface ContainerStats {
 }
 
 export const getContainerStats = async (id:string):Promise<ContainerStats | null> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/stats?stream=false`);
+	const res = await fetch(DOCKER_URL + `/containers/${id}/stats?stream=false`);
 	if (res.status !== 200) {
 		return null;
 	}
@@ -110,7 +110,7 @@ export const getContainerStats = async (id:string):Promise<ContainerStats | null
 };
 
 export const getContainerProcesses = async (id:string):Promise<unknown> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
+	const res = await fetch(DOCKER_URL + `/containers/${id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
 	if (res.status !== 200) {
 		return {};
 	}
@@ -119,9 +119,18 @@ export const getContainerProcesses = async (id:string):Promise<unknown> => {
 
 
 export const getContainerLogs = async (id:string):Promise<string> => {
-	const res = await fetch(dockerUrl + `/containers/${id}/logs?stdout=true&tail=1000`);
+	const res = await fetch(DOCKER_URL + `/containers/${id}/logs?stdout=true&tail=1000`);
 	if (res.status !== 200) {
 		return '';
 	}
 	return await res.text();
+};
+
+export const connectToLWNetwork = async (id:string):Promise<boolean> => {
+	const res = await fetch(DOCKER_URL + `/networks/${LW_NETWORK_NAME}/connect`, {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({Container: id}),
+	});
+	return res.status === 200;
 };

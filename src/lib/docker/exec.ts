@@ -1,8 +1,8 @@
-import {dockerUrl} from '$lib/docker/config';
+import {DOCKER_URL} from '$lib/docker/config';
 
 
 export const execCommand = async (containerId:string, command:string):Promise<string | null> => {
-	const resCreate = await fetch(dockerUrl + `/containers/${containerId}/exec`, {
+	const resCreate = await fetch(DOCKER_URL + `/containers/${containerId}/exec`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -18,7 +18,7 @@ export const execCommand = async (containerId:string, command:string):Promise<st
 	}
 	const dataCreate = await resCreate.json();
 	const execId = dataCreate.Id;
-	const resStart = await fetch(dockerUrl + `/exec/${execId}/start`, {
+	const resStart = await fetch(DOCKER_URL + `/exec/${execId}/start`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({

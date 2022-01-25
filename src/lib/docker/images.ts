@@ -1,4 +1,4 @@
-import {dockerUrl} from '$lib/docker/config';
+import {DOCKER_URL} from '$lib/docker/config';
 
 export interface Image {
 	id:string,
@@ -9,7 +9,7 @@ export interface Image {
 }
 
 export const getImages = async ():Promise<Image[]> => {
-	const res = await fetch(dockerUrl + '/images/json?all=false');
+	const res = await fetch(DOCKER_URL + '/images/json?all=false');
 	const data = await res.json();
 	return data.map((image):Image => ({
 		id: image.Id ?? '',
@@ -21,6 +21,6 @@ export const getImages = async ():Promise<Image[]> => {
 };
 
 export const removeImage = async (id:string):Promise<boolean> => {
-	const res = await fetch(dockerUrl + `/images/${id}`, {method: 'DELETE'});
+	const res = await fetch(DOCKER_URL + `/images/${id}`, {method: 'DELETE'});
 	return res.status === 200;
 };

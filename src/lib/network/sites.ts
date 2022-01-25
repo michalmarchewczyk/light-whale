@@ -3,6 +3,7 @@ import path from 'path';
 import {reloadNginx} from '$lib/network/nginx';
 import template from './template.conf?raw';
 import crypto from 'crypto';
+import {connectToLWNetwork} from '$lib/docker/containers';
 
 export interface Site {
 	id:string,
@@ -102,6 +103,7 @@ export const createSite = async (containerId:string, domain:string, port:number)
 	if (sites.map(s => s.domain).includes(domain)) {
 		return false;
 	}
+	await connectToLWNetwork(containerId);
 	const newSite:Site = {
 		id: crypto.randomBytes(6).toString('hex'),
 		paused: false,

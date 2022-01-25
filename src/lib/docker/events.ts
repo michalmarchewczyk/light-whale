@@ -1,13 +1,13 @@
-import {dockerUrl} from '$lib/docker/config';
+import {DOCKER_URL} from '$lib/docker/config';
 
 let lastEvent = null;
 
 export const getEvents = async ():Promise<Record<string, unknown>[]> => {
 	try {
-		const serverTimeRes = await fetch(dockerUrl + '/info');
+		const serverTimeRes = await fetch(DOCKER_URL + '/info');
 		const serverTime = new Date((await serverTimeRes.json())['SystemTime']).getTime() ?? Date.now();
 		const timestamp = Math.floor(serverTime / 1000);
-		const res = await fetch(`${dockerUrl}/events?since=${timestamp - 60 * 60 * 24}&until=${timestamp}`,
+		const res = await fetch(`${DOCKER_URL}/events?since=${timestamp - 60 * 60 * 24}&until=${timestamp}`,
 			{mode: 'no-cors'},
 		);
 		const data = (await res.text()).split('\n');
