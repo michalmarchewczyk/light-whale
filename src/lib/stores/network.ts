@@ -3,6 +3,7 @@ import {writable} from 'svelte/store';
 export const networkAvailable = writable(false);
 export const nginxAvailable = writable(false);
 export const nginxConnected = writable(false);
+export const nginxConfig = writable('');
 
 export const fetchNetworkAvailable = async ():Promise<void> => {
 	const res = await fetch('/network/status');
@@ -27,5 +28,11 @@ export const fetchNginxAvailable = async ():Promise<void> => {
 		nginxAvailable.set(false);
 		nginxConnected.set(false);
 	}
+};
+
+export const fetchNginxConfig = async ():Promise<void> => {
+	const res = await fetch('/network/nginxConfig');
+	const data = await res.text();
+	nginxConfig.set(data);
 };
 

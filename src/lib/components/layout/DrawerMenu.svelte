@@ -8,11 +8,15 @@
 	import DatabaseIcon from '$icons/database.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import CogIcon from '$icons/cog.svg';
-	import {networkAvailable} from '$lib/stores/network';
+	import {networkAvailable, nginxConnected} from '$lib/stores/network';
 	import DrawerMenuItem from '$lib/components/layout/DrawerMenuItem.svelte';
 	import {nginxAvailable} from '$lib/stores/network';
 
 	const dispatch = createEventDispatcher();
+
+	let online:boolean;
+
+	$: online = $networkAvailable && $nginxAvailable && $nginxConnected;
 
 	export let currentTheme;
 </script>
@@ -44,8 +48,8 @@
 
 	<li class="menu-title mt-4 mb-2 flex-row">
 		<span>Network</span>
-		<div class="badge mt-0.5 {$networkAvailable && $nginxAvailable ? 'badge-success' : 'badge-error'}">
-			{$networkAvailable && $nginxAvailable ? 'Working' : 'Not working'}
+		<div class="badge mt-0.5 {online ? 'badge-success' : 'badge-error'}">
+			{online ? 'Working' : 'Not working'}
 		</div>
 	</li>
 

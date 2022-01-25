@@ -14,6 +14,16 @@ export const checkContainerConnected = async ():Promise<boolean> => {
 	return Object.keys(container?.['NetworkSettings']?.['Networks']).includes(LW_NETWORK_NAME);
 };
 
+export const checkContainerPorts = async ():Promise<boolean> => {
+	const container = await inspectContainer(NGINX_CONTAINER_NAME);
+	return container?.['HostConfig']?.['PortBindings']?.['80/tcp']?.[0]?.['HostPort'] === '80';
+};
+
+export const checkContainerRestart = async ():Promise<boolean> => {
+	const container = await inspectContainer(NGINX_CONTAINER_NAME);
+	return container?.['HostConfig']?.['RestartPolicy']?.['Name'] === 'always';
+};
+
 export const reloadNginx = async ():Promise<boolean> => {
 	const container = await inspectContainer(NGINX_CONTAINER_NAME);
 	if (!container['Id'] || container?.['State']?.['Status'] !== 'running') {
