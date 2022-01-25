@@ -10,6 +10,7 @@
 	import CogIcon from '$icons/cog.svg';
 	import {networkAvailable} from '$lib/stores/network';
 	import DrawerMenuItem from '$lib/components/layout/DrawerMenuItem.svelte';
+	import {nginxAvailable} from '$lib/stores/network';
 
 	const dispatch = createEventDispatcher();
 
@@ -43,8 +44,8 @@
 
 	<li class="menu-title mt-4 mb-2 flex-row">
 		<span>Network</span>
-		<div class="badge mt-0.5 {$networkAvailable ? 'badge-success' : 'badge-error'}">
-			{$networkAvailable ? 'Working' : 'Not working'}
+		<div class="badge mt-0.5 {$networkAvailable && $nginxAvailable ? 'badge-success' : 'badge-error'}">
+			{$networkAvailable && $nginxAvailable ? 'Working' : 'Not working'}
 		</div>
 	</li>
 

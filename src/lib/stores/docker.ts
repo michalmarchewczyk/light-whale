@@ -2,7 +2,7 @@ import {get, writable} from 'svelte/store';
 import {fetchContainers} from '$lib/stores/containers';
 import {fetchImages} from '$lib/stores/images';
 import {fetchSites} from '$lib/stores/sites';
-import {fetchNetworkAvailable} from '$lib/stores/network';
+import {fetchNetworkAvailable, fetchNginxAvailable} from '$lib/stores/network';
 
 export const dockerAvailable = writable(false);
 export const lastUpdate = writable<number>(0);
@@ -21,6 +21,7 @@ export const fetchDockerAvailable = async ():Promise<void> => {
 export const updateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	await fetchNetworkAvailable();
+	await fetchNginxAvailable();
 	const res = await fetch('/docker/events');
 	if(res.status !== 200){
 		return;
@@ -38,6 +39,7 @@ export const updateEverything = async ():Promise<void> => {
 export const forceUpdateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	await fetchNetworkAvailable();
+	await fetchNginxAvailable();
 	await fetchContainers();
 	await fetchImages();
 	await fetchSites();

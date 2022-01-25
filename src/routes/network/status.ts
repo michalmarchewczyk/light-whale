@@ -1,13 +1,13 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkContainer, NGINX_CONTAINER_NAME} from '$lib/network/nginx';
+import {checkNetwork} from '$lib/network/network';
 
 
 const get:RequestHandler = async () => {
-	const isContainer = await checkContainer();
-	if (!isContainer) {
+	const isNetwork = await checkNetwork();
+	if (!isNetwork) {
 		return {
 			status: 500,
-			body: `${NGINX_CONTAINER_NAME} is not running`,
+			body: 'Network is not available',
 		};
 	}
 	return {
