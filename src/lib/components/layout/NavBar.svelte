@@ -9,6 +9,8 @@
 	import RefreshIcon from '$icons/refresh.svg';
 	import LogoutIcon from '$icons/logout.svg';
 
+	import Logotype from '$lib/assets/logotype_white.png';
+
 	export let drawerOpen = false;
 
 	const changeDrawerOpen = () => {
@@ -58,10 +60,8 @@
 			{/if}
 		</button>
 	</div>
-	<div class="flex-1 px-2 mx-2">
-		<span class="text-lg font-bold">
-			Light-Whale
-		</span>
+	<div class="flex-1 mx-2 ml-2 lg:ml-0">
+		<img src={Logotype} class="h-14 absolute top-1" alt="Light-Whale"/>
 	</div>
 	<div class="flex-none">
 		<button class="btn btn-square btn-ghost mr-2" on:click={refresh}>
