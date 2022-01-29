@@ -13,6 +13,8 @@
 	let loadedPath = null;
 
 	let files = [];
+	let fileContent = '';
+	let fileName = '';
 
 	const getFiles = async () => {
 		if (!container?.id || container?.state !== 'running') return;
@@ -29,10 +31,26 @@
 		loading = false;
 	};
 
+	const readFile = async (name) => {
+		if (!container?.id || container?.state !== 'running') return;
+		loading = true;
+		const filePath = path.join(currentPath, name);
+		const res = await fetch(`/docker/file?id=${container?.id}&path=${filePath}`);
+		if (res.status !== 200) {
+			loading = false;
+			return;
+		}
+		fileContent = await res.text();
+		loading = false;
+	};
+
 	const openFile = async (event) => {
 		const file = event.detail;
 		if (file.directory) {
 			currentPath = path.join(currentPath, file.name);
+		}else{
+			await readFile(file.name);
+			fileName = file.name;
 		}
 	};
 
@@ -40,12 +58,15 @@
 		if (container && loadedPath !== currentPath) {
 			getFiles();
 		}
+		if(fileContent === ''){
+			fileName = '';
+		}
 	}
 
 </script>
 
 {#if container?.state === 'running'}
-	<FileBrowser path={$page.params.id+': '+currentPath} files={files} loading={loading} on:open={openFile}/>
+	<FileBrowser path={$page.params.id+': '+path.join(currentPath,fileName)} files={files} loading={loading} on:open={openFile} bind:file={fileContent}/>
 {:else}
 	<p class="w-full text-center text-2xl pt-8 opacity-80">Container has to be running to view files</p>
 {/if}
