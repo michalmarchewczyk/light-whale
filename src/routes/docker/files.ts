@@ -2,6 +2,7 @@ import type {RequestHandler} from '@sveltejs/kit';
 import {execCommand} from '$lib/docker/exec';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
+import {EOL} from 'os';
 
 const get:RequestHandler = async ({url, headers}) => {
 	if (!checkSession(headers)) {
@@ -30,7 +31,7 @@ const get:RequestHandler = async ({url, headers}) => {
 			status: 400,
 		};
 	}
-	const lines = data.split('\r\n');
+	const lines = data.split(EOL);
 	if (!lines[0].startsWith('total')) {
 		return {
 			status: 400,

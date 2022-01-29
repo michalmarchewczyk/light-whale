@@ -4,6 +4,7 @@ import {reloadNginx} from '$lib/network/nginx';
 import template from './template.conf?raw';
 import crypto from 'crypto';
 import {connectToLWNetwork} from '$lib/docker/containers';
+import {EOL} from 'os';
 
 export interface Site {
 	id:string,
@@ -21,7 +22,7 @@ export interface SiteConfig {
 const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
 
 const isContentSiteConfig = (content:string):boolean => {
-	return content.startsWith('# light-whale\r\n# site');
+	return content.startsWith(`# light-whale${EOL}# site`);
 };
 
 export const getSites = async ():Promise<Site[]> => {
@@ -30,7 +31,7 @@ export const getSites = async ():Promise<Site[]> => {
 	for await (const fileName of fileNames) {
 		const content = await fs.readFile(path.join(nginxPath, fileName), {encoding: 'utf8'});
 		if (isContentSiteConfig(content)) {
-			const lines = content.split('\r\n');
+			const lines = content.split(EOL);
 			files.push({
 				site: {
 					id: lines[1].split(' ')[2].trim(),
@@ -52,14 +53,14 @@ export const unpauseSite = async (id:string):Promise<boolean> => {
 	if (!isContentSiteConfig(content)) {
 		return false;
 	}
-	const lines = content.split('\r\n');
+	const lines = content.split(EOL);
 
 	lines[4] = '# paused: false';
 	for (let i = 6; i < lines.length; i++) {
 		lines[i] = lines[i].substring(2);
 	}
 
-	const newContent = lines.join('\r\n');
+	const newContent = lines.join(EOL);
 	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
@@ -71,14 +72,14 @@ export const pauseSite = async (id:string):Promise<boolean> => {
 	if (!isContentSiteConfig(content)) {
 		return false;
 	}
-	const lines = content.split('\r\n');
+	const lines = content.split(EOL);
 
 	lines[4] = '# paused: true';
 	for (let i = 6; i < lines.length; i++) {
 		lines[i] = '# ' + lines[i];
 	}
 
-	const newContent = lines.join('\r\n');
+	const newContent = lines.join(EOL);
 	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
 	await reloadNginx();
