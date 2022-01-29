@@ -6,10 +6,16 @@ import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/docker/config';
 import path from 'path';
 import fs from 'fs/promises';
 import defaultConfig from '$lib/network/default.conf?raw';
+import {pingDocker} from '$lib/docker/ping';
 
 const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
+const configPath = path.join(process.cwd(), 'lw-config');
 
 export const checkNginx = async ():Promise<string> => {
+	const ping = await pingDocker();
+	if(!ping){
+		return 'no-docker';
+	}
 	const container = await inspectContainer(NGINX_CONTAINER_NAME);
 	if(!container['Id']){
 		return 'no-container';
@@ -22,6 +28,12 @@ export const checkNginx = async ():Promise<string> => {
 	const network = await checkNetwork();
 	if(!network){
 		return 'no-network';
+	}
+	try {
+		await fs.access(nginxPath);
+		await fs.access(configPath);
+	}catch(e){
+		return 'no-folder';
 	}
 	return 'ok';
 };
@@ -78,6 +90,8 @@ export const createNginxContainer = async():Promise<string> => {
 	if(!connect){
 		return 'connect';
 	}
+	await fs.mkdir(nginxPath).catch(() => '');
+	await fs.mkdir(configPath).catch(() => '');
 	await fs.writeFile(path.join(nginxPath, 'default.conf'), defaultConfig, {encoding: 'utf-8'});
 	return 'ok';
 };
