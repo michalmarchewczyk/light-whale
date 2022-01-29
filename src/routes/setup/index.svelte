@@ -20,8 +20,33 @@
 	import {goto} from '$app/navigation';
 	import {page} from '$app/stores';
 	import CheckCard from '$lib/components/CheckCard.svelte';
+	import {onMount} from 'svelte';
 
 	let step:number;
+	let dockerAvailable = $page.stuff.docker === 'ok';
+	let nginxAvailable = $page.stuff.nginx === 'ok';
+
+	const fetchDockerAvailable = async ():Promise<void> => {
+		const resDocker = await fetch('/setup/checkDocker');
+		const docker = await resDocker.text();
+		dockerAvailable = docker === 'ok';
+	};
+
+	const fetchNginxAvailable = async ():Promise<void> => {
+		const resNginx = await fetch('/setup/checkNginx');
+		const nginx = await resNginx.text();
+		nginxAvailable = nginx === 'ok';
+	};
+
+	onMount(() => {
+		const interval = setInterval(async () => {
+			await fetchDockerAvailable();
+			await fetchNginxAvailable();
+		}, 1000);
+		return () => {
+			clearInterval(interval);
+		};
+	});
 
 	$: {
 		step = 4;
@@ -103,6 +128,9 @@
 					<CheckCard class="shadow-none mb-8 mx-[-1rem]" status="error" title="Docker Engine API not reachable"
 							   msg="Docker Engine is installed, but Docker Engine API is not reachable at http://localhost:2375"/>
 				{/if}
+				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+					<button class="btn btn-primary text-base" on:click={() => step += 1} disabled={!dockerAvailable}>Next</button>
+				</div>
 			{:else if step === 3}
 				<h2 class="text-2xl font-bold mb-8">Setup NGINX</h2>
 				<p>
@@ -110,16 +138,31 @@
 				</p>
 				<button class="btn btn-primary my-4 text-base" on:click={setupNginx}
 						class:loading={loading} disabled="{loading}">Setup NGINX</button>
+				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+					<button class="btn btn-primary text-base" on:click={() => step += 1} disabled={!nginxAvailable}>Next</button>
+				</div>
 			{:else if step === 4}
 				<h2 class="text-2xl font-bold mb-8">Setup DNS Provider</h2>
 				<p>
 					Connect Light-Whale to your DNS Provider to more easily manage your domains.
 				</p>
+				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+					<div>
+						<button class="btn btn-primary text-base" on:click={() => step += 1} disabled>Next</button>
+					</div>
+					<button class="btn btn-primary text-base" on:click={() => step += 1}>Skip</button>
+				</div>
 			{:else if step === 5}
 				<h2 class="text-2xl font-bold mb-8">Setup Github account</h2>
 				<p>
 					You can connect your Github account in order to more easily create containers from your repositories.
 				</p>
+				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+					<div>
+						<button class="btn btn-primary text-base" on:click={() => step += 1} disabled>Next</button>
+					</div>
+					<button class="btn btn-primary text-base" on:click={() => step += 1}>Skip</button>
+				</div>
 			{:else if step === 6}
 				<h2 class="text-2xl font-bold mb-8">Setup password</h2>
 				<p>
@@ -127,21 +170,12 @@
 				</p>
 				<form on:submit|preventDefault={setPassword}>
 					<FormPassword label="Password" placeholder="password" class="mt-4 mb-6" bind:value={password}/>
-					<input type="submit" value="SAVE" class="btn btn-primary text-base"/>
+					<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+						<input type="submit" class="btn btn-primary text-base" value="Save"/>
+					</div>
 				</form>
 			{/if}
-			<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-				<div>
-					{#if step < 6}
-						<button class="btn btn-primary text-base" on:click={() => step += 1}>Next</button>
-					{:else}
-						<button class="btn btn-primary text-base" on:click={() => goto('/login')}>Done</button>
-					{/if}
-				</div>
-				{#if step === 4 || step === 5}
-					<button class="btn btn-primary text-base" on:click={() => step += 1}>Skip</button>
-				{/if}
-			</div>
+
 		</div>
 	</div>
 </div>
