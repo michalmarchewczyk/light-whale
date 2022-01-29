@@ -25,7 +25,7 @@
 	};
 </script>
 
-<div class="card shadow-lg w-80 bg-base-100">
+<div class="card shadow-xl w-80 bg-base-100">
 	<div class="card-body">
 		<h1 class="card-title">Login</h1>
 		<form on:submit|preventDefault={submit}>

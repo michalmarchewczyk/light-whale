@@ -1,4 +1,6 @@
-export const login = (password:string):boolean => {
-	const ENV_PASSWORD = process.env.LIGHT_WHALE_PASSWORD ?? '';
-	return !(password !== ENV_PASSWORD || ENV_PASSWORD === '');
+import {getPassword} from '$lib/setup/password';
+
+export const login = async(password:string):Promise<boolean> => {
+	const pwd = await getPassword();
+	return !(password !== pwd || pwd === '');
 };

@@ -11,7 +11,7 @@ const post:RequestHandler<Promise<void>, { password:string }> = async ({body}) =
 			body: JSON.stringify({msg: 'empty password'}),
 		};
 	}
-	if (!login(password)) {
+	if (!await login(password)) {
 		return {
 			status: 401,
 			body: JSON.stringify({msg: 'wrong password'}),

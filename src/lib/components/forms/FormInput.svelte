@@ -4,7 +4,7 @@
 	export let value;
 </script>
 
-<div class="form-control mb-2">
+<div class="form-control mb-2 {$$props.class}">
 	<label>
 		<span class="label pl-0">
 			<span class="label-text text-lg mb-0">{label}: </span>

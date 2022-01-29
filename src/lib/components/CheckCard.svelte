@@ -6,7 +6,7 @@
 	export let msg = '';
 </script>
 
-<div class="card shadow-md bg-base-100 mb-4 h-24 card-side">
+<div class="card shadow-md bg-base-100 mb-4 h-24 card-side {$$props.class}">
 	<figure class="pt-4 pl-2">
 		<CheckStatusIcon status="{status}"/>
 	</figure>
