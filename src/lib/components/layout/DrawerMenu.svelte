@@ -8,6 +8,10 @@
 	import DatabaseIcon from '$icons/database.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import CogIcon from '$icons/cog.svg';
+	import FolderOpenIcon from '$icons/folder-open.svg';
+	import GitIcon from '$lib/assets/icons/git.svg';
+	import DockerIcon from '$lib/assets/icons/docker.svg';
+
 	import {networkAvailable, nginxConnected} from '$lib/stores/network';
 	import DrawerMenuItem from '$lib/components/layout/DrawerMenuItem.svelte';
 	import {nginxAvailable} from '$lib/stores/network';
@@ -58,6 +62,20 @@
 	</DrawerMenuItem>
 	<DrawerMenuItem icon={CogIcon} path="/settings" on:click={() => dispatch('navigate')}>
 		Settings
+	</DrawerMenuItem>
+
+	<li class="menu-title mt-4 mb-2 flex-row">
+		<span>Sources</span>
+	</li>
+
+	<DrawerMenuItem icon={GitIcon} path="/sources/git" on:click={() => dispatch('navigate')}>
+		Git
+	</DrawerMenuItem>
+	<DrawerMenuItem icon={DockerIcon} path="/sources/dockerhub" on:click={() => dispatch('navigate')}>
+		DockerHub
+	</DrawerMenuItem>
+	<DrawerMenuItem icon={FolderOpenIcon} path="/sources/files" on:click={() => dispatch('navigate')}>
+		Files
 	</DrawerMenuItem>
 
 	<li class="mt-auto">
