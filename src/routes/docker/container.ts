@@ -33,8 +33,8 @@ const get:RequestHandler = async ({url, headers}) => {
 		const systemCpuDelta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
 		const numberOfCpus = data.cpu_stats.online_cpus;
 		const usedMemory = data.memory_stats.usage - data.memory_stats.stats.cache;
-		const input = Object.values(data.networks)[0]?.['rx_bytes'];
-		const output = Object.values(data.networks)[0]?.['tx_bytes'];
+		const input = Object.values(data.networks).reduce((p,c) => p + c['rx_bytes'] ?? 0, 0);
+		const output = Object.values(data.networks).reduce((p,c) => p + c['tx_bytes'] ?? 0, 0);
 		const stats = {
 			cpu: (cpuDelta / systemCpuDelta) * numberOfCpus * 100,
 			cores: numberOfCpus,
