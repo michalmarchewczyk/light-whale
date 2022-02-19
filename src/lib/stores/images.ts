@@ -28,3 +28,12 @@ export const removeImage = async (id:string):Promise<void> => {
 	});
 	await forceUpdateEverything();
 };
+
+export const pullImage = async (name:string, tag:string):Promise<void> => {
+	await fetch('/docker/images', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({name, tag}),
+	});
+	await forceUpdateEverything();
+};

@@ -28,3 +28,11 @@ export const removeImage = async (id:string):Promise<boolean> => {
 	const res = await fetch(DOCKER_URL + `/images/${id}`, {method: 'DELETE'});
 	return res.status === 200;
 };
+
+export const pullImage = async (name:string, tag:string):Promise<boolean> => {
+	if(!tag) {
+		return false;
+	}
+	const res = await fetch(DOCKER_URL + `/images/create?fromImage=${name}&tag=${tag}`, {method: 'POST'});
+	return res.status === 200;
+};

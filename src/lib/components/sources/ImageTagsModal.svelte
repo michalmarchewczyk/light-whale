@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {pullImage} from '$lib/stores/images';
+
 	export let open = false;
 	export let name = '';
 	let tags = [];
@@ -18,6 +20,10 @@
 			fetchTags(name);
 		}
 	}
+
+	const pull = async() => {
+		await pullImage(name,selected);
+	};
 </script>
 
 <input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={open}>
@@ -33,7 +39,7 @@
 		<div class="modal-action">
 			<button class="btn btn-primary" on:click={() => {
 						open = false;
-						console.log('pull', selected);
+						pull();
 					}} disabled={!selected}>
 				Pull
 			</button>
