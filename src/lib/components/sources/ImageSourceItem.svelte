@@ -15,11 +15,12 @@
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-auto overflow-hidden">
-	<div class="mx-1 sm:mx-2 w-20 sm:w-20 {$$props.class}" class:text-success={false}>
+	<div class="mx-1 sm:mx-2 w-24 {$$props.class}" class:text-success={false}>
 		{#if image['logo_url']?.['large']}
-			<img src={image['logo_url']?.['large']} alt='' class="w-10 h-10 sm:h-14 sm:w-14 mx-auto mt-3 sm:mt-1 stroke-[1.5px] bg-base-100"/>
+			<img src={image['logo_url']?.['large']} alt=''
+				 class="w-14 h-14 sm:h-20 sm:w-20 mx-auto mt-1 stroke-[1.5px] bg-white p-2 rounded-md"/>
 		{:else}
-			<DiscIcon class="w-10 h-10 sm:h-14 sm:w-14 mx-auto mt-3 sm:mt-1 stroke-[1.5px]"/>
+			<DiscIcon class="w-10 h-10 sm:h-16 sm:w-16 mx-auto mt-3 sm:mt-1 stroke-[1.5px]"/>
 		{/if}
 	</div>
 	<a class="block w-64 flex-auto overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus"
