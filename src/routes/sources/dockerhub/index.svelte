@@ -36,7 +36,7 @@ $: {
 </svelte:head>
 
 <div class="max-w-5xl mx-auto text-base-content">
-	<ListHeader title="Sources / DockerHub">
+	<ListHeader title="Sources / DockerHub" badge="{items.length}{items.length === 50 ? '+' : ''} found">
 		<div class="inline-block {$$props.class}">
 			<span class="text-lg font-semibold align-middle capitalize">Search:</span>
 			<input class="input input-bordered bg-base-100 align-middle ml-2 w-36 text-base font-semibold w-64"
@@ -47,8 +47,11 @@ $: {
 		{#each items as item}
 			<ImageSourceItem image={item}/>
 		{:else}
-			<p class="w-full text-center text-3xl pt-12 opacity-50">Not found</p>
+			<p class="w-full text-center text-3xl p-12 opacity-50">Not found</p>
 		{/each}
+		{#if items.length === 50}
+			<p class="w-full text-center text-xl p-4 opacity-50">Found more than 50 images. Please refine your search.</p>
+		{/if}
 	</div>
 </div>
 
