@@ -14,21 +14,25 @@ interface Container {
 }
 
 export const getContainers = async ():Promise<Container[]> => {
-	const res = await fetch(DOCKER_URL + '/containers/json?all=true&size=true');
-	const data = await res.json();
-	const containers:Container[] = data.map((container):Container => ({
-		id: container.Id ?? '',
-		names: container.Names ?? [],
-		imageName: container.Image ?? '',
-		imageId: container.ImageID ?? '',
-		command: container.Command ?? '',
-		created: new Date(container.Created * 1000 ?? 0),
-		state: container.State ?? '',
-		status: container.Status ?? 4,
-		compose: container.Labels['com.docker.compose.project'] ?? null,
-		networks: container.NetworkSettings['Networks'] ?? {},
-	}));
-	return containers;
+	try {
+		const res = await fetch(DOCKER_URL + '/containers/json?all=true&size=true');
+		const data = await res.json();
+		const containers:Container[] = data.map((container):Container => ({
+			id: container.Id ?? '',
+			names: container.Names ?? [],
+			imageName: container.Image ?? '',
+			imageId: container.ImageID ?? '',
+			command: container.Command ?? '',
+			created: new Date(container.Created * 1000 ?? 0),
+			state: container.State ?? '',
+			status: container.Status ?? 4,
+			compose: container.Labels['com.docker.compose.project'] ?? null,
+			networks: container.NetworkSettings['Networks'] ?? {},
+		}));
+		return containers;
+	}catch(e){
+		return [];
+	}
 };
 
 
@@ -54,11 +58,15 @@ export const removeContainer = async (id:string):Promise<boolean> => {
 
 
 export const inspectContainer = async (id:string):Promise<unknown> => {
-	const res = await fetch(DOCKER_URL + `/containers/${id}/json?size=true`);
-	if (res.status !== 200) {
+	try {
+		const res = await fetch(DOCKER_URL + `/containers/${id}/json?size=true`);
+		if (res.status !== 200) {
+			return {};
+		}
+		return await res.json();
+	}catch(e){
 		return {};
 	}
-	return await res.json();
 };
 
 export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
