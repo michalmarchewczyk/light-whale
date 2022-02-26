@@ -28,7 +28,7 @@
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
 			{image['name']}
 		</span>
-		<p class="inline-block w-full overflow-hidden overflow-ellipsis mt-1 min-h-12">
+		<p class="inline-block w-full overflow-hidden overflow-ellipsis mt-1 min-h-12 text-base">
 			{image['short_description']}
 		</p>
 	</a>
