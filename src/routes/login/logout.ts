@@ -2,8 +2,8 @@ import type {RequestHandler} from '@sveltejs/kit';
 import cookie from 'cookie';
 import {invalidateSession} from '$lib/auth/sessions';
 
-const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
-	const sessionCookie = headers['cookie'];
+const get:RequestHandler<Promise<void>> = async ({request}) => {
+	const sessionCookie = request.headers.get('cookie');
 	if (!sessionCookie) {
 		return {status: 400};
 	}

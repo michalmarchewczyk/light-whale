@@ -2,8 +2,8 @@ import {getLastEvent} from '$lib/docker/events';
 import type {RequestHandler} from '@sveltejs/kit';
 import {checkSession} from '$lib/auth/sessions';
 
-const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};

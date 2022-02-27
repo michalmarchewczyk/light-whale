@@ -4,7 +4,7 @@ import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
 
-const get:RequestHandler<Promise<void>, void> = async () => {
+const get:RequestHandler<Promise<void>> = async () => {
 	let sites:Site[] = await getSites();
 	sites = sites.sort((a, b) => b.created.getTime() - a.created.getTime());
 	return {
@@ -14,13 +14,13 @@ const get:RequestHandler<Promise<void>, void> = async () => {
 	};
 };
 
-const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const put:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {id, action} = body;
+	const {id, action} = await request.json();
 	if (!validator.isAlphanumeric(id ?? '') || !validator.isAlphanumeric(action ?? '')) {
 		return {
 			status: 400,
@@ -41,13 +41,13 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 };
 
 
-const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const del:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {id} = body;
+	const {id} = await request.json();
 	if (!validator.isAlphanumeric(id ?? '')) {
 		return {
 			status: 400,
@@ -61,13 +61,13 @@ const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers})
 };
 
 
-const post:RequestHandler<void, { containerId:string, domain:string, port:number }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const post:RequestHandler<void> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {containerId, domain, port} = body;
+	const {containerId, domain, port} = await request.json();
 	if (!validator.isFQDN(domain ?? '') || !validator.isAlphanumeric(containerId) || !validator.isPort(port.toString())) {
 		return {
 			status: 400,

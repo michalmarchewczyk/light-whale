@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
-	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
 
-	export async function load({session}:LoadInput):Promise<LoadOutput> {
+	import type {Load} from '@sveltejs/kit';
+
+	const load:Load = ({session}) => {
 		if (!session.id) {
 			return {
 				status: 302,
@@ -11,7 +12,11 @@
 		return {
 			props: {}
 		};
-	}
+	};
+
+	export {
+		load
+	};
 </script>
 
 <script lang="ts">

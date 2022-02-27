@@ -3,8 +3,8 @@ import {createSession} from '$lib/auth/sessions';
 import cookie from 'cookie';
 import {login} from '$lib/auth/login';
 
-const post:RequestHandler<Promise<void>, { password:string }> = async ({body}) => {
-	const {password} = body;
+const post:RequestHandler<Promise<void>, string> = async ({request}) => {
+	const {password} = await request.json();
 	if (!password) {
 		return {
 			status: 401,

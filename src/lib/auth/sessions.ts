@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
-import type {RequestHeaders} from '@sveltejs/kit/types/helper';
 import cookie from 'cookie';
+import type {RequestEvent} from '@sveltejs/kit/types/private';
 
 interface Session {
 	id:string,
@@ -32,8 +32,8 @@ export const invalidateSession = (id:string):void => {
 	session.expires = 0;
 };
 
-export const checkSession = (headers:RequestHeaders):boolean => {
-	const sessionCookie = headers['cookie'];
+export const checkSession = (headers:RequestEvent['request']['headers']):boolean => {
+	const sessionCookie = headers.get('cookie');
 	if (!sessionCookie) {
 		return false;
 	}

@@ -3,8 +3,8 @@ import validator from 'validator';
 import {getContainerProcesses, getContainerStats, inspectContainer} from '$lib/docker/containers';
 import {checkSession} from '$lib/auth/sessions';
 
-const get:RequestHandler = async ({url, headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler = async ({url, request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};

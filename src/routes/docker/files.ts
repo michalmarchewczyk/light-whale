@@ -4,8 +4,8 @@ import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 import {EOL} from 'os';
 
-const get:RequestHandler = async ({url, headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler = async ({url, request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};

@@ -3,8 +3,8 @@ import {checkSession} from '$lib/auth/sessions';
 import {getImages, pullImage, removeImage} from '$lib/docker/images';
 import validator from 'validator';
 
-const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -16,13 +16,13 @@ const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	};
 };
 
-const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const del:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {id} = body;
+	const {id} = await request.json();
 	if (!validator.isHash(id.substring(7) ?? '', 'sha256')) {
 		return {
 			status: 400,
@@ -35,13 +35,13 @@ const del:RequestHandler<Promise<void>, { id:string }> = async ({body, headers})
 	};
 };
 
-const post:RequestHandler<void, {name:string, tag:string}> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const post:RequestHandler<void> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {name, tag} = body;
+	const {name, tag} = await request.json();
 	if (!validator.isAlphanumeric(name,'en-US', {ignore: '.-/'}) || !validator.isAlphanumeric(tag,'en-US', {ignore: '.-'})) {
 		return {
 			status: 400,

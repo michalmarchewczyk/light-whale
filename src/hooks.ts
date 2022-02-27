@@ -1,10 +1,10 @@
-import type {ServerRequest} from '@sveltejs/kit/types/hooks';
 import {getSavedSession} from '$lib/auth/sessions';
 import cookie from 'cookie';
+import type {GetSession} from '@sveltejs/kit';
 
 
-export function getSession(request:ServerRequest):Record<string, unknown> {
-	const sessionCookie = request.headers['cookie'];
+const getSession:GetSession = (event) => {
+	const sessionCookie = event.request.headers.get('cookie');
 	if (!sessionCookie) {
 		return {};
 	}
@@ -16,4 +16,8 @@ export function getSession(request:ServerRequest):Record<string, unknown> {
 	return {
 		id: session.id,
 	};
-}
+};
+
+export {
+	getSession
+};

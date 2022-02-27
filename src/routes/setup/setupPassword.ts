@@ -1,8 +1,8 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {setPassword} from '$lib/setup/password';
 
-const post:RequestHandler<void, { password:string }> = async ({body}) => {
-	const {password} = body;
+const post:RequestHandler<void> = async ({request}) => {
+	const {password} = await request.json();
 	if (!password || password.length < 4) {
 		return {
 			status: 400,

@@ -3,8 +3,8 @@ import {execCommand} from '$lib/docker/exec';
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
-const get:RequestHandler = async ({url, headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler = async ({url, request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};

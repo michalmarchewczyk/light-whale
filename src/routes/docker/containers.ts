@@ -10,8 +10,8 @@ import {
 import {checkSession} from '$lib/auth/sessions';
 import validator from 'validator';
 
-const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
-	if (!checkSession(headers)) {
+const get:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -23,13 +23,13 @@ const get:RequestHandler<Promise<void>, void> = async ({headers}) => {
 	};
 };
 
-const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const put:RequestHandler<Promise<void>, string> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {id, action} = body;
+	const {id, action} = await request.json();
 	if (!validator.isAlphanumeric(id ?? '') || !validator.isAlphanumeric(action ?? '')) {
 		return {
 			status: 400,
@@ -53,13 +53,13 @@ const put:RequestHandler<Promise<void>, { id:string, action:string }> = async ({
 	};
 };
 
-const post:RequestHandler<Promise<void>, { imageId:string, name:string, command:string }> = async ({body, headers}) => {
-	if (!checkSession(headers)) {
+const post:RequestHandler<Promise<void>> = async ({request}) => {
+	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const {imageId, name, command} = body;
+	const {imageId, name, command} = await request.json();
 	if (!validator.isHash(imageId.substring(7) ?? '', 'sha256')
 		|| !(validator.matches(name, /^\/?[a-zA-Z0-9][a-zA-Z0-9_.-]+$/) || name === '')) {
 		return {
