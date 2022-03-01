@@ -8,7 +8,6 @@
 	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
 
 	import CogIcon from '$icons/cog.svg';
-	import CheckCircleIcon from '$icons/check-circle.svg';
 
 	onMount(async () => {
 		await fetchSites();
@@ -28,9 +27,6 @@
 	<PageMenu>
 		<PageMenuItem path="/settings" icon={CogIcon}>
 			General
-		</PageMenuItem>
-		<PageMenuItem path="/settings/check" icon={CheckCircleIcon}>
-			Check
 		</PageMenuItem>
 	</PageMenu>
 
