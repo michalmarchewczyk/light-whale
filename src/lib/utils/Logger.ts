@@ -17,7 +17,7 @@ export interface Log {
 
 class Logger {
 	private static instance:Logger;
-	private readonly file:string;
+	private file:string;
 	private logs:Log[] = [];
 
 	public static getInstance():Logger {
@@ -30,16 +30,16 @@ class Logger {
 
 	private constructor(){
 		const logsFolder = path.join(process.cwd(), 'lw-logs');
-		const date = new Date().toISOString()
-			.replaceAll('-', '')
-			.replaceAll('T', '_')
-			.replaceAll(':', '')
-			.replaceAll('.', '');
-		this.file = path.join(logsFolder, `logs_${date}.txt`);
-		fs.writeFile(this.file, '===== LOGS START =====\n', {encoding: 'utf-8', flag: 'w'})
-			.then(async() => {
-				await this.log(LogType.Info, 'Logger initialized');
-			});
+		fs.mkdir(logsFolder, {recursive: true}).then(async () => {
+			const date = new Date().toISOString()
+				.replaceAll('-', '')
+				.replaceAll('T', '_')
+				.replaceAll(':', '')
+				.replaceAll('.', '');
+			this.file = path.join(logsFolder, `logs_${date}.txt`);
+			await fs.writeFile(this.file, '===== LOGS START =====\n', {encoding: 'utf-8', flag: 'w'});
+			await this.log(LogType.Info, 'Logger initialized');
+		});
 	}
 
 	async log(type:LogType, msg:string):Promise<void>{

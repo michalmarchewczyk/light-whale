@@ -10,7 +10,6 @@ import {pingDocker} from '$lib/docker/ping';
 
 const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
 const configPath = path.join(process.cwd(), 'lw-config');
-const logsPath = path.join(process.cwd(), 'lw-logs');
 
 export const checkNginx = async ():Promise<string> => {
 	const ping = await pingDocker();
@@ -93,7 +92,6 @@ export const createNginxContainer = async():Promise<string> => {
 	}
 	await fs.mkdir(nginxPath).catch(() => '');
 	await fs.mkdir(configPath).catch(() => '');
-	await fs.mkdir(logsPath).catch(() => '');
 	await fs.writeFile(path.join(nginxPath, 'default.conf'), defaultConfig, {encoding: 'utf-8'});
 	return 'ok';
 };
