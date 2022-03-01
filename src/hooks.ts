@@ -7,9 +7,7 @@ const logger = Logger.getInstance();
 
 const handle:Handle = async ({event, resolve}) => {
 	const url = event.url.toString();
-	// TODO: Remove when streaming is available in SvelteKit
-	if(url.endsWith('/docker/ping') || url.endsWith('/docker/events')
-		|| url.endsWith('/network/status') || url.endsWith('/network/nginx')){
+	if(event.url.searchParams.get('skipLogger') === 'true'){
 		return resolve(event);
 	}
 	logger.log(LogType.Router, `${event.request.method} ${url}`);

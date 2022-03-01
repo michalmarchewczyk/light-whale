@@ -6,7 +6,7 @@ export const nginxConnected = writable(false);
 export const nginxConfig = writable('');
 
 export const fetchNetworkAvailable = async ():Promise<void> => {
-	const res = await fetch('/network/status');
+	const res = await fetch('/network/status?skipLogger=true');
 	const data = await res.text();
 	if (data === 'ok') {
 		networkAvailable.set(true);
@@ -16,7 +16,7 @@ export const fetchNetworkAvailable = async ():Promise<void> => {
 };
 
 export const fetchNginxAvailable = async ():Promise<void> => {
-	const res = await fetch('/network/nginx');
+	const res = await fetch('/network/nginx?skipLogger=true');
 	const data = await res.text();
 	if (data === 'ok') {
 		nginxAvailable.set(true);
