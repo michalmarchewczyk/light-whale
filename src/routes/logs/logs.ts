@@ -9,7 +9,7 @@ const get:RequestHandler = ({request}) => {
 		};
 	}
 	const logger = Logger.getInstance();
-	const logs = logger.get();
+	const logs = logger.get().map(log => ({...log, date: log.date.toISOString()}));
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},

@@ -12,6 +12,7 @@ export enum LogType {
 export interface Log {
 	type:LogType;
 	msg:string;
+	date:Date;
 }
 
 class Logger {
@@ -42,9 +43,10 @@ class Logger {
 	}
 
 	async log(type:LogType, msg:string):Promise<void>{
-		this.logs = this.logs.slice(-10000);
-		this.logs.push({type, msg});
-		const log = `[${type}] ${msg}\n`;
+		this.logs = this.logs.slice(-100000);
+		const date = new Date();
+		this.logs.push({type, msg, date});
+		const log = `[${date.toISOString()}] (${type}) ${msg}\n`;
 		// eslint-disable-next-line no-console
 		console.log('LW-Logger:', log);
 		await fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'});

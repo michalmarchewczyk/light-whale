@@ -93,11 +93,11 @@
 				<p class="p-6 text-xl text-center">Loading...</p>
 			{:else}
 				<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
-					<div class="w-max">
+					<div class="w-max min-w-full">
 						{#each logsFiltered as log, i}
 							<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
 							   class:bg-base-200={i%2===0}>
-								[{log.type}] {log.msg}
+								[{log.date}] ({log.type}) {log.msg}
 							</p>
 						{/each}
 					</div>
