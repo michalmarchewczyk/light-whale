@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import type {Image} from '$lib/stores/images';
-	import {images} from '$lib/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import {images} from '$lib/client/stores/images';
 
 	let image:Image;
 

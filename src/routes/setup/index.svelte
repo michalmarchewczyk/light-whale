@@ -1,39 +1,46 @@
 <script context="module" lang="ts">
-	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
+	import type {Load} from '@sveltejs/kit';
 
-	export async function load({fetch}:LoadInput):Promise<LoadOutput> {
-		const resDocker = await fetch('/setup/checkDocker');
+	const load:Load = async ({fetch}) => {
+		const resDocker = await fetch('/api/setup/checkDocker');
 		const docker = await resDocker.text();
-		const resNginx = await fetch('/setup/checkNginx');
+		const resNginx = await fetch('/api/setup/checkNginx');
 		const nginx = await resNginx.text();
 		return {
-			stuff: {
+			props: {
 				docker,
 				nginx,
 			}
 		};
-	}
+	};
+
+	export {
+		load
+	};
 </script>
 
 <script lang="ts">
-	import FormPassword from '$lib/components/forms/FormPassword.svelte';
+	import FormPassword from '$lib/client/components/forms/FormPassword.svelte';
 	import {goto} from '$app/navigation';
 	import {page} from '$app/stores';
-	import CheckCard from '$lib/components/CheckCard.svelte';
+	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import {onMount} from 'svelte';
 
+	export let docker;
+	export let nginx;
+
 	let step:number;
-	let dockerAvailable = $page.stuff.docker === 'ok';
-	let nginxAvailable = $page.stuff.nginx === 'ok';
+	let dockerAvailable = docker === 'ok';
+	let nginxAvailable = nginx === 'ok';
 
 	const fetchDockerAvailable = async ():Promise<void> => {
-		const resDocker = await fetch('/setup/checkDocker');
+		const resDocker = await fetch('/api/setup/checkDocker?skipLogger=true');
 		const docker = await resDocker.text();
 		dockerAvailable = docker === 'ok';
 	};
 
 	const fetchNginxAvailable = async ():Promise<void> => {
-		const resNginx = await fetch('/setup/checkNginx');
+		const resNginx = await fetch('/api/setup/checkNginx?skipLogger=true');
 		const nginx = await resNginx.text();
 		nginxAvailable = nginx === 'ok';
 	};
@@ -50,9 +57,9 @@
 
 	$: {
 		step = 4;
-		if($page.stuff.docker !== 'ok'){
+		if(!dockerAvailable){
 			step = 2;
-		}else if($page.stuff.nginx !== 'ok'){
+		}else if(!nginxAvailable){
 			step = 3;
 		}
 
@@ -62,7 +69,7 @@
 
 	const setupNginx = async () => {
 		loading = true;
-		const res = await fetch('/setup/setupNginx');
+		const res = await fetch('/api/setup/setupNginx');
 		const data = await res.text();
 		if(data === 'ok'){
 			step = 4;
@@ -74,7 +81,7 @@
 
 	const setPassword = async () => {
 		loading = true;
-		const res = await fetch('/setup/setupPassword', {
+		const res = await fetch('/api/setup/setupPassword', {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({password})

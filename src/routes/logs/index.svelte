@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PageHeader from '$lib/components/page/PageHeader.svelte';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
 	import {onMount} from 'svelte';
 
 	let loading = true;
@@ -13,7 +13,7 @@
 	let selectClient = false;
 
 	const getLogs = async () => {
-		const res = await fetch('/logs/logs?skipLogger=true');
+		const res = await fetch('/api/logs/logs?skipLogger=true');
 		if (res.status !== 200) return;
 		logs = await res.json();
 	};

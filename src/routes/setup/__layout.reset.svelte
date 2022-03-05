@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
-	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
+	import type {Load} from '@sveltejs/kit';
 
-	export async function load({fetch}:LoadInput):Promise<LoadOutput> {
-		const res = await fetch('/login/check');
+	const load:Load = async ({fetch}) => {
+		const res = await fetch('/api/auth/check');
 		const isSetup = await res.text();
 		if(isSetup !== 'false'){
 			return {
@@ -10,7 +10,7 @@
 				redirect: '/login'
 			};
 		}
-		const res2 = await fetch('/setup/getSystem');
+		const res2 = await fetch('/api/setup/getSystem');
 		if(res2.status !== 200){
 			return {
 				stuff: {}
@@ -22,12 +22,16 @@
 				system,
 			}
 		};
-	}
+	};
+
+	export {
+		load
+	};
 </script>
 
 <script lang="ts">
-	import Background from '$lib/assets/background.svg';
-	import Logotype from '$lib/assets/logotype_white.png';
+	import Background from '$lib/client/assets/background.svg';
+	import Logotype from '$lib/client/assets/logotype_white.png';
 	import {page} from '$app/stores';
 </script>
 

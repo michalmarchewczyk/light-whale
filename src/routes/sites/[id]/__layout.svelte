@@ -1,14 +1,14 @@
 <script lang="ts">
-	import {Site, sites} from '$lib/stores/sites';
+	import {Site, sites} from '$lib/client/stores/sites';
 	import {page} from '$app/stores';
 
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import ClipboardCheckIcon from '$icons/clipboard-check.svg';
 	import ExternalLinkIcon from '$icons/external-link.svg';
-	import {Container, containers} from '$lib/stores/containers';
-	import PageHeader from '$lib/components/page/PageHeader.svelte';
-	import PageMenu from '$lib/components/page/PageMenu.svelte';
-	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
+	import {Container, containers} from '$lib/client/stores/containers';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
+	import PageMenu from '$lib/client/components/page/PageMenu.svelte';
+	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
 
 	let site:Site;
 

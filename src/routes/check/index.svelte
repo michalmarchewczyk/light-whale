@@ -1,8 +1,8 @@
 <script lang="ts">
-	import PageHeader from '$lib/components/page/PageHeader.svelte';
-	import CheckCard from '$lib/components/CheckCard.svelte';
-	import {dockerAvailable} from '$lib/stores/docker';
-	import {networkAvailable, nginxAvailable, nginxConfig, nginxConnected} from '$lib/stores/network';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
+	import CheckCard from '$lib/client/components/CheckCard.svelte';
+	import {dockerAvailable} from '$lib/client/stores/docker';
+	import {networkAvailable, nginxAvailable, nginxConfig, nginxConnected} from '$lib/client/stores/network';
 
 </script>
 

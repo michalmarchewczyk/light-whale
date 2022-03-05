@@ -1,14 +1,14 @@
 <script lang="ts">
 	import {page} from '$app/stores';
 
-	import DiscIcon from '$lib/assets/icons/disc.svg';
+	import DiscIcon from '$lib/client/assets/icons/disc.svg';
 	import CubeIcon from '$icons/cube.svg';
 	import PlusIcon from '$icons/plus.svg';
-	import {Image, images} from '$lib/stores/images';
-	import {containers} from '$lib/stores/containers';
-	import PageHeader from '$lib/components/page/PageHeader.svelte';
-	import PageMenu from '$lib/components/page/PageMenu.svelte';
-	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
+	import {Image, images} from '$lib/client/stores/images';
+	import {containers} from '$lib/client/stores/containers';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
+	import PageMenu from '$lib/client/components/page/PageMenu.svelte';
+	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
 
 	let image:Image;
 

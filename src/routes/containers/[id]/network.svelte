@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {Container, containers,} from '$lib/stores/containers';
-	import type {Site} from '$lib/stores/sites';
-	import {addSite, sites} from '$lib/stores/sites';
-	import SiteItem from '$lib/components/network/SiteItem.svelte';
+	import {Container, containers,} from '$lib/client/stores/containers';
+	import type {Site} from '$lib/client/stores/sites';
+	import {addSite, sites} from '$lib/client/stores/sites';
+	import SiteItem from '$lib/client/components/network/SiteItem.svelte';
 
-	import FormError from '$lib/components/forms/FormError.svelte';
+	import FormError from '$lib/client/components/forms/FormError.svelte';
 
 	let container:Container;
 

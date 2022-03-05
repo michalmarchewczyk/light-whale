@@ -1,7 +1,7 @@
-import {getSavedSession} from '$lib/auth/sessions';
+import {getSavedSession} from '$lib/server/auth/sessions';
 import cookie from 'cookie';
 import type {GetSession, Handle} from '@sveltejs/kit';
-import Logger, {LogType} from '$lib/utils/Logger';
+import Logger, {LogType} from '$lib/server/utils/Logger';
 
 const logger = Logger.getInstance();
 

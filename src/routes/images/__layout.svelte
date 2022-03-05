@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
-	import {fetchImages} from '$lib/stores/images';
-	import {fetchContainers} from '$lib/stores/containers';
+	import {fetchImages} from '$lib/client/stores/images';
+	import {fetchContainers} from '$lib/client/stores/containers';
 
 	onMount(async () => {
 		await fetchImages();

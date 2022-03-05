@@ -5,12 +5,12 @@
 	import CloudUploadIcon from '$icons/cloud-upload.svg';
 	import PuzzleIcon from '$icons/puzzle.svg';
 
-	import {Container, containers} from '$lib/stores/containers';
+	import {Container, containers} from '$lib/client/stores/containers';
 	import {page} from '$app/stores';
 	import {onMount} from 'svelte';
-	import {bytesToHuman} from '$lib/utils/bytesToHuman';
+	import {bytesToHuman} from '$lib/client/utils/bytesToHuman';
 
-	import StatsCard from '$lib/components/containers/StatsCard.svelte';
+	import StatsCard from '$lib/client/components/containers/StatsCard.svelte';
 
 	let container:Container;
 
@@ -20,7 +20,7 @@
 
 	const getStats = async () => {
 		if (!container?.id || container?.state !== 'running') return;
-		const res = await fetch(`/docker/container?id=${container.id}`);
+		const res = await fetch(`/api/docker/container?id=${container.id}`);
 		if (res.status !== 200) return;
 		const data = await res.json();
 		stats = data;

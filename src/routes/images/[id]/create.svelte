@@ -1,10 +1,10 @@
 <script lang="ts">
-	import {Image, images} from '$lib/stores/images';
+	import {Image, images} from '$lib/client/stores/images';
 	import {page} from '$app/stores';
-	import {createContainer} from '$lib/stores/containers';
+	import {createContainer} from '$lib/client/stores/containers';
 	import {goto} from '$app/navigation';
-	import FormError from '$lib/components/forms/FormError.svelte';
-	import FormInput from '$lib/components/forms/FormInput.svelte';
+	import FormError from '$lib/client/components/forms/FormError.svelte';
+	import FormInput from '$lib/client/components/forms/FormInput.svelte';
 
 	let image:Image;
 

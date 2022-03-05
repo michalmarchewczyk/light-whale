@@ -1,14 +1,14 @@
 <script lang="ts">
-import ListHeader from '$lib/components/lists/ListHeader.svelte';
+import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 import {onMount} from 'svelte';
 import {browser} from '$app/env';
-import ImageSourceItem from '$lib/components/sources/ImageSourceItem.svelte';
+import ImageSourceItem from '$lib/client/components/sources/ImageSourceItem.svelte';
 
 let items = [];
 let search = '';
 
 const fetchItems = async (search=''):Promise<void> => {
-	const res = await fetch(`/sources/dockerhub/search?query=${search}`);
+	const res = await fetch(`/api/sources/dockerhub/search?query=${search}`);
 	if(res.status !== 200){
 		return;
 	}

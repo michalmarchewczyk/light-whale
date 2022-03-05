@@ -1,10 +1,10 @@
 <script lang="ts">
-	import {Site, sites} from '$lib/stores/sites';
-	import SiteItem from '$lib/components/network/SiteItem.svelte';
-	import {containers} from '$lib/stores/containers';
-	import ListHeader from '$lib/components/lists/ListHeader.svelte';
-	import SortMenu from '$lib/components/lists/SortMenu.svelte';
-	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
+	import {Site, sites} from '$lib/client/stores/sites';
+	import SiteItem from '$lib/client/components/network/SiteItem.svelte';
+	import {containers} from '$lib/client/stores/containers';
+	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
+	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
+	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 
 
 	let onlineCount:number;

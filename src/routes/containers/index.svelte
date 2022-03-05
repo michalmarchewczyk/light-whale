@@ -1,10 +1,10 @@
 <script lang="ts">
-	import ContainerItem from '$lib/components/containers/ContainerItem.svelte';
-	import ComposeAppItem from '$lib/components/containers/ComposeAppItem.svelte';
-	import {ComposeApp, composeApps, Container, containers} from '$lib/stores/containers';
-	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
-	import SortMenu from '$lib/components/lists/SortMenu.svelte';
-	import ListHeader from '$lib/components/lists/ListHeader.svelte';
+	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
+	import ComposeAppItem from '$lib/client/components/containers/ComposeAppItem.svelte';
+	import {ComposeApp, composeApps, Container, containers} from '$lib/client/stores/containers';
+	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
+	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
+	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 
 	let appsAndContainers:(ComposeApp | Container)[];
 

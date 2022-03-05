@@ -20,11 +20,11 @@
 </script>
 
 <script lang="ts">
-	import NavBar from '$lib/components/layout/NavBar.svelte';
-	import Drawer from '$lib/components/layout/Drawer.svelte';
+	import NavBar from '$lib/client/components/layout/NavBar.svelte';
+	import Drawer from '$lib/client/components/layout/Drawer.svelte';
 	import {onMount} from 'svelte';
 	import {browser} from '$app/env';
-	import SnackbarsOverlay from '$lib/components/layout/SnackbarsOverlay.svelte';
+	import SnackbarsOverlay from '$lib/client/components/layout/SnackbarsOverlay.svelte';
 
 	let drawerOpen = false;
 
@@ -61,5 +61,5 @@
 </div>
 
 <style global lang="scss">
-  @use '../lib/styles/main';
+  @use 'src/lib/client/styles/main';
 </style>

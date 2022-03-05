@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type {Container} from '$lib/stores/containers';
-	import {containers} from '$lib/stores/containers';
-	import {Image, images} from '$lib/stores/images';
+	import type {Container} from '$lib/client/stores/containers';
+	import {containers} from '$lib/client/stores/containers';
+	import {Image, images} from '$lib/client/stores/images';
 	import {page} from '$app/stores';
-	import ContainerItem from '$lib/components/containers/ContainerItem.svelte';
+	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
 
 	let image:Image;
 

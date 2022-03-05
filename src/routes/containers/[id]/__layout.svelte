@@ -1,15 +1,15 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {Container, containers} from '$lib/stores/containers';
+	import {Container, containers} from '$lib/client/stores/containers';
 
 	import CubeIcon from '$icons/cube.svg';
 	import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import FolderIcon from '$icons/folder.svg';
 	import ViewListIcon from '$icons/view-list.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
-	import PageHeader from '$lib/components/page/PageHeader.svelte';
-	import PageMenu from '$lib/components/page/PageMenu.svelte';
-	import PageMenuItem from '$lib/components/page/PageMenuItem.svelte';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
+	import PageMenu from '$lib/client/components/page/PageMenu.svelte';
+	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
 
 	let container:Container;
 

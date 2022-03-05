@@ -1,10 +1,10 @@
 <script lang="ts">
-	import {Image, images} from '$lib/stores/images';
-	import ImageItem from '$lib/components/images/ImageItem.svelte';
-	import {containers} from '$lib/stores/containers';
-	import ListHeader from '$lib/components/lists/ListHeader.svelte';
-	import SortMenu from '$lib/components/lists/SortMenu.svelte';
-	import FilterMenu from '$lib/components/lists/FilterMenu.svelte';
+	import {Image, images} from '$lib/client/stores/images';
+	import ImageItem from '$lib/client/components/images/ImageItem.svelte';
+	import {containers} from '$lib/client/stores/containers';
+	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
+	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
+	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 
 	let usedCount:number;
 	$: usedCount = $images.filter(i => $containers.filter(c => c.imageId === i.id).length > 0).length;

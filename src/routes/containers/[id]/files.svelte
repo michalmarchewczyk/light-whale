@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import FileBrowser from '$lib/components/containers/FileBrowser.svelte';
-	import {Container, containers} from '$lib/stores/containers';
+	import FileBrowser from '$lib/client/components/containers/FileBrowser.svelte';
+	import {Container, containers} from '$lib/client/stores/containers';
 	import * as path from 'path-browserify';
 
 	let container:Container = null;
@@ -19,7 +19,7 @@
 	const getFiles = async () => {
 		if (!container?.id || container?.state !== 'running') return;
 		loading = true;
-		const res = await fetch(`/docker/files?id=${container?.id}&path=${currentPath}`);
+		const res = await fetch(`/api/docker/files?id=${container?.id}&path=${currentPath}`);
 		if (res.status !== 200) {
 			loading = false;
 			loadedPath = currentPath;
@@ -35,7 +35,7 @@
 		if (!container?.id || container?.state !== 'running') return;
 		loading = true;
 		const filePath = path.join(currentPath, name);
-		const res = await fetch(`/docker/file?id=${container?.id}&path=${filePath}`);
+		const res = await fetch(`/api/docker/file?id=${container?.id}&path=${filePath}`);
 		if (res.status !== 200) {
 			loading = false;
 			return;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {Container, containers} from '$lib/stores/containers';
+	import {Container, containers} from '$lib/client/stores/containers';
 	import {onMount} from 'svelte';
 
 	let container:Container = null;
@@ -14,7 +14,7 @@
 
 	const getLogs = async () => {
 		if (!container?.id || container?.state !== 'running') return;
-		const res = await fetch(`/docker/containerLogs?id=${container.id}`);
+		const res = await fetch(`/api/docker/containerLogs?id=${container.id}`);
 		if (res.status !== 200) return;
 		const data = await res.text();
 		logsData = data;

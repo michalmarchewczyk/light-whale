@@ -1,8 +1,9 @@
 <script context="module" lang="ts">
-	import type {LoadInput, LoadOutput} from '@sveltejs/kit';
 
-	export async function load({session, fetch}:LoadInput):Promise<LoadOutput> {
-		const res = await fetch('/login/check');
+	import type {Load} from '@sveltejs/kit';
+
+	const load:Load = async ({session, fetch}) => {
+		const res = await fetch('/api/auth/check');
 		const isSetup = await res.text();
 		if(isSetup !== 'true'){
 			return {
@@ -19,12 +20,16 @@
 		return {
 			props: {}
 		};
-	}
+	};
+
+	export {
+		load
+	};
 </script>
 
 <script lang="ts">
-	import Background from '$lib/assets/background.svg';
-	import Logotype from '$lib/assets/logotype_white.png';
+	import Background from '$lib/client/assets/background.svg';
+	import Logotype from '$lib/client/assets/logotype_white.png';
 </script>
 
 <svelte:head>

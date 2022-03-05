@@ -7,16 +7,16 @@
 		restartContainer,
 		startContainer,
 		stopContainer
-	} from '$lib/stores/containers';
+	} from '$lib/client/stores/containers';
 	import {goto} from '$app/navigation';
 
 	import RefreshIcon from '$icons/refresh.svg';
 	import PauseIcon from '$icons/pause.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
-	import {Image, images} from '$lib/stores/images';
-	import ActionButton from '$lib/components/ActionButton.svelte';
-	import RemoveModal from '$lib/components/RemoveModal.svelte';
+	import {Image, images} from '$lib/client/stores/images';
+	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 
 	let container:Container = null;
 

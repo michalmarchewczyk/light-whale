@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import type {Site} from '$lib/stores/sites';
-	import {sites} from '$lib/stores/sites';
+	import type {Site} from '$lib/client/stores/sites';
+	import {sites} from '$lib/client/stores/sites';
 
 	let site:Site;
 
