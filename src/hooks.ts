@@ -10,7 +10,7 @@ const handle:Handle = async ({event, resolve}) => {
 	if(event.url.searchParams.get('skipLogger') === 'true'){
 		return resolve(event);
 	}
-	logger.log(LogType.Router, `${event.request.method} ${url} IP Address: ${event.request.headers.get('x-forwarded-for') ?? 'unknown'}`);
+	logger.log(LogType.Router, `${event.request.method} ${url} IP Address: ${event.clientAddress ?? 'unknown'}`);
 	return resolve(event);
 };
 
