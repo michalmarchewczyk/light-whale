@@ -8,7 +8,7 @@ export const dockerAvailable = writable(false);
 export const lastUpdate = writable<number>(0);
 
 export const fetchDockerAvailable = async ():Promise<void> => {
-	const res = await fetch('/api/docker/ping?skipLogger=true');
+	const res = await fetch('/api/docker/system/ping?skipLogger=true');
 	const data = await res.text();
 	if (data === 'true') {
 		dockerAvailable.set(true);
@@ -22,7 +22,7 @@ export const updateEverything = async ():Promise<void> => {
 	await fetchDockerAvailable();
 	await fetchNetworkAvailable();
 	await fetchNginxAvailable();
-	const res = await fetch('/api/docker/events?skipLogger=true');
+	const res = await fetch('/api/docker/system/events?skipLogger=true');
 	if(res.status !== 200){
 		return;
 	}

@@ -10,12 +10,15 @@ const handle:Handle = async ({event, resolve}) => {
 	if(event.url.searchParams.get('skipLogger') === 'true'){
 		return resolve(event);
 	}
-	logger.log(LogType.Router, `${event.request.method} ${url} IP Address: ${event.clientAddress ?? 'unknown'}`);
-	return resolve(event);
+	const response = await resolve(event);
+	logger.log(LogType.Router,
+		`${event.request.method} ${url} - ${response.status}; Origin: ${event.url.origin}; IP Address: ${event.clientAddress ?? 'unknown'}`
+	);
+	return response;
 };
 
-const getSession:GetSession = (event) => {
-	const sessionCookie = event.request.headers.get('cookie');
+const getSession:GetSession = ({request}) => {
+	const sessionCookie = request.headers.get('cookie');
 	if (!sessionCookie) {
 		return {};
 	}

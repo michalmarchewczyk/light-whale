@@ -3,13 +3,13 @@ import validator from 'validator';
 import {getContainerProcesses, getContainerStats, inspectContainer} from '$lib/server/docker/containers';
 import {checkSession} from '$lib/server/auth/sessions';
 
-const get:RequestHandler = async ({url, request}) => {
+const get:RequestHandler = async ({params, request}) => {
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const id = url.searchParams.get('id') ?? '';
+	const id =  params.id;
 	if (!id) {
 		return {
 			status: 400,

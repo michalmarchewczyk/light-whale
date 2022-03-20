@@ -1,17 +1,17 @@
-import {pingDocker} from '$lib/server/docker/ping';
+import {getLastEvent} from '$lib/server/docker/events';
 import type {RequestHandler} from '@sveltejs/kit';
 import {checkSession} from '$lib/server/auth/sessions';
 
-const get:RequestHandler<Promise<void>> = async ({request}) => {
+const get:RequestHandler = async ({request}) => {
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const ping = await pingDocker();
+	const event = await getLastEvent();
 	return {
 		status: 200,
-		body: ping.toString(),
+		body: JSON.stringify(event),
 	};
 };
 

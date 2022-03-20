@@ -21,10 +21,9 @@ export const fetchImages = async ():Promise<void> => {
 };
 
 export const removeImage = async (id:string):Promise<void> => {
-	await fetch('/api/docker/images', {
+	await fetch(`/api/docker/images/${id}`, {
 		method: 'DELETE',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({id}),
 	});
 	await forceUpdateEverything();
 };

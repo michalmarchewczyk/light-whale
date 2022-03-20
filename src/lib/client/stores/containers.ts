@@ -52,37 +52,36 @@ export const fetchContainers = async ():Promise<void> => {
 };
 
 export const startContainer = async (id:string):Promise<void> => {
-	await fetch('/api/docker/containers', {
+	await fetch(`/api/docker/containers/${id}`, {
 		method: 'PUT',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({id, action: 'start'}),
+		body: JSON.stringify({action: 'start'}),
 	});
 	await forceUpdateEverything();
 };
 
 export const stopContainer = async (id:string):Promise<void> => {
-	await fetch('/api/docker/containers', {
+	await fetch(`/api/docker/containers/${id}`, {
 		method: 'PUT',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({id, action: 'stop'}),
+		body: JSON.stringify({action: 'stop'}),
 	});
 	await forceUpdateEverything();
 };
 
 export const restartContainer = async (id:string):Promise<void> => {
-	await fetch('/api/docker/containers', {
+	await fetch(`/api/docker/containers/${id}`, {
 		method: 'PUT',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({id, action: 'restart'}),
+		body: JSON.stringify({action: 'restart'}),
 	});
 	await forceUpdateEverything();
 };
 
 export const removeContainer = async (id:string):Promise<void> => {
-	await fetch('/api/docker/containers', {
-		method: 'PUT',
+	await fetch(`/api/docker/containers/${id}`, {
+		method: 'DELETE',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({id, action: 'remove'}),
 	});
 	await forceUpdateEverything();
 };

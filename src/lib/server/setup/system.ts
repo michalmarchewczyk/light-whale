@@ -14,7 +14,7 @@ export const getSystem = async ():Promise<string> => new Promise((resolve, rejec
 		reject('');
 		return;
 	}
-	exec('cat /etc/*release | grep -E ^NAME', function(error, stdout, stderr) {
+	exec('cat /etc/*release | grep -E ^NAME', (error, stdout, stderr) => {
 		if(error || stderr){
 			resolve('');
 			return;

@@ -18,7 +18,7 @@
 	};
 
 	const logout = async () => {
-		const res = await fetch('/api/login/logout');
+		const res = await fetch('/api/auth/logout');
 		if (res.status === 200) {
 			$session = {};
 			await goto('/login');

@@ -30,19 +30,20 @@ export const getSites = async ():Promise<Site[]> => {
 	const files:SiteConfig[] = [];
 	for await (const fileName of fileNames) {
 		const content = await fs.readFile(path.join(nginxPath, fileName), {encoding: 'utf8'});
-		if (isContentSiteConfig(content)) {
-			const lines = content.split(EOL);
-			files.push({
-				site: {
-					id: lines[1].split(' ')[2].trim(),
-					containerId: lines[2].split(' ')[2].trim(),
-					domain: lines[3].split(' ')[2].trim(),
-					paused: lines[4].split(' ')[2].trim() === 'true',
-					created: new Date(lines[5].split(' ')[2].trim()),
-				},
-				content,
-			});
+		if(!isContentSiteConfig(content)){
+			continue;
 		}
+		const lines = content.split(EOL);
+		files.push({
+			site: {
+				id: lines[1].split(' ')[2].trim(),
+				containerId: lines[2].split(' ')[2].trim(),
+				domain: lines[3].split(' ')[2].trim(),
+				paused: lines[4].split(' ')[2].trim() === 'true',
+				created: new Date(lines[5].split(' ')[2].trim()),
+			},
+			content,
+		});
 	}
 	return files.map(file => file.site);
 };

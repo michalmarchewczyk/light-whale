@@ -19,7 +19,7 @@
 	const getFiles = async () => {
 		if (!container?.id || container?.state !== 'running') return;
 		loading = true;
-		const res = await fetch(`/api/docker/files?id=${container?.id}&path=${currentPath}`);
+		const res = await fetch(`/api/docker/containers/${container?.id}/files?path=${currentPath}&type=dir`);
 		if (res.status !== 200) {
 			loading = false;
 			loadedPath = currentPath;
@@ -35,7 +35,7 @@
 		if (!container?.id || container?.state !== 'running') return;
 		loading = true;
 		const filePath = path.join(currentPath, name);
-		const res = await fetch(`/api/docker/file?id=${container?.id}&path=${filePath}`);
+		const res = await fetch(`/api/docker/containers/${container?.id}/files?path=${filePath}&type=file`);
 		if (res.status !== 200) {
 			loading = false;
 			return;

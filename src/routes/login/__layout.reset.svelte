@@ -3,7 +3,7 @@
 	import type {Load} from '@sveltejs/kit';
 
 	const load:Load = async ({session, fetch}) => {
-		const res = await fetch('/api/auth/check');
+		const res = await fetch('/api/setup/check');
 		const isSetup = await res.text();
 		if(isSetup !== 'true'){
 			return {

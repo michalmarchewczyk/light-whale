@@ -13,7 +13,7 @@
 	let selectClient = false;
 
 	const getLogs = async () => {
-		const res = await fetch('/api/logs/logs?skipLogger=true');
+		const res = await fetch('/api/logs?skipLogger=true');
 		if (res.status !== 200) return;
 		logs = await res.json();
 	};

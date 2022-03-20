@@ -4,7 +4,7 @@ import {checkSession} from '$lib/server/auth/sessions';
 import validator from 'validator';
 
 
-const get:RequestHandler<Promise<void>> = async () => {
+const get:RequestHandler = async () => {
 	let sites:Site[] = await getSites();
 	sites = sites.sort((a, b) => b.created.getTime() - a.created.getTime());
 	return {
@@ -14,7 +14,7 @@ const get:RequestHandler<Promise<void>> = async () => {
 	};
 };
 
-const put:RequestHandler<Promise<void>, string> = async ({request}) => {
+const put:RequestHandler = async ({request}) => {
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
@@ -41,7 +41,7 @@ const put:RequestHandler<Promise<void>, string> = async ({request}) => {
 };
 
 
-const del:RequestHandler<Promise<void>, string> = async ({request}) => {
+const del:RequestHandler = async ({request}) => {
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
@@ -61,7 +61,7 @@ const del:RequestHandler<Promise<void>, string> = async ({request}) => {
 };
 
 
-const post:RequestHandler<void> = async ({request}) => {
+const post:RequestHandler = async ({request}) => {
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,

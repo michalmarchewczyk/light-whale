@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	import type {Load} from '@sveltejs/kit';
 
-	const load:Load = async ({fetch}) => {
+	const load:Load<null, null, { docker:string, nginx:string }> = async ({fetch}) => {
 		const resDocker = await fetch('/api/setup/checkDocker');
 		const docker = await resDocker.text();
 		const resNginx = await fetch('/api/setup/checkNginx');
@@ -26,8 +26,8 @@
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import {onMount} from 'svelte';
 
-	export let docker;
-	export let nginx;
+	export let docker = '';
+	export let nginx = '';
 
 	let step:number;
 	let dockerAvailable = docker === 'ok';

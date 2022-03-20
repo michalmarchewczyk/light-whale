@@ -12,11 +12,11 @@
 	 class:text-warning={status === 'warning'}
 >
 	{#if status === 'success'}
-		<CheckCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px]"/>
+		<CheckCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px] mt-4"/>
 	{:else if status === 'warning'}
-		<ExclamationCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px]"/>
+		<ExclamationCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px] mt-4"/>
 	{:else if status === 'error'}
-		<XCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px]"/>
+		<XCircleIcon class="w-12 h-12 sm:h-16 sm:w-16 mx-auto stroke-[1.5px] mt-4"/>
 	{/if}
 </div>
 

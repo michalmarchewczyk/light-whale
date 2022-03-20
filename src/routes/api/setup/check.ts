@@ -1,7 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {checkSetup} from '$lib/server/setup/check';
 
-const get:RequestHandler<Promise<void>> = async () => {
+const get:RequestHandler = async () => {
 	const isSetup = await checkSetup();
 	if(!isSetup){
 		return {
