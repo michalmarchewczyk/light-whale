@@ -65,7 +65,7 @@
 					</label>
 				</div>
 			</div>
-			<div class="card-actions">
+			<div class="card-actions mt-4">
 				<input class="btn btn-primary" type="submit" value="Create"/>
 			</div>
 		</form>

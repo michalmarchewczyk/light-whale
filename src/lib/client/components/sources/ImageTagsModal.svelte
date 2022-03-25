@@ -37,13 +37,13 @@
 		</select>
 
 		<div class="modal-action">
+			<button class="btn" on:click={() => open = false}>Cancel</button>
 			<button class="btn btn-primary" on:click={() => {
 						open = false;
 						pull();
 					}} disabled={!selected}>
 				Pull
 			</button>
-			<button class="btn" on:click={() => open = false}>Cancel</button>
 		</div>
 	</div>
 </div>

@@ -59,7 +59,7 @@
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">State: {container?.state.toUpperCase()}</h2>
 		<p>Status: {container?.status}</p>
-		<div class="card-actions">
+		<div class="card-actions mt-2">
 			<ActionButton icon={PlayIcon} on:click={start} loading={loading} disabled={container?.state === 'running'}
 				class="w-auto px-3">
 				Start

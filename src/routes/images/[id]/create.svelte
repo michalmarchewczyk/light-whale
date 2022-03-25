@@ -27,7 +27,7 @@
 			<FormError error={error} />
 			<FormInput label="Container name" placeholder="name" bind:value={name}/>
 			<FormInput label="Command" placeholder="command" bind:value={command}/>
-			<div class="card-actions">
+			<div class="card-actions mt-4">
 				<input class="btn btn-primary" type="submit" value="Create"/>
 			</div>
 		</form>

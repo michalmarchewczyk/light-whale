@@ -32,7 +32,7 @@
 			<FormError error={error}/>
 			<FormPassword label="Password" placeholder="password" bind:value={password}/>
 			<div class="card-actions">
-				<input class="btn btn-primary" type="submit" value="Login"/>
+				<input class="btn btn-primary mt-2" type="submit" value="Login"/>
 			</div>
 		</form>
 	</div>
