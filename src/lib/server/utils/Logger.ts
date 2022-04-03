@@ -19,6 +19,7 @@ class Logger {
 	private static instance:Logger;
 	private file:string;
 	private logs:Log[] = [];
+	private lastTime = 0;
 
 	public static getInstance():Logger {
 		if(!Logger.instance){
@@ -38,6 +39,7 @@ class Logger {
 				.replaceAll('.', '');
 			this.file = path.join(logsFolder, `logs_${date}.txt`);
 			await fs.writeFile(this.file, '===== LOGS START =====\n', {encoding: 'utf-8', flag: 'w'});
+			this.lastTime = Date.now();
 			await this.log(LogType.Info, 'Logger initialized');
 		});
 	}
@@ -45,8 +47,10 @@ class Logger {
 	async log(type:LogType, msg:string):Promise<void>{
 		this.logs = this.logs.slice(-100000);
 		const date = new Date();
+		const dateDiff = date.getTime() - this.lastTime;
+		this.lastTime = date.getTime();
 		this.logs.push({type, msg, date});
-		const log = `[${date.toISOString()}] (${type}) ${msg}\n`;
+		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}\n`;
 		// eslint-disable-next-line no-console
 		console.log('LW-Logger:', log);
 		await fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'});
