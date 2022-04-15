@@ -1,10 +1,12 @@
 <script lang="ts">
 	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
-	import {onMount} from 'svelte';
+	import {afterUpdate, onMount} from 'svelte';
 
 	let loading = true;
+	let previousResponse;
 	let logs = [];
-	let logsFiltered = [];
+	let logsFiltered;
+	let logsLength = 0;
 	let scrollContainer;
 	let selectInfo = true;
 	let selectWarning = true;
@@ -15,7 +17,12 @@
 	const getLogs = async () => {
 		const res = await fetch('/api/logs?skipLogger=true');
 		if (res.status !== 200) return;
-		logs = await res.json();
+		const text = await res.text();
+		if(text === previousResponse) {
+			return;
+		}
+		previousResponse = text;
+		logs = JSON.parse(text);
 	};
 
 	$: {
@@ -35,15 +42,14 @@
 		if(!selectClient){
 			logsFiltered = logsFiltered.filter(log => log.type !== 'Client');
 		}
+		logsLength = logsFiltered.length;
 	}
 
-	$: {
+	afterUpdate(()=>{
 		if (scrollContainer) {
-			scrollContainer.scrollTop = logs.length * 100;
+			scrollContainer.scrollTop = logsLength * 100;
 		}
-	}
-
-
+	});
 
 	onMount(() => {
 		getLogs().then(() => {
