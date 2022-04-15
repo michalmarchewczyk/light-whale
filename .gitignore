@@ -12,3 +12,4 @@ node_modules
 /nginx-config
 /lw-config
 /lw-logs
+/git-sources

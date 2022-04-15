@@ -1,33 +1,33 @@
 <script lang="ts">
-import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
-import {onMount} from 'svelte';
-import {browser} from '$app/env';
-import ImageSourceItem from '$lib/client/components/sources/ImageSourceItem.svelte';
+	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
+	import {onMount} from 'svelte';
+	import {browser} from '$app/env';
+	import ImageSourceItem from '$lib/client/components/sources/ImageSourceItem.svelte';
 
-let items = [];
-let search = '';
+	let items = [];
+	let search = '';
 
-const fetchItems = async (search=''):Promise<void> => {
-	const res = await fetch(`/api/sources/dockerhub/search?query=${search}`);
-	if(res.status !== 200){
-		return;
+	const fetchItems = async (search=''):Promise<void> => {
+		const res = await fetch(`/api/sources/dockerhub/search?query=${search}`);
+		if(res.status !== 200){
+			return;
+		}
+		const data = await res.json();
+		if(data.count === 0){
+			items = [];
+		}
+		items = data['summaries'] ?? items ?? [];
+	};
+
+	onMount(async() => {
+		await fetchItems();
+	});
+
+	$: {
+		if(browser){
+			fetchItems(search.length === 1 ? '' : search);
+		}
 	}
-	const data = await res.json();
-	if(data.count === 0){
-		items = [];
-	}
-	items = data['summaries'] ?? items ?? [];
-};
-
-onMount(async() => {
-	await fetchItems();
-});
-
-$: {
-	if(browser){
-		fetchItems(search.length === 1 ? '' : search);
-	}
-}
 
 </script>
 
