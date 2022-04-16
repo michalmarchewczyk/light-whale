@@ -46,6 +46,10 @@
 		if(!selectVerbose){
 			logsFiltered = logsFiltered.filter(log => log.type !== 'Verbose');
 		}
+		logsFiltered = logsFiltered.map((log, i, all) => ({
+			...log,
+			dateDiff: all[i-1] ? (new Date(log.date)).getTime() - (new Date(all[i-1].date)).getTime() : 0
+		}));
 		logsLength = logsFiltered.length;
 	}
 
@@ -111,7 +115,7 @@
 						{#each logsFiltered as log, i}
 							<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
 							   class:bg-base-200={i%2===0}>
-								[{log.date}] ({log.type}) {log.msg}
+								[{log.date}][+{log.dateDiff/1000}] ({log.type}) {log.msg}
 							</p>
 						{/each}
 					</div>
