@@ -59,6 +59,7 @@ export const createNginxContainer = async():Promise<string> => {
 	});
 	await res.text();
 	if(res.status !== 200){
+		logger.log(LogType.Error, 'NGINX Setup: Failed to pull NGINX image');
 		return 'image';
 	}
 	logger.log(LogType.Info, 'NGINX Setup: Deleting existing LW containers');
@@ -84,6 +85,7 @@ export const createNginxContainer = async():Promise<string> => {
 		})
 	});
 	if(res3.status !== 201){
+		logger.log(LogType.Error, 'NGINX Setup: Failed to create LW container');
 		return 'container';
 	}
 	const container = await res3.json();
@@ -101,11 +103,13 @@ export const createNginxContainer = async():Promise<string> => {
 		})
 	});
 	if(res4.status !== 201 && res4.status !== 409){
+		logger.log(LogType.Error, 'NGINX Setup: Failed to create LW network');
 		return 'network';
 	}
 	logger.log(LogType.Info, 'NGINX Setup: Connecting LW container to network');
 	const connect = await connectToLWNetwork(id);
 	if(!connect){
+		logger.log(LogType.Error, 'NGINX Setup: Failed to connect LW container to network');
 		return 'connect';
 	}
 	logger.log(LogType.Info, 'NGINX Setup: Setting up config paths');
