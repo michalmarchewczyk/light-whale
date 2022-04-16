@@ -38,7 +38,7 @@
 
 	<li class="menu-title">
 		<span>Docker</span>
-		<div class="badge badge-outline mt-0.5 {$dockerAvailable ? 'badge-success' : 'badge-error'}">
+		<div class="badge mt-0.5 {$dockerAvailable ? 'badge-success' : 'badge-error'}">
 			{$dockerAvailable ? 'Connected' : 'Disconnected'}
 		</div>
 	</li>
