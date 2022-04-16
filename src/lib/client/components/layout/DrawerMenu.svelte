@@ -2,7 +2,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import {dockerAvailable} from '$lib/client/stores/docker';
 	import HomeIcon from '$icons/home.svg';
-	import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
+	// import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import CubeIcon from '$icons/cube.svg';
 	import DiscIcon from '$lib/client/assets/icons/disc.svg';
 	// import DatabaseIcon from '$icons/database.svg';
@@ -14,6 +14,7 @@
 	import DockerIcon from '$lib/client/assets/icons/docker.svg';
 	import CheckCircleIcon from '$icons/check-circle.svg';
 	import ViewListIcon from '$icons/view-list.svg';
+	import QuestionMarkCircleIcon from '$icons/question-mark-circle.svg';
 
 	import {networkAvailable, nginxConnected} from '$lib/client/stores/network';
 	import DrawerMenuItem from '$lib/client/components/layout/DrawerMenuItem.svelte';
@@ -32,9 +33,9 @@
 	<DrawerMenuItem icon={HomeIcon} path="/" on:click={() => dispatch('navigate')}>
 		Home
 	</DrawerMenuItem>
-	<DrawerMenuItem icon={ChartSquareBarIcon} path="/stats" on:click={() => dispatch('navigate')}>
-		Statistics
-	</DrawerMenuItem>
+<!--	<DrawerMenuItem icon={ChartSquareBarIcon} path="/stats" on:click={() => dispatch('navigate')}>-->
+<!--		Statistics-->
+<!--	</DrawerMenuItem>-->
 
 	<li class="menu-title">
 		<span>Docker</span>
@@ -94,6 +95,9 @@
 	</DrawerMenuItem>
 	<DrawerMenuItem icon={ViewListIcon} path="/logs" on:click={() => dispatch('navigate')}>
 		Logs
+	</DrawerMenuItem>
+	<DrawerMenuItem icon={QuestionMarkCircleIcon} path="/docs" on:click={() => dispatch('navigate')}>
+		Documentation
 	</DrawerMenuItem>
 
 
