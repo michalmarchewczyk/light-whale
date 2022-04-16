@@ -1,6 +1,7 @@
 import {inspectContainer} from '$lib/server/docker/containers';
 import {execCommand} from '$lib/server/docker/exec';
 import {LW_NETWORK_NAME} from '$lib/server/docker/config';
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 export const NGINX_CONTAINER_NAME = process.env.NGINX_CONTAINER_NAME ?? 'light-whale-nginx';
 
@@ -25,6 +26,7 @@ export const checkContainerRestart = async ():Promise<boolean> => {
 };
 
 export const reloadNginx = async ():Promise<boolean> => {
+	logger.log(LogType.Info, 'Reloading LW container');
 	const container = await inspectContainer(NGINX_CONTAINER_NAME);
 	if (!container['Id'] || container?.['State']?.['Status'] !== 'running') {
 		return false;

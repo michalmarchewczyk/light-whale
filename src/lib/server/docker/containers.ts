@@ -1,4 +1,6 @@
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
+import {logger, LogType} from '$lib/server/utils/Logger';
+import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginx';
 
 interface Container {
 	id:string,
@@ -15,6 +17,7 @@ interface Container {
 
 export const getContainers = async ():Promise<Container[]> => {
 	try {
+		logger.log(LogType.Info, 'Listing containers');
 		const res = await fetch(DOCKER_URL + '/containers/json?all=true&size=true');
 		const data = await res.json();
 		const containers:Container[] = data.map((container):Container => ({
@@ -37,21 +40,25 @@ export const getContainers = async ():Promise<Container[]> => {
 
 
 export const startContainer = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Starting container with id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/start`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const stopContainer = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Stopping container with id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/stop`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const restartContainer = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Restarting container with id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/restart`, {method: 'POST'});
 	return res.status === 204;
 };
 
 export const removeContainer = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Deleting container with id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}`, {method: 'DELETE'});
 	return res.status === 204;
 };
@@ -59,6 +66,9 @@ export const removeContainer = async (id:string):Promise<boolean> => {
 
 export const inspectContainer = async (id:string):Promise<unknown> => {
 	try {
+		if(id !== NGINX_CONTAINER_NAME) {
+			logger.log(LogType.Verbose, `Inspecting container with id: ${id}`);
+		}
 		const res = await fetch(DOCKER_URL + `/containers/${id}/json?size=true`);
 		if (res.status !== 200) {
 			return {};
@@ -70,6 +80,7 @@ export const inspectContainer = async (id:string):Promise<unknown> => {
 };
 
 export const createContainer = async (imageId:string, name:string, command:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Create container with imageId: ${imageId} and name ${name}`);
 	const query = name ? '?name=' + name : '';
 	const res = await fetch(`${DOCKER_URL}/containers/create${query}`, {
 		method: 'POST',
@@ -110,6 +121,7 @@ interface ContainerStats {
 }
 
 export const getContainerStats = async (id:string):Promise<ContainerStats | null> => {
+	logger.log(LogType.Verbose, `Getting container stats, id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/stats?stream=false`);
 	if (res.status !== 200) {
 		return null;
@@ -118,6 +130,7 @@ export const getContainerStats = async (id:string):Promise<ContainerStats | null
 };
 
 export const getContainerProcesses = async (id:string):Promise<unknown> => {
+	logger.log(LogType.Verbose, `Getting container processes, id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
 	if (res.status !== 200) {
 		return {};
@@ -127,6 +140,7 @@ export const getContainerProcesses = async (id:string):Promise<unknown> => {
 
 
 export const getContainerLogs = async (id:string):Promise<string> => {
+	logger.log(LogType.Verbose, `Getting container logs, id: ${id}`);
 	const res = await fetch(DOCKER_URL + `/containers/${id}/logs?stdout=true&tail=1000`);
 	if (res.status !== 200) {
 		return '';
@@ -135,6 +149,7 @@ export const getContainerLogs = async (id:string):Promise<string> => {
 };
 
 export const connectToLWNetwork = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Connecting container with id: ${id} to LW network`);
 	const res = await fetch(DOCKER_URL + `/networks/${LW_NETWORK_NAME}/connect`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},

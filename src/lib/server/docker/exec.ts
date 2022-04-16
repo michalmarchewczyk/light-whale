@@ -1,7 +1,9 @@
 import {DOCKER_URL} from '$lib/server/docker/config';
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 
 export const execCommand = async (containerId:string, command:string):Promise<string | null> => {
+	logger.log(LogType.Info, `Execute command: ${command} on container with id: ${containerId}`);
 	const resCreate = await fetch(DOCKER_URL + `/containers/${containerId}/exec`, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},

@@ -1,5 +1,6 @@
 import {execCommand} from '$lib/server/docker/exec';
 import {EOL} from 'os';
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 interface File {
 	directory: boolean;
@@ -11,10 +12,12 @@ interface File {
 }
 
 export async function getContainerFile(id:string, path:string):Promise<string> {
+	logger.log(LogType.Info, `Read file: ${path} from container with id: ${id}`);
 	return await execCommand(id, `cat ${path}`);
 }
 
 export async function getContainerFiles(id:string, path:string):Promise<File[]> {
+	logger.log(LogType.Info, `Read path: ${path} from container with id: ${id}`);
 	const data = await execCommand(id, `ls -lha --time-style=full-iso --group-directories-first ${path}`);
 	if (!data) {
 		return [];
