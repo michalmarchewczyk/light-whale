@@ -10,7 +10,13 @@ const handle:Handle = async ({event, resolve}) => {
 	if(event.url.searchParams.get('skipLogger') === 'true'){
 		return resolve(event);
 	}
-	logger.log(LogType.Router, `GET ${url}; Origin: ${event.url.origin}; IP Address: ${event.clientAddress ?? 'unknown'}`);
+	let ipAddress = '';
+	try {
+		ipAddress = event.clientAddress ?? 'unknown';
+	}catch(e){
+		ipAddress = 'unknown';
+	}
+	logger.log(LogType.Router, `GET ${url}; Origin: ${event.url.origin}; IP Address: ${ipAddress}`);
 	const response = await resolve(event);
 	logger.log(LogType.Router, `${event.request.method} RESPONSE ${url} - ${response.status} ${response.statusText}`);
 	return response;
