@@ -1,9 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import simpleGit, {CheckRepoActions, SimpleGit, SimpleGitOptions} from 'simple-git';
-import Logger, {LogType} from '$lib/server/utils/Logger';
-
-const logger = Logger.getInstance();
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 const gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
@@ -57,17 +55,17 @@ const pullRepo = async (repoUrl:string):Promise<boolean> => {
 	try {
 		await fs.access(repoDir);
 		await git.cwd(repoDir);
-		await logger.log(LogType.Info, `Pulling git repository ${repoUrl}`);
+		logger.log(LogType.Info, `Pulling git repository ${repoUrl}`);
 		await git.pull();
 		return true;
 	} catch (e) {
 		try {
-			await logger.log(LogType.Info, `Fetching git repository ${repoUrl}`);
+			logger.log(LogType.Info, `Fetching git repository ${repoUrl}`);
 			await git.clone(repoUrl, repoDir);
 			await git.cwd(repoDir);
 			return true;
 		} catch (e) {
-			await logger.log(LogType.Error, `Could not fetch git repository ${repoUrl}`);
+			logger.log(LogType.Error, `Could not fetch git repository ${repoUrl}`);
 			return false;
 		}
 	}
@@ -101,14 +99,14 @@ export const fetchRepo = async (repoUrl:string):Promise<RepoInfo|null> => {
 			topFileContent
 		};
 	}catch(e){
-		await logger.log(LogType.Error, 'Something went wrong reading repository information');
+		logger.log(LogType.Error, 'Something went wrong reading repository information');
 		return null;
 	}
 };
 
 
 export const listRepos = async():Promise<string[]> => {
-	await logger.log(LogType.Info, 'Listing git repositories');
+	logger.log(LogType.Info, 'Listing git repositories');
 	try {
 		const dirs = (await fs.readdir(gitSourcesPath, {withFileTypes: true}))
 			.filter(d => d.isDirectory())
@@ -124,7 +122,7 @@ export const listRepos = async():Promise<string[]> => {
 		}
 		return repos;
 	}catch(e){
-		await logger.log(LogType.Error, 'Something went wrong while listing repositories');
+		logger.log(LogType.Error, 'Something went wrong while listing repositories');
 		return [];
 	}
 };

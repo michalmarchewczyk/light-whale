@@ -1,9 +1,7 @@
 import {getSavedSession} from '$lib/server/auth/sessions';
 import cookie from 'cookie';
 import type {GetSession, Handle} from '@sveltejs/kit';
-import Logger, {LogType} from '$lib/server/utils/Logger';
-
-const logger = Logger.getInstance();
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 const handle:Handle = async ({event, resolve}) => {
 	const url = event.url.toString();

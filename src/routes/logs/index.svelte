@@ -13,6 +13,7 @@
 	let selectError = true;
 	let selectRouter = false;
 	let selectClient = false;
+	let selectVerbose = false;
 
 	const getLogs = async () => {
 		const res = await fetch('/api/logs?skipLogger=true');
@@ -41,6 +42,9 @@
 		}
 		if(!selectClient){
 			logsFiltered = logsFiltered.filter(log => log.type !== 'Client');
+		}
+		if(!selectVerbose){
+			logsFiltered = logsFiltered.filter(log => log.type !== 'Verbose');
 		}
 		logsLength = logsFiltered.length;
 	}
@@ -74,6 +78,10 @@
 		<div class="card shadow-lg bg-base-100 p-0 max-h-[calc(100vh-13rem)] overflow-hidden">
 			<div class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">
 				<span>Logs</span>
+				<label class="inline cursor-pointer label float-right py-0 pt-0.5 ml-2">
+					<input type="checkbox" bind:checked="{selectVerbose}" class="checkbox checkbox-primary mt-0.5 float-left">
+					<span class="label-text ml-2 text-base font-semibold float-left">Verbose</span>
+				</label>
 				<label class="inline cursor-pointer label float-right py-0 pt-0.5 ml-2">
 					<input type="checkbox" bind:checked="{selectClient}" class="checkbox checkbox-primary mt-0.5 float-left">
 					<span class="label-text ml-2 text-base font-semibold float-left">Client</span>

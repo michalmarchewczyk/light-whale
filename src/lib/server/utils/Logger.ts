@@ -6,7 +6,8 @@ export enum LogType {
 	Warning = 'Warning',
 	Error = 'Error',
 	Router = 'Router',
-	Client = 'Client'
+	Client = 'Client',
+	Verbose = 'Verbose',
 }
 
 export interface Log {
@@ -44,21 +45,27 @@ class Logger {
 		});
 	}
 
-	async log(type:LogType, msg:string):Promise<void>{
+	log(type:LogType, msg:string):void{
 		this.logs = this.logs.slice(-100000);
 		const date = new Date();
 		const dateDiff = date.getTime() - this.lastTime;
 		this.lastTime = date.getTime();
 		this.logs.push({type, msg, date});
 		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}\n`;
-		// eslint-disable-next-line no-console
-		console.log('LW-Logger:', log);
-		await fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'});
+		fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'}).then(() => {
+			if (type === LogType.Router || type === LogType.Verbose){
+				return;
+			}
+			// eslint-disable-next-line no-console
+			console.log('LW-Logger:', log);
+		});
 	}
 
 	get():Log[]{
 		return this.logs;
 	}
 }
+
+export const logger = Logger.getInstance();
 
 export default Logger;
