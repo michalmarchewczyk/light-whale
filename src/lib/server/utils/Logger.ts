@@ -48,8 +48,11 @@ class Logger {
 	log(type:LogType, msg:string):void{
 		this.logs = this.logs.slice(-100000);
 		const date = new Date();
-		const dateDiff = date.getTime() - this.lastTime;
-		this.lastTime = date.getTime();
+		let dateDiff = 0;
+		if(type !== LogType.Verbose) {
+			dateDiff = date.getTime() - this.lastTime;
+			this.lastTime = date.getTime();
+		}
 		this.logs.push({type, msg, date});
 		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}\n`;
 		fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'}).then(() => {
