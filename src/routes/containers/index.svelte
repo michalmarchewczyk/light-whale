@@ -37,7 +37,7 @@
 		if (sort === 'name') {
 			appsAndContainers = appsAndContainers.sort((a, b) => a.name < b.name ? 1 : -1);
 		} else if (sort === 'created') {
-			appsAndContainers = appsAndContainers.sort((a, b) => a.created < b.created ? 1 : -1);
+			appsAndContainers = appsAndContainers.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1);
 		}
 		if (sort && order === 'asc') {
 			appsAndContainers = appsAndContainers.reverse();
