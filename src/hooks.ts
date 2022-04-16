@@ -16,7 +16,7 @@ const handle:Handle = async ({event, resolve}) => {
 	}catch(e){
 		ipAddress = 'unknown';
 	}
-	logger.log(LogType.Router, `GET ${url}; Origin: ${event.url.origin}; IP Address: ${ipAddress}`);
+	logger.log(LogType.Router, `${event.request.method} ${url}; Origin: ${event.url.origin}; IP Address: ${ipAddress}`);
 	const response = await resolve(event);
 	logger.log(LogType.Router, `${event.request.method} RESPONSE ${url} - ${response.status} ${response.statusText}`);
 	return response;
