@@ -2,7 +2,7 @@ import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
 import tildeImporter from 'node-sass-tilde-importer';
 import path from 'path';
-import {svelteSVG} from 'rollup-plugin-svelte-svg';
+import svelteSVG from 'vite-plugin-svelte-vsvg';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,6 +15,8 @@ const config = {
 			},
 		}),
 	],
+
+	extensions: ['.svelte', '.svg'],
 
 	kit: {
 		adapter: adapter(),
