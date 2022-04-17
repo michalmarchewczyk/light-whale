@@ -5,6 +5,7 @@ import template from './template.conf?raw';
 import crypto from 'crypto';
 import {connectToLWNetwork} from '$lib/server/docker/containers';
 import {EOL} from 'os';
+import {logger, LogType} from '$lib/server/utils/Logger';
 
 export interface Site {
 	id:string,
@@ -26,6 +27,7 @@ const isContentSiteConfig = (content:string):boolean => {
 };
 
 export const getSites = async ():Promise<Site[]> => {
+	logger.log(LogType.Info, 'Listing sites');
 	const fileNames = await fs.readdir(nginxPath);
 	const files:SiteConfig[] = [];
 	for await (const fileName of fileNames) {
@@ -50,6 +52,7 @@ export const getSites = async ():Promise<Site[]> => {
 
 
 export const unpauseSite = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Unpause site with id: ${id}`);
 	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
 	if (!isContentSiteConfig(content)) {
 		return false;
@@ -69,6 +72,7 @@ export const unpauseSite = async (id:string):Promise<boolean> => {
 };
 
 export const pauseSite = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Pause site with id: ${id}`);
 	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
 	if (!isContentSiteConfig(content)) {
 		return false;
@@ -89,6 +93,7 @@ export const pauseSite = async (id:string):Promise<boolean> => {
 
 
 export const removeSite = async (id:string):Promise<boolean> => {
+	logger.log(LogType.Info, `Remove site with id: ${id}`);
 	const content = await fs.readFile(path.join(nginxPath, `site-${id}.conf`), {encoding: 'utf8'});
 	if (!isContentSiteConfig(content)) {
 		return false;
@@ -101,6 +106,7 @@ export const removeSite = async (id:string):Promise<boolean> => {
 };
 
 export const createSite = async (containerId:string, domain:string, port:number):Promise<boolean> => {
+	logger.log(LogType.Info, `Create site with containerId: ${containerId} and domain: ${domain}`);
 	const sites = await getSites();
 	if (sites.map(s => s.domain).includes(domain)) {
 		return false;
