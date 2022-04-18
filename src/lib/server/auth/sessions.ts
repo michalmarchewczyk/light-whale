@@ -42,6 +42,10 @@ export const checkSession = (headers:RequestEvent['request']['headers']):boolean
 	}
 	const id = cookie.parse(sessionCookie).sessionId;
 	const session = getSavedSession(id);
-	return !(!session || Date.now() > session.expires);
+	if(!session || Date.now() > session.expires){
+		logger.log(LogType.Warning, 'Tried to access without authorization');
+		return false;
+	}
+	return true;
 
 };
