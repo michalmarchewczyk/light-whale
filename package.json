@@ -27,6 +27,7 @@
     "eslint": "^7.32.0",
     "eslint-plugin-svelte3": "^3.2.1",
     "heroicons": "^1.0.5",
+    "linguist-js": "^2.4.2",
     "node-sass-tilde-importer": "^1.0.2",
     "path-browserify": "^1.0.1",
     "sass": "^1.45.1",

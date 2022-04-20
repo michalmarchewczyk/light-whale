@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git';
 import {logger, LogType} from '$lib/server/utils/Logger';
+import linguist from 'linguist-js';
 
 const gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
@@ -22,6 +23,8 @@ export interface RepoInfo {
 	foundComposeFiles:string[],
 	topFile:string,
 	topFileContent:string,
+	topLanguage:string,
+	languages:string[],
 }
 
 type RepoBasicInfo = Pick<RepoInfo, 'remoteName' | 'branchName' | 'author' | 'lastCommit' | 'lastDate'>;
@@ -58,6 +61,14 @@ const getRepoDockerInfo = async():Promise<RepoDockerInfo> => {
 	return {foundDockerfiles, foundComposeFiles, topFile, topFileContent};
 };
 
+const getRepoSourceInfo = async():Promise<{ topLanguage: string, languages: string[] }> => {
+	const cwd = await git.revparse('--show-toplevel');
+	const result = await linguist(cwd, {childLanguages: true, categories: ['programming', 'markup'], quick:true});
+	const topLanguages = Object.entries(result.languages.results).sort((a,b) => b[1].bytes - a[1].bytes);
+	const topLanguage = topLanguages[0];
+	return {topLanguage: topLanguage[0], languages: topLanguages.map(l => l[0])};
+};
+
 const pullRepo = async (repoUrl:string):Promise<boolean> => {
 	await git.cwd(gitSourcesPath);
 	const repoDir = path.join(gitSourcesPath, encodeURIComponent(repoUrl));
@@ -89,9 +100,12 @@ export const fetchRepo = async (repoUrl:string):Promise<RepoInfo|null> => {
 	try {
 		const basicInfo = await getRepoBasicInfo();
 		const dockerInfo = await getRepoDockerInfo();
+		const {topLanguage, languages} = await getRepoSourceInfo();
 		const repoInfo:RepoInfo = {
 			...basicInfo,
-			...dockerInfo
+			...dockerInfo,
+			topLanguage,
+			languages
 		};
 		await fs.writeFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'),
 			JSON.stringify(repoInfo),
