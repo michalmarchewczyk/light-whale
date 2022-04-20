@@ -10,7 +10,7 @@
 			{badge}
 		</div>
 	{/if}
-	<div class="w-full mt-6 text-base font-normal">
+	<div class="w-full mt-6 empty:mt-2 text-base font-normal">
 		<slot></slot>
 	</div>
 </div>
