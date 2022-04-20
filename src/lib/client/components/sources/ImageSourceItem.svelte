@@ -6,6 +6,7 @@
 	import DownloadIcon from '$icons/download.svg';
 	import StarIcon from '$icons/star.svg';
 	import ImageTagsModal from '$lib/client/components/sources/ImageTagsModal.svelte';
+	import ExternalLinkIcon from '$icons/external-link.svg';
 
 	export let image;
 
@@ -49,5 +50,10 @@
 			Pull
 		</ActionButton>
 		<ImageTagsModal bind:open={open} name={image['name']}/>
+		<a href="https://hub.docker.com/{image['publisher']['id'] === 'docker' ? '_' : 'r'}/{image['slug']}" target="_blank"
+		   class="btn btn-ghost w-24 justify-start h-8 btn-block min-h-0 text-base px-2 mt-2">
+			<ExternalLinkIcon class="h-6 w-6 mr-2 stroke-2"/>
+			<span class="mt-0">Info</span>
+		</a>
 	</div>
 </div>
