@@ -1,5 +1,21 @@
 <script lang="ts">
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
+	import {onMount} from 'svelte';
+	import RepoSourceItem from '$lib/client/components/sources/RepoSourceItem.svelte';
+
+	let items = [];
+
+	const fetchItems = async ():Promise<void> => {
+		const res = await fetch('/api/sources/git');
+		if(res.status !== 200){
+			return;
+		}
+		items = await res.json();
+	};
+
+	onMount(async() => {
+		await fetchItems();
+	});
 </script>
 
 <svelte:head>
@@ -10,7 +26,9 @@
 	<ListHeader title="Sources / Git">
 	</ListHeader>
 	<div class="p-8 pt-2">
-
+		{#each items as item}
+			<RepoSourceItem repo={item}/>
+		{/each}
 	</div>
 </div>
 
