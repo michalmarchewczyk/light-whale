@@ -65,7 +65,7 @@ const getRepoSourceInfo = async():Promise<{ topLanguage: string, languages: stri
 	const cwd = await git.revparse('--show-toplevel');
 	const result = await linguist(cwd, {childLanguages: true, categories: ['programming', 'markup'], quick:true});
 	const topLanguages = Object.entries(result.languages.results).sort((a,b) => b[1].bytes - a[1].bytes);
-	const topLanguage = topLanguages[0];
+	const topLanguage = topLanguages?.[0] ?? [''];
 	return {topLanguage: topLanguage[0], languages: topLanguages.map(l => l[0])};
 };
 

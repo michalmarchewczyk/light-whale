@@ -12,15 +12,19 @@
 	export let repo;
 
 	let loading = false;
+	let name;
+	let topLangSrc;
 
-	let name = decodeURIComponent(repo?.remoteName);
-	if(name.startsWith('https://github.com/')){
-		name = name.split('github.com/')[1];
+	$: {
+		name = decodeURIComponent(repo?.remoteName);
+		if(name.startsWith('https://github.com/')){
+			name = name.split('github.com/')[1];
+		}
+		if(name.endsWith('.git')){
+			name = name.slice(0, -4);
+		}
+		topLangSrc = repo?.topLanguage.toLowerCase();
 	}
-	if(name.endsWith('.git')){
-		name = name.slice(0, -4);
-	}
-	let topLangSrc = repo?.topLanguage.toLowerCase();
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-auto overflow-hidden">
@@ -62,9 +66,12 @@
 			{repo.lastDate}
 		</ItemInfo>
 	</div>
-	<div class="block w-26 md:w-26 overflow-hidden flex-shrink-0 self-center">
-		<ActionButton icon={DownloadIcon} loading={loading} class="w-26 h-8 md:h-12 md:w-26 md:mr-2">
+	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
+		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2" disabled="{repo.topFile.length === 0}">
 			Build
+		</ActionButton>
+		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-10 md:w-28 md:mr-2 mt-2">
+			Pull
 		</ActionButton>
 	</div>
 </div>

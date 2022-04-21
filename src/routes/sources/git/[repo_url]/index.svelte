@@ -1,6 +1,14 @@
 <script lang="ts">
-	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 	import {page} from '$app/stores';
+	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
+
+	let name = decodeURIComponent($page.params.repo_url);
+	if(name.startsWith('https://github.com/')){
+		name = name.split('github.com/')[1];
+	}
+	if(name.endsWith('.git')){
+		name = name.slice(0, -4);
+	}
 </script>
 
 <svelte:head>
@@ -8,8 +16,12 @@
 </svelte:head>
 
 <div class="max-w-5xl mx-auto text-base-content">
-	<ListHeader title="Sources / Git / {$page.params.repo_url}">
-	</ListHeader>
+	<PageHeader badge="">
+		<a class="text-3xl opacity-40 hover:text-primary-focus hover:opacity-100" href="/sources/git">
+			Sources / Git /
+		</a>
+		{name}
+	</PageHeader>
 	<div class="p-8 pt-2">
 
 	</div>

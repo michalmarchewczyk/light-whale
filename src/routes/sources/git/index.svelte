@@ -2,6 +2,7 @@
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 	import {onMount} from 'svelte';
 	import RepoSourceItem from '$lib/client/components/sources/RepoSourceItem.svelte';
+	import RepoPullForm from '$lib/client/components/sources/RepoPullForm.svelte';
 
 	let items = [];
 
@@ -26,6 +27,7 @@
 	<ListHeader title="Sources / Git">
 	</ListHeader>
 	<div class="p-8 pt-2">
+		<RepoPullForm fetchItems={() => fetchItems()}/>
 		{#each items as item}
 			<RepoSourceItem repo={item}/>
 		{/each}
