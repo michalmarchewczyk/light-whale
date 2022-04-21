@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FormError from '$lib/client/components/forms/FormError.svelte';
+	import {page} from '$app/stores';
 
 	export let fetchItems;
 
@@ -7,6 +8,13 @@
 	let loading = false;
 
 	let address = '';
+
+	let pullUrl;
+	$: pullUrl = $page.url.searchParams.get('pull');
+	$: if(pullUrl){
+		address = pullUrl;
+		submit();
+	}
 
 	const submit = async () => {
 		if(address === ''){
@@ -22,6 +30,7 @@
 		}
 		fetchItems();
 		loading = false;
+		// address = '';
 	};
 </script>
 

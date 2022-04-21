@@ -25,6 +25,7 @@
 	import {onMount} from 'svelte';
 	import {browser} from '$app/env';
 	import SnackbarsOverlay from '$lib/client/components/layout/SnackbarsOverlay.svelte';
+	import DropOverlay from '$lib/client/components/layout/DropOverlay.svelte';
 
 	let drawerOpen = false;
 
@@ -45,12 +46,24 @@
 		}
 	}
 
+	let dragging = false;
+	let dragTimeout;
+
+	const drag = () => {
+		dragging = true;
+		clearTimeout(dragTimeout);
+		dragTimeout = setTimeout(() => {
+			dragging = false;
+		}, 100);
+	};
+
 </script>
 
 
-<div class="flex flex-col w-screen h-screen overflow-hidden" data-theme={currentTheme}>
+<div class="flex flex-col w-screen h-screen overflow-hidden" data-theme={currentTheme} on:dragover={drag}>
 	<NavBar bind:drawerOpen={drawerOpen}/>
 	<SnackbarsOverlay/>
+	<DropOverlay {dragging}/>
 	<div class="drawer drawer-mobile flex-1">
 		<input bind:checked={drawerOpen} class="drawer-toggle" type="checkbox">
 		<div class="drawer-content bg-base-200" style="overflow-y: scroll;">

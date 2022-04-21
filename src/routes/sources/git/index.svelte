@@ -24,7 +24,7 @@
 </svelte:head>
 
 <div class="max-w-5xl mx-auto text-base-content">
-	<ListHeader title="Sources / Git">
+	<ListHeader title="Sources / Git" badge="{items.length} repos">
 	</ListHeader>
 	<div class="p-8 pt-2">
 		<RepoPullForm fetchItems={() => fetchItems()}/>
