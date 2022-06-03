@@ -33,6 +33,9 @@
 
 	const handleString = (text) => {
 		if(text.includes('github.com/') || text.includes('gitlab.com/')){
+			if(text.includes(' ')){
+				text = text.split(' ')[0];
+			}
 			text = text + '.git';
 		}
 		if(text.endsWith('.git')){

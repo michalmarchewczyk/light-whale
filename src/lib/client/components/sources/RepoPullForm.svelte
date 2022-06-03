@@ -1,6 +1,7 @@
 <script lang="ts">
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import {page} from '$app/stores';
+	import {goto} from '$app/navigation';
 
 	export let fetchItems;
 
@@ -8,13 +9,6 @@
 	let loading = false;
 
 	let address = '';
-
-	let pullUrl;
-	$: pullUrl = $page.url.searchParams.get('pull');
-	$: if(pullUrl){
-		address = pullUrl;
-		submit();
-	}
 
 	const submit = async () => {
 		if(address === ''){
@@ -31,7 +25,15 @@
 		fetchItems();
 		loading = false;
 		// address = '';
+		await goto(`/sources/git/${encodeURIComponent(address)}`);
 	};
+
+	let pullUrl;
+	$: pullUrl = $page.url.searchParams.get('pull');
+	$: if(pullUrl){
+		address = pullUrl;
+		submit();
+	}
 </script>
 
 <div class="card shadow-lg bg-base-100 mb-6 mt-4">

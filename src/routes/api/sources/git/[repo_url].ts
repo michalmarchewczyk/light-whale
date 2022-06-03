@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {fetchRepo} from '$lib/server/sources/git/repos';
+import {buildRepo, fetchRepo} from '$lib/server/sources/git/repos';
 import {checkSession} from '$lib/server/auth/sessions';
 
 const get:RequestHandler = async ({request, params}) => {
@@ -22,6 +22,25 @@ const get:RequestHandler = async ({request, params}) => {
 	};
 };
 
+
+const post:RequestHandler = async ({request, params}) => {
+	// TODO: check if image/app name if available
+	if (!checkSession(request.headers)) {
+		return {
+			status: 401,
+		};
+	}
+	const repoUrl = params.repo_url;
+	const {name} = await request.json();
+	const id = await buildRepo(repoUrl, name);
+	return {
+		status: 200,
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({id}),
+	};
+};
+
 export {
-	get
+	get,
+	post
 };

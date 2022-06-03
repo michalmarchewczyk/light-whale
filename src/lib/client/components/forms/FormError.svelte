@@ -5,7 +5,7 @@
 </script>
 
 {#if error}
-	<div class="alert alert-error my-2">
+	<div class="alert alert-error my-2 {$$props.class}">
 		<div class="flex-1 font-semibold">
 			<ExclamationIcon class="h-6 w-6 stroke-2 mr-4 ml-1"/>
 			<span>{error}</span>

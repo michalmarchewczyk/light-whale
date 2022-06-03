@@ -8,12 +8,15 @@
 	import CommitIcon from '$lib/client/assets/icons/commit.svg';
 	import CubeIcon from '$icons/cube.svg';
 	import CubeTransparentIcon from '$icons/cube-transparent.svg';
+	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 
 	export let repo;
+	$: isComposeFile = repo?.topFile && !repo?.topFileContent.startsWith('FROM');
 
 	let loading = false;
 	let name;
 	let topLangSrc;
+	let open = false;
 
 	$: {
 		name = decodeURIComponent(repo?.remoteName);
@@ -67,11 +70,13 @@
 		</ItemInfo>
 	</div>
 	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
-		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2" disabled="{repo.topFile.length === 0}">
-			Build
+		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2" disabled="{repo.topFile.length === 0}"
+		on:click={() => open = true}>
+			{isComposeFile ? 'Create' : 'Build'}
 		</ActionButton>
-		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-10 md:w-28 md:mr-2 mt-2">
-			Pull
-		</ActionButton>
+		<RepoBuildModal bind:open={open} repo={repo}/>
+<!--		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-10 md:w-28 md:mr-2 mt-2">-->
+<!--			Pull-->
+<!--		</ActionButton>-->
 	</div>
 </div>

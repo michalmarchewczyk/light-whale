@@ -3,6 +3,11 @@ import fs from 'fs/promises';
 import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import linguist from 'linguist-js';
+import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
+import {exec} from 'child_process';
+import validator from 'validator';
+import YAML from 'yaml';
+import type {ComposeSpecification} from '$lib/server/typings/docker/ComposeFile';
 
 const gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
@@ -134,4 +139,74 @@ export const listRepos = async():Promise<Partial<RepoInfo>[]> => {
 		logger.log(LogType.Error, 'Something went wrong while listing repositories');
 		return [];
 	}
+};
+
+
+export const buildRepo = async (repoUrl:string, name:string):Promise<string> => {
+	await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
+	const data = await fs.readFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'), {encoding: 'utf-8'});
+	const repoInfo:RepoInfo = JSON.parse(data);
+	if(repoInfo.topFileContent.startsWith('FROM')){
+		const imageId = await buildFromDockerfile(repoInfo, name);
+		return imageId;
+	}else{
+		await buildFromComposeFile(repoInfo, name);
+		return '';
+	}
+};
+
+const buildFromDockerfile = async (repoInfo:RepoInfo, name):Promise<string> => {
+	await logger.log(LogType.Info, `Building image with name: ${name}`);
+	const res = await fetch(DOCKER_URL + `/build?dockerfile=${repoInfo.topFile}&t=${name}&remote=${repoInfo.remoteName}&q=true`, {
+		method: 'POST',
+	});
+	if(res.status !== 200){
+		return '';
+	}
+	const imageId = (await res.json()).stream;
+	await logger.log(LogType.Info, `Built image with ID: ${imageId}`);
+	return imageId;
+};
+
+const buildFromComposeFile = async (repoInfo:RepoInfo, name):Promise<string> => {
+	await logger.log(LogType.Info, `Building app with name: ${name}`);
+	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(repoInfo.topFile, {
+		require_tld: false,
+		require_valid_protocol: false,
+		require_host: false,
+	})) {
+		return '';
+	}
+	const config:ComposeSpecification = YAML.parse(repoInfo.topFileContent);
+	Object.values(config.services).forEach((service) => {
+		if(service.ports){
+			service.ports = [];
+		}
+		if(!service.networks){
+			service.networks = [];
+		}
+		if(Array.isArray(service.networks)){
+			service.networks.push(LW_NETWORK_NAME);
+		}else{
+			service.networks[LW_NETWORK_NAME] = {};
+		}
+	});
+	if(!config.networks){
+		config.networks = {[LW_NETWORK_NAME]: {external: true}};
+	}else{
+		config.networks[LW_NETWORK_NAME] = {external: true};
+	}
+
+	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), repoInfo.topFile+'.tmp');
+	await fs.writeFile(tempConfigPath, YAML.stringify(config));
+	await new Promise((resolve) => {
+		exec(`docker compose -f ${tempConfigPath} -p ${name} up --no-start --build`, (err) => {
+			if(err){
+				resolve(false);
+			}
+			resolve(true);
+		});
+	});
+	// await fs.rm(tempConfigPath);
+	return name;
 };
