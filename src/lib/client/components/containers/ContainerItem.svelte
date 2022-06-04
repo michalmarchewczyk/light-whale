@@ -15,6 +15,7 @@
 	import ContainerStateIcon from '$lib/client/components/containers/ContainerStateIcon.svelte';
 
 	export let container:Container;
+	export let forceLoading = false;
 
 	let image:Image;
 
@@ -72,19 +73,19 @@
 	</div>
 	<div class="block w-32 overflow-hidden flex-shrink-0">
 		{#if container.state === 'created' || container.state === 'exited'}
-			<ActionButton icon={PlayIcon} loading={loading} on:click={start} class="w-32 h-10">
+			<ActionButton icon={PlayIcon} loading={loading || forceLoading} on:click={start} class="w-32 h-10">
 				Start
 			</ActionButton>
-			<ActionButton icon={TrashIcon} loading={loading} on:click={() => removeModal = true} class="w-32 h-10 mt-2">
+			<ActionButton icon={TrashIcon} loading={loading || forceLoading} on:click={() => removeModal = true} class="w-32 h-10 mt-2">
 				Remove
 			</ActionButton>
 			<RemoveModal label="container" name="{container?.name}" remove={remove} bind:open={removeModal}/>
 		{/if}
 		{#if container.state === 'running' || container.state === 'paused'}
-			<ActionButton icon={PauseIcon} loading={loading} on:click={stop} class="w-32 h-10">
+			<ActionButton icon={PauseIcon} loading={loading || forceLoading} on:click={stop} class="w-32 h-10">
 				Stop
 			</ActionButton>
-			<ActionButton icon={RefreshIcon} loading={loading} on:click={restart} class="w-32 h-10 mt-2">
+			<ActionButton icon={RefreshIcon} loading={loading || forceLoading} on:click={restart} class="w-32 h-10 mt-2">
 				Restart
 			</ActionButton>
 		{/if}
