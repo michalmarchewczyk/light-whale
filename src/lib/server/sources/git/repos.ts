@@ -28,13 +28,14 @@ export interface RepoInfo {
 	foundComposeFiles:string[],
 	topFile:string,
 	topFileContent:string,
+	envVariables?:string[],
 	topLanguage:string,
 	languages:string[],
 }
 
 type RepoBasicInfo = Pick<RepoInfo, 'remoteName' | 'branchName' | 'author' | 'lastCommit' | 'lastDate'>;
 
-type RepoDockerInfo = Pick<RepoInfo, 'foundDockerfiles' | 'foundComposeFiles' | 'topFile' | 'topFileContent'>;
+type RepoDockerInfo = Pick<RepoInfo, 'foundDockerfiles' | 'foundComposeFiles' | 'topFile' | 'topFileContent' | 'envVariables'>;
 
 
 const getRepoBasicInfo = async ():Promise<RepoBasicInfo> => {
@@ -63,7 +64,34 @@ const getRepoDockerInfo = async():Promise<RepoDockerInfo> => {
 		.sort((a, b) => a.split(path.sep).length - b.split(path.sep).length)[0];
 	const currentHash = await git.revparse(['--short', 'HEAD']);
 	const topFileContent = await git.show(currentHash + ':' + topFile);
-	return {foundDockerfiles, foundComposeFiles, topFile, topFileContent};
+	if(topFileContent.startsWith('FROM')){
+		return {foundDockerfiles, foundComposeFiles, topFile, topFileContent};
+	}else{
+		const envVariables = await getEnvVariablesFromComposeFile(topFileContent);
+		return {foundDockerfiles, foundComposeFiles, topFile, topFileContent, envVariables};
+	}
+
+};
+
+const getEnvVariablesFromComposeFile = async(fileContent:string):Promise<string[]> => {
+	let found = [];
+	const regex = /(\${\w+:?-?\??\w+})|(\$\w+)/gm;
+	fileContent.split('\n').forEach(line => {
+		let stringToTest = line;
+		while(regex.test(stringToTest)){
+			const res = stringToTest.match(regex);
+			res.forEach(r => {
+				if(!r.startsWith('$$')) {
+					found.push(r);
+				}
+			});
+			stringToTest = stringToTest.replaceAll(regex, '');
+		}
+	});
+	found = found.map(r => r[1] === '{' ? r.slice(2,r.length-1) : r.slice(1));
+	found = found.map(r => r.split('-')[0].split(':')[0].split('?')[0]);
+	found = [...new Set(found)];
+	return found;
 };
 
 const getRepoSourceInfo = async():Promise<{ topLanguage: string, languages: string[] }> => {
@@ -142,7 +170,7 @@ export const listRepos = async():Promise<Partial<RepoInfo>[]> => {
 };
 
 
-export const buildRepo = async (repoUrl:string, name:string):Promise<string> => {
+export const buildRepo = async (repoUrl:string, name:string, envVariables:Record<string, string>):Promise<string> => {
 	await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
 	const data = await fs.readFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'), {encoding: 'utf-8'});
 	const repoInfo:RepoInfo = JSON.parse(data);
@@ -150,7 +178,7 @@ export const buildRepo = async (repoUrl:string, name:string):Promise<string> => 
 		const imageId = await buildFromDockerfile(repoInfo, name);
 		return imageId;
 	}else{
-		await buildFromComposeFile(repoInfo, name);
+		await buildFromComposeFile(repoInfo, name, envVariables);
 		return '';
 	}
 };
@@ -168,7 +196,8 @@ const buildFromDockerfile = async (repoInfo:RepoInfo, name):Promise<string> => {
 	return imageId;
 };
 
-const buildFromComposeFile = async (repoInfo:RepoInfo, name):Promise<string> => {
+const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, envVariables:Record<string, string>):Promise<string> => {
+	// TODO: validate env variables
 	await logger.log(LogType.Info, `Building app with name: ${name}`);
 	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(repoInfo.topFile, {
 		require_tld: false,
@@ -197,16 +226,17 @@ const buildFromComposeFile = async (repoInfo:RepoInfo, name):Promise<string> => 
 		config.networks[LW_NETWORK_NAME] = {external: true};
 	}
 
-	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), repoInfo.topFile+'.tmp');
+	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), repoInfo.topFile+'.temp');
 	await fs.writeFile(tempConfigPath, YAML.stringify(config));
 	await new Promise((resolve) => {
-		exec(`docker compose -f ${tempConfigPath} -p ${name} up --no-start --build`, (err) => {
+		// TODO: replace with execFile
+		exec(`docker compose -f ${tempConfigPath} -p ${name} up --no-start --build --force-recreate`, {env: {...process.env, ...envVariables}}, (err) => {
 			if(err){
 				resolve(false);
 			}
 			resolve(true);
 		});
 	});
-	// await fs.rm(tempConfigPath);
+	await fs.rm(tempConfigPath);
 	return name;
 };
