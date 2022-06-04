@@ -13,7 +13,7 @@
 	let scrollContainer;
 
 	const getLogs = async () => {
-		if (!container?.id || container?.state !== 'running') return;
+		if (!container?.id) return;
 		const res = await fetch(`/api/docker/containers/${container.id}/logs?skipLogger=true`);
 		if (res.status !== 200) return;
 		const data = await res.text();
@@ -39,26 +39,21 @@
 
 </script>
 
-{#if container?.state === 'running'}
-	<div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
-		<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">Container logs</span>
-		{#if loading}
-			<p class="p-6 text-xl text-center">Loading...</p>
-		{:else}
-			<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
-				<div class="w-max">
-					{#each logs as log, i}
-						<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
-						   class:bg-base-200={i%2===0}>{log}</p>
-					{/each}
-				</div>
+<div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
+	<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">Container logs</span>
+	{#if loading}
+		<p class="p-6 text-xl text-center">Loading...</p>
+	{:else}
+		<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
+			<div class="w-max">
+				{#each logs as log, i}
+					<p class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
+					   class:bg-base-200={i%2===0}>{log.slice(8).trim()}</p>
+				{/each}
 			</div>
-		{/if}
-	</div>
-{:else}
-	<p class="w-full text-center text-2xl pt-8 opacity-80">Container has to be running to view logs</p>
-{/if}
-
+		</div>
+	{/if}
+</div>
 
 <style lang="scss">
 
