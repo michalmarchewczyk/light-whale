@@ -5,7 +5,9 @@
 
 	export let open = false;
 	export let repo;
-	$: isComposeFile = !repo?.topFileContent.startsWith('FROM');
+
+	let selectedFile = repo?.topFile ?? '';
+	$: isComposeFile = selectedFile?.includes('compose') ?? false;
 
 	let name = '';
 	let error = '';
@@ -13,10 +15,16 @@
 
 	let envVars:Record<string, string> = {};
 
-	if(repo?.envVariables?.length > 0){
-		repo.envVariables.forEach(envVar => {
-			envVars[envVar] = '';
-		});
+	$: envVarsNames = repo?.files?.find(file => file.file === selectedFile)?.envVars ?? [];
+
+	$: if(envVarsNames.length > 0){
+		if(envVarsNames.join(' ') !== Object.keys(envVars).join(' ')){
+			envVarsNames.forEach(name => {
+				envVars[name] = '';
+			});
+		}
+	}else{
+		envVars = {};
 	}
 
 	const build = async() => {
@@ -24,7 +32,7 @@
 		const res = await fetch(`/api/sources/git/${encodeURIComponent(repo.remoteName)}`, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({name, envVariables: envVars})
+			body: JSON.stringify({name, selectedFile, envVariables: envVars})
 		});
 		if(res.status !== 200){
 			error = 'There was an error building an' + isComposeFile ? 'app' : 'image';
@@ -41,19 +49,34 @@
 
 <input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={open}>
 <div class="modal">
-	<div class="modal-box">
+	<div class="modal-box overflow-y-visible">
 		<span class="text-xl mb-6 font-semibold w-full block">Build {isComposeFile ? 'app' : 'image'}</span>
+		<label class="pl-0 flex flex-1 space-x-2 mr-2 mb-4">
+			<span class="text-lg mb-0 mt-2 ">File: </span>
+			<div class="dropdown flex-1">
+				<button class="select select-bordered bg-base-100 align-middle ml-2 w-full">
+					<span class="mt-2 text-base">{selectedFile}</span>
+				</button>
+				<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full ml-2">
+					{#each repo?.files?.map(file => file.file) as val}
+						<li>
+							<button on:click={() => selectedFile = val}>{val}</button>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		</label>
 		<FormError error={error} class="mb-4"/>
 		<label class="pl-0 flex flex-1 space-x-4">
 			<span class="text-lg mb-0 mt-2 ">Name: </span>
 			<input bind:value={name} on:input={() => error = ''} class="input input-bordered w-full text-base" placeholder="name"
 				   type="text">
 		</label>
-		{#if repo.envVariables?.length > 0}
+		{#if envVarsNames.length > 0}
 			<span class="text-lg font-semibold mb-4 mt-6 w-full block">Set values for detected environment variables:</span>
-			{#each repo.envVariables as envVar}
-				<label class="pl-0 flex flex-1 space-x-4 mb-2">
-					<span class="text-lg mb-0 mt-2">{envVar} =</span>
+			{#each envVarsNames as envVar}
+				<label class="input-group pl-0 mb-2">
+					<span class="">{envVar} =</span>
 					<input bind:value={envVars[envVar]} class="input input-bordered text-base flex-1 ml-0" placeholder="value" type="text">
 				</label>
 			{/each}

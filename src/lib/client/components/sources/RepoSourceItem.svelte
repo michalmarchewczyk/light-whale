@@ -11,7 +11,7 @@
 	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 
 	export let repo;
-	$: isComposeFile = repo?.topFile && !repo?.topFileContent.startsWith('FROM');
+	$: isComposeFile = repo?.topFile?.includes('compose');
 
 	let loading = false;
 	let name;

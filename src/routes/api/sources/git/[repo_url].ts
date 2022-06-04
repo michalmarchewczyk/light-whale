@@ -31,8 +31,8 @@ const post:RequestHandler = async ({request, params}) => {
 		};
 	}
 	const repoUrl = params.repo_url;
-	const {name, envVariables} = await request.json();
-	const id = await buildRepo(repoUrl, name, envVariables);
+	const {name, envVariables, selectedFile} = await request.json();
+	const id = await buildRepo(repoUrl, name, selectedFile, envVariables);
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},

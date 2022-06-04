@@ -27,15 +27,18 @@ export interface RepoInfo {
 	foundDockerfiles:string[],
 	foundComposeFiles:string[],
 	topFile:string,
-	topFileContent:string,
-	envVariables?:string[],
+	files: {
+		file:string,
+		content:string,
+		envVars:string[]
+	}[],
 	topLanguage:string,
 	languages:string[],
 }
 
 type RepoBasicInfo = Pick<RepoInfo, 'remoteName' | 'branchName' | 'author' | 'lastCommit' | 'lastDate'>;
 
-type RepoDockerInfo = Pick<RepoInfo, 'foundDockerfiles' | 'foundComposeFiles' | 'topFile' | 'topFileContent' | 'envVariables'>;
+type RepoDockerInfo = Pick<RepoInfo, 'foundDockerfiles' | 'foundComposeFiles' | 'topFile' | 'files' >;
 
 
 const getRepoBasicInfo = async ():Promise<RepoBasicInfo> => {
@@ -52,24 +55,31 @@ const getRepoBasicInfo = async ():Promise<RepoBasicInfo> => {
 
 const getRepoDockerInfo = async():Promise<RepoDockerInfo> => {
 	const foundDockerfiles = [...(await git.grep('FROM')).paths].filter(path => path.endsWith('Dockerfile'));
-	const foundComposeFiles = [...(await git.grep('services:')).paths].filter(path => path.includes('docker-compose'));
+	const foundComposeFiles = [...(await git.grep('services:')).paths].filter(path => path.includes('compose'));
 	if(foundDockerfiles.length === 0 && foundComposeFiles.length === 0){
-		return {foundDockerfiles, foundComposeFiles, topFile: '', topFileContent: ''};
+		return {foundDockerfiles, foundComposeFiles, topFile: '', files: []};
 	}
 	let topFile = foundComposeFiles
 		.filter(path => path.endsWith('docker-compose.yaml') || path.endsWith('docker-compose.yml'))
 		.sort((a, b) => a.split(path.sep).length - b.split(path.sep).length)
 		?.[0];
+	topFile = topFile ?? foundComposeFiles
+		.sort((a, b) => a.split(path.sep).length - b.split(path.sep).length)
+		?.[0];
 	topFile = topFile ?? foundDockerfiles
-		.sort((a, b) => a.split(path.sep).length - b.split(path.sep).length)[0];
+		.sort((a, b) => a.split(path.sep).length - b.split(path.sep).length)
+		?.[0];
 	const currentHash = await git.revparse(['--short', 'HEAD']);
-	const topFileContent = await git.show(currentHash + ':' + topFile);
-	if(topFileContent.startsWith('FROM')){
-		return {foundDockerfiles, foundComposeFiles, topFile, topFileContent};
-	}else{
-		const envVariables = await getEnvVariablesFromComposeFile(topFileContent);
-		return {foundDockerfiles, foundComposeFiles, topFile, topFileContent, envVariables};
+	const files = [];
+	for(const file of [...foundComposeFiles, ...foundDockerfiles]){
+		const fileContent = await git.show(currentHash + ':' + file);
+		let envVars = [];
+		if(file.includes('compose')){
+			envVars = await getEnvVariablesFromComposeFile(fileContent);
+		}
+		files.push({file, content: fileContent, envVars});
 	}
+	return {foundDockerfiles, foundComposeFiles, topFile, files};
 
 };
 
@@ -170,22 +180,23 @@ export const listRepos = async():Promise<Partial<RepoInfo>[]> => {
 };
 
 
-export const buildRepo = async (repoUrl:string, name:string, envVariables:Record<string, string>):Promise<string> => {
+export const buildRepo = async (repoUrl:string, name:string, selectedFile:string, envVariables:Record<string, string>):Promise<string> => {
 	await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
 	const data = await fs.readFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'), {encoding: 'utf-8'});
 	const repoInfo:RepoInfo = JSON.parse(data);
-	if(repoInfo.topFileContent.startsWith('FROM')){
-		const imageId = await buildFromDockerfile(repoInfo, name);
+	if(selectedFile.includes('Dockerfile')){
+		const imageId = await buildFromDockerfile(repoInfo, name, selectedFile);
 		return imageId;
 	}else{
-		await buildFromComposeFile(repoInfo, name, envVariables);
+		await buildFromComposeFile(repoInfo, name, selectedFile, envVariables);
 		return '';
 	}
 };
 
-const buildFromDockerfile = async (repoInfo:RepoInfo, name):Promise<string> => {
+const buildFromDockerfile = async (repoInfo:RepoInfo, name:string, selectedFile: string):Promise<string> => {
+	// TODO: validate selected file
 	await logger.log(LogType.Info, `Building image with name: ${name}`);
-	const res = await fetch(DOCKER_URL + `/build?dockerfile=${repoInfo.topFile}&t=${name}&remote=${repoInfo.remoteName}&q=true`, {
+	const res = await fetch(DOCKER_URL + `/build?dockerfile=${selectedFile}&t=${name}&remote=${repoInfo.remoteName}&q=true`, {
 		method: 'POST',
 	});
 	if(res.status !== 200){
@@ -196,17 +207,17 @@ const buildFromDockerfile = async (repoInfo:RepoInfo, name):Promise<string> => {
 	return imageId;
 };
 
-const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, envVariables:Record<string, string>):Promise<string> => {
-	// TODO: validate env variables
+const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, selectedFile: string, envVariables:Record<string, string>):Promise<string> => {
+	// TODO: validate env variables and selected file
 	await logger.log(LogType.Info, `Building app with name: ${name}`);
-	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(repoInfo.topFile, {
+	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(selectedFile, {
 		require_tld: false,
 		require_valid_protocol: false,
 		require_host: false,
 	})) {
 		return '';
 	}
-	const config:ComposeSpecification = YAML.parse(repoInfo.topFileContent);
+	const config:ComposeSpecification = YAML.parse(repoInfo.files.find(file => file.file === selectedFile)?.content);
 	Object.values(config.services).forEach((service) => {
 		if(service.ports){
 			service.ports = [];
@@ -226,7 +237,7 @@ const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, envVariables
 		config.networks[LW_NETWORK_NAME] = {external: true};
 	}
 
-	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), repoInfo.topFile+'.temp');
+	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), selectedFile+'.temp');
 	await fs.writeFile(tempConfigPath, YAML.stringify(config));
 	await new Promise((resolve) => {
 		// TODO: replace with execFile
