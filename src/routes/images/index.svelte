@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import { images} from '$lib/client/stores/images';
 	import ImageItem from '$lib/client/components/images/ImageItem.svelte';
 	import {containers} from '$lib/client/stores/containers';
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';

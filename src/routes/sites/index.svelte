@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {Site, sites} from '$lib/client/stores/sites';
+	import type {Site} from '$lib/client/stores/sites';
+	import { sites} from '$lib/client/stores/sites';
 	import SiteItem from '$lib/client/components/network/SiteItem.svelte';
 	import {containers} from '$lib/client/stores/containers';
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';

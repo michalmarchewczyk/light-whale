@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {Container, containers,} from '$lib/client/stores/containers';
+	import type {Container} from '$lib/client/stores/containers';
+	import { containers,} from '$lib/client/stores/containers';
 	import type {Site} from '$lib/client/stores/sites';
 	import {addSite, sites} from '$lib/client/stores/sites';
 	import SiteItem from '$lib/client/components/network/SiteItem.svelte';

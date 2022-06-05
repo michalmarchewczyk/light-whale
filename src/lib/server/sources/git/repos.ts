@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
-import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git';
+import type {SimpleGit, SimpleGitOptions} from 'simple-git';
+import simpleGit from 'simple-git';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import linguist from 'linguist-js';
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';

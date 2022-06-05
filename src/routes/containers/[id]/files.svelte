@@ -1,7 +1,8 @@
 <script lang="ts">
 	import {page} from '$app/stores';
 	import FileBrowser from '$lib/client/components/containers/FileBrowser.svelte';
-	import {Container, containers} from '$lib/client/stores/containers';
+	import type {Container} from '$lib/client/stores/containers';
+	import { containers} from '$lib/client/stores/containers';
 	import * as path from 'path-browserify';
 
 	let container:Container = null;

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type {Container} from '$lib/client/stores/containers';
 	import {containers} from '$lib/client/stores/containers';
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import { images} from '$lib/client/stores/images';
 	import {page} from '$app/stores';
 	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
 

@@ -5,7 +5,8 @@
 	import CloudUploadIcon from '$icons/cloud-upload.svg';
 	import PuzzleIcon from '$icons/puzzle.svg';
 
-	import {Container, containers} from '$lib/client/stores/containers';
+	import type {Container} from '$lib/client/stores/containers';
+	import { containers} from '$lib/client/stores/containers';
 	import {page} from '$app/stores';
 	import {onMount} from 'svelte';
 	import {bytesToHuman} from '$lib/client/utils/bytesToHuman';

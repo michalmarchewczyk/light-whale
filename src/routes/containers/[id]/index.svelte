@@ -1,7 +1,8 @@
 <script lang="ts">
 	import {page} from '$app/stores';
+	import type {
+		Container} from '$lib/client/stores/containers';
 	import {
-		Container,
 		containers,
 		removeContainer,
 		restartContainer,
@@ -14,7 +15,8 @@
 	import PauseIcon from '$icons/pause.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import { images} from '$lib/client/stores/images';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 

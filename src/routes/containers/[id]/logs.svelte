@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {page} from '$app/stores';
-	import {Container, containers} from '$lib/client/stores/containers';
+	import type {Container} from '$lib/client/stores/containers';
+	import { containers} from '$lib/client/stores/containers';
 	import {onMount} from 'svelte';
 
 	let container:Container = null;

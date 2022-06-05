@@ -4,7 +4,8 @@
 	import DiscIcon from '$lib/client/assets/icons/disc.svg';
 	import CubeIcon from '$icons/cube.svg';
 	import PlusIcon from '$icons/plus.svg';
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import { images} from '$lib/client/stores/images';
 	import {containers} from '$lib/client/stores/containers';
 	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
 	import PageMenu from '$lib/client/components/page/PageMenu.svelte';

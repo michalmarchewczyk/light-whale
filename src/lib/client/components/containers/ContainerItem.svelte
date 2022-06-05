@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {Container, removeContainer, restartContainer, startContainer, stopContainer} from '$lib/client/stores/containers';
+	import type {Container} from '$lib/client/stores/containers';
+	import {removeContainer, restartContainer, startContainer, stopContainer} from '$lib/client/stores/containers';
 
 	import RefreshIcon from '$icons/refresh.svg';
 	import PauseIcon from '$icons/pause.svg';
@@ -8,7 +9,8 @@
 	import TerminalIcon from '$icons/terminal.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import {images} from '$lib/client/stores/images';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import ItemInfo from '$lib/client/components/ItemInfo.svelte';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';

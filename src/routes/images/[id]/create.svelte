@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {Image, images} from '$lib/client/stores/images';
+	import type {Image} from '$lib/client/stores/images';
+	import { images} from '$lib/client/stores/images';
 	import {page} from '$app/stores';
 	import {createContainer} from '$lib/client/stores/containers';
 	import {goto} from '$app/navigation';

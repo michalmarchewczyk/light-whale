@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
 	import ComposeAppItem from '$lib/client/components/containers/ComposeAppItem.svelte';
-	import {ComposeApp, composeApps, Container, containers} from '$lib/client/stores/containers';
+	import type {ComposeApp, Container} from '$lib/client/stores/containers';
+	import { composeApps, containers} from '$lib/client/stores/containers';
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';

@@ -1,5 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {createSite, getSites, pauseSite, removeSite, Site, unpauseSite} from '$lib/server/network/sites';
+import type { Site} from '$lib/server/network/sites';
+import {createSite, getSites, pauseSite, removeSite, unpauseSite} from '$lib/server/network/sites';
 import {checkSession} from '$lib/server/auth/sessions';
 import validator from 'validator';
 
