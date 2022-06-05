@@ -182,9 +182,23 @@ export const listRepos = async():Promise<Partial<RepoInfo>[]> => {
 
 
 export const buildRepo = async (repoUrl:string, name:string, selectedFile:string, envVariables:Record<string, string>):Promise<string> => {
+	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(selectedFile, {
+		require_tld: false,
+		require_valid_protocol: false,
+		require_host: false,
+	})) {
+		return '';
+	}
 	await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
 	const data = await fs.readFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'), {encoding: 'utf-8'});
 	const repoInfo:RepoInfo = JSON.parse(data);
+	const file = repoInfo.files.find(f => f.file === selectedFile);
+	if(!file){
+		return '';
+	}
+	if(file.envVars.join(' ') !== Object.keys(envVariables).join(' ')){
+		return '';
+	}
 	if(selectedFile.includes('Dockerfile')){
 		const imageId = await buildFromDockerfile(repoInfo, name, selectedFile);
 		return imageId;
@@ -195,7 +209,6 @@ export const buildRepo = async (repoUrl:string, name:string, selectedFile:string
 };
 
 const buildFromDockerfile = async (repoInfo:RepoInfo, name:string, selectedFile: string):Promise<string> => {
-	// TODO: validate selected file
 	await logger.log(LogType.Info, `Building image with name: ${name}`);
 	const res = await fetch(DOCKER_URL + `/build?dockerfile=${selectedFile}&t=${name}&remote=${repoInfo.remoteName}&q=true`, {
 		method: 'POST',
@@ -209,15 +222,7 @@ const buildFromDockerfile = async (repoInfo:RepoInfo, name:string, selectedFile:
 };
 
 const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, selectedFile: string, envVariables:Record<string, string>):Promise<string> => {
-	// TODO: validate env variables and selected file
 	await logger.log(LogType.Info, `Building app with name: ${name}`);
-	if(!validator.isAlphanumeric(name, 'en-US', {ignore: '-'}) || !validator.isURL(selectedFile, {
-		require_tld: false,
-		require_valid_protocol: false,
-		require_host: false,
-	})) {
-		return '';
-	}
 	const config:ComposeSpecification = YAML.parse(repoInfo.files.find(file => file.file === selectedFile)?.content);
 	Object.values(config.services).forEach((service) => {
 		if(service.ports){
