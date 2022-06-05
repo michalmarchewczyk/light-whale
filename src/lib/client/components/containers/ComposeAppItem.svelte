@@ -93,7 +93,7 @@
 			</span>
 		</div>
 	</div>
-	<div class="px-4 pb-1 mt-[-0.5rem]">
+	<div class="px-4 pb-1 mt-[-1rem]">
 	{#each app.containers as container}
 		<ContainerItem {container} forceLoading={loading}/>
 	{/each}
