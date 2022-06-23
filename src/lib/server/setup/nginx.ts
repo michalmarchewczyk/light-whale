@@ -11,6 +11,7 @@ import {logger, LogType} from '$lib/server/utils/Logger';
 
 const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
 const configPath = path.join(process.cwd(), 'lw-config');
+const tokensPath = path.join(process.cwd(), 'lw-config', 'tokens.txt');
 
 export const checkNginx = async ():Promise<string> => {
 	logger.log(LogType.Verbose, 'Checking NGINX setup');
@@ -115,6 +116,7 @@ export const createNginxContainer = async():Promise<string> => {
 	logger.log(LogType.Info, 'NGINX Setup: Setting up config paths');
 	await fs.mkdir(nginxPath).catch(() => '');
 	await fs.mkdir(configPath).catch(() => '');
+	await fs.writeFile(tokensPath, '', {encoding: 'utf-8'}).catch(() => '');
 	await fs.writeFile(path.join(nginxPath, 'default.conf'), defaultConfig, {encoding: 'utf-8'});
 	logger.log(LogType.Info, 'NGINX Setup: Done');
 	return 'ok';

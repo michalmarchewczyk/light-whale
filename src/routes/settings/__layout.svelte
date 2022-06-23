@@ -6,6 +6,7 @@
 	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
 	import PageMenu from '$lib/client/components/page/PageMenu.svelte';
 	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
+	import GitIcon from '$lib/client/assets/icons/git.svg';
 
 	import CogIcon from '$icons/cog.svg';
 
@@ -27,6 +28,9 @@
 	<PageMenu>
 		<PageMenuItem path="/settings" icon={CogIcon}>
 			General
+		</PageMenuItem>
+		<PageMenuItem path="/settings/git" icon={GitIcon}>
+			Git
 		</PageMenuItem>
 	</PageMenu>
 
