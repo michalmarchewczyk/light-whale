@@ -9,6 +9,7 @@ import {exec} from 'child_process';
 import validator from 'validator';
 import YAML from 'yaml';
 import type {ComposeSpecification} from '$lib/server/typings/docker/ComposeFile';
+import {getContainerAndComposeNames} from '$lib/server/docker/containers';
 
 const gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
@@ -187,7 +188,7 @@ export const buildRepo = async (repoUrl:string, name:string, selectedFile:string
 		require_valid_protocol: false,
 		require_host: false,
 	})) {
-		return '';
+		return 'invalid';
 	}
 	await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
 	const data = await fs.readFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'), {encoding: 'utf-8'});
@@ -198,6 +199,10 @@ export const buildRepo = async (repoUrl:string, name:string, selectedFile:string
 	}
 	if(file.envVars.join(' ') !== Object.keys(envVariables).join(' ')){
 		return '';
+	}
+	const names = await getContainerAndComposeNames();
+	if(names.includes(name)){
+		return 'name';
 	}
 	if(selectedFile.includes('Dockerfile')){
 		const imageId = await buildFromDockerfile(repoInfo, name, selectedFile);
@@ -246,7 +251,6 @@ const buildFromComposeFile = async (repoInfo:RepoInfo, name:string, selectedFile
 	const tempConfigPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), selectedFile+'.temp');
 	await fs.writeFile(tempConfigPath, YAML.stringify(config));
 	await new Promise((resolve) => {
-		// TODO: replace with execFile
 		exec(`docker compose -f ${tempConfigPath} -p ${name} up --no-start --build --force-recreate`, {env: {...process.env, ...envVariables}}, (err) => {
 			if(err){
 				resolve(false);

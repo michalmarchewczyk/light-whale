@@ -38,6 +38,10 @@ export const getContainers = async ():Promise<Container[]> => {
 	}
 };
 
+export const getContainerAndComposeNames = async ():Promise<string[]> => {
+	const containers = await getContainers();
+	return containers.map(c => [...c.names.map(n => n.slice(1)), c.compose]).flat();
+};
 
 export const startContainer = async (id:string):Promise<boolean> => {
 	logger.log(LogType.Info, `Starting container with id: ${id}`);

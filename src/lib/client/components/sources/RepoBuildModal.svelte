@@ -34,13 +34,20 @@
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({name, selectedFile, envVariables: envVars})
 		});
+		loading = false;
+		if(res.status === 400){
+			error = 'Image/app name is invalid';
+			return;
+		}
+		if(res.status === 409){
+			error = 'Image/app name is already taken';
+			return;
+		}
 		if(res.status !== 200){
 			error = 'There was an error building an' + isComposeFile ? 'app' : 'image';
-			loading = false;
 			return;
 		}
 		const data = await res.json();
-		loading = false;
 		open = false;
 		await fetchImages();
 		await goto(`/images/${data.id.substring(7, 19)}`);

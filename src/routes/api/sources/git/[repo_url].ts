@@ -24,7 +24,6 @@ const get:RequestHandler = async ({request, params}) => {
 
 
 const post:RequestHandler = async ({request, params}) => {
-	// TODO: check if image/app name if available
 	if (!checkSession(request.headers)) {
 		return {
 			status: 401,
@@ -33,6 +32,18 @@ const post:RequestHandler = async ({request, params}) => {
 	const repoUrl = params.repo_url;
 	const {name, envVariables, selectedFile} = await request.json();
 	const id = await buildRepo(repoUrl, name, selectedFile, envVariables);
+	if(id === 'invalid'){
+		return {
+			status: 400,
+			headers: {'Content-Type': 'application/json'},
+		};
+	}
+	if(id === 'name'){
+		return {
+			status: 409,
+			headers: {'Content-Type': 'application/json'},
+		};
+	}
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},
