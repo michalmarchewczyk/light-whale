@@ -4,7 +4,7 @@ import type {SimpleGit, SimpleGitOptions} from 'simple-git';
 import simpleGit from 'simple-git';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import linguist from 'linguist-js';
-import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
+import {LW_NETWORK_NAME} from '$lib/server/docker/config';
 import {exec} from 'child_process';
 import validator from 'validator';
 import YAML from 'yaml';
@@ -216,13 +216,16 @@ export const buildRepo = async (repoUrl:string, name:string, selectedFile:string
 
 const buildFromDockerfile = async (repoInfo:RepoInfo, name:string, selectedFile: string):Promise<string> => {
 	await logger.log(LogType.Info, `Building image with name: ${name}`);
-	const res = await fetch(DOCKER_URL + `/build?dockerfile=${selectedFile}&t=${name}&remote=${repoInfo.remoteName}&q=true`, {
-		method: 'POST',
+	const dockerfilePath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName), selectedFile);
+	const contextPath = path.join(gitSourcesPath, encodeURIComponent(repoInfo.remoteName));
+	const imageId:string = await new Promise((resolve) => {
+		exec(`docker build --quiet --tag ${name} --file ${dockerfilePath} ${contextPath}`, {env: {...process.env}}, (err, data) => {
+			if(err){
+				resolve('');
+			}
+			resolve(data);
+		});
 	});
-	if(res.status !== 200){
-		return '';
-	}
-	const imageId = (await res.json()).stream;
 	await logger.log(LogType.Info, `Built image with ID: ${imageId}`);
 	return imageId;
 };
