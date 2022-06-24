@@ -30,7 +30,7 @@
 	}
 </script>
 
-<div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-auto overflow-hidden">
+<div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-2 h-auto overflow-hidden">
 	<div class="mx-1 sm:mx-2 w-20 {$$props.class}" class:text-success={false}>
 		<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/{topLangSrc}/{topLangSrc}-original.svg" alt=''
 			 class="absolute w-10 h-10 sm:h-16 sm:w-16 mx-auto mt-1 stroke-[1.5px] bg-transparent p-1.5 rounded-md z-10" on:error={() => {
