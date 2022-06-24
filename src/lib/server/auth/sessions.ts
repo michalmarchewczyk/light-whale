@@ -6,10 +6,9 @@ import type {RequestEvent} from '@sveltejs/kit';
 interface Session {
 	id:string,
 	expires:number,
-	tokens:{service:string, token:string}[],
 }
 
-const sessions = [];
+const sessions:Session[] = [];
 
 
 export const createSession = ():Session => {
@@ -17,7 +16,6 @@ export const createSession = ():Session => {
 	const newSession = {
 		id: newId,
 		expires: Date.now() + 1000 * 60 * 60 * 24,
-		tokens: []
 	};
 	sessions.push(newSession);
 	logger.log(LogType.Info, `Created new session with id: ${newId}`);
@@ -49,30 +47,4 @@ export const checkSession = (headers:RequestEvent['request']['headers']):boolean
 		return false;
 	}
 	return true;
-};
-
-export const getSessionTokens = (headers:RequestEvent['request']['headers']):{service:string, token:string}[] => {
-	const sessionCookie = headers.get('cookie');
-	if (!sessionCookie) {
-		return [];
-	}
-	const id = cookie.parse(sessionCookie).sessionId;
-	const session = getSavedSession(id);
-	if(!session){
-		return [];
-	}
-	return session.tokens;
-};
-
-export const addSessionToken = (headers:RequestEvent['request']['headers'], token:{service:string, token:string}):void => {
-	const sessionCookie = headers.get('cookie');
-	if (!sessionCookie) {
-		return;
-	}
-	const id = cookie.parse(sessionCookie).sessionId;
-	const session = getSavedSession(id);
-	if(!session){
-		return;
-	}
-	session.tokens = [...session.tokens, token];
 };

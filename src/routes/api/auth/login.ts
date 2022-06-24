@@ -2,7 +2,7 @@ import type {RequestHandler} from '@sveltejs/kit';
 import {createSession} from '$lib/server/auth/sessions';
 import cookie from 'cookie';
 import {login} from '$lib/server/auth/login';
-import {getAllTokens} from '$lib/server/auth/tokens';
+import {readAllTokens} from '$lib/server/auth/tokens';
 
 const post:RequestHandler = async ({request}) => {
 	const {password} = await request.json();
@@ -19,16 +19,15 @@ const post:RequestHandler = async ({request}) => {
 		};
 	}
 	const session = createSession();
-	session.tokens = await getAllTokens(password);
 	const sessionCookie = cookie.serialize('sessionId', session.id, {
 		httpOnly: true,
 		maxAge: 60 * 60 * 24,
 		path: '/',
 	});
-	const filteredSession = {...session, tokens: []};
+	await readAllTokens(password);
 	return {
 		status: 200,
-		body: JSON.stringify({msg: 'logged in', session: filteredSession}),
+		body: JSON.stringify({msg: 'logged in', session}),
 		headers: {
 			'Set-Cookie': sessionCookie,
 		},
