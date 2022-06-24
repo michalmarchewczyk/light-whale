@@ -25,11 +25,9 @@
 	let online:boolean;
 
 	$: online = $networkAvailable && $nginxAvailable && $nginxConnected;
-
-	export let currentTheme;
 </script>
 
-<ul class="menu menu-compact p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2">
+<ul class="menu menu-compact p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2 max-h-[calc(100%-4rem)] lg:max-h-full">
 	<DrawerMenuItem icon={HomeIcon} path="/" on:click={() => dispatch('navigate')}>
 		Home
 	</DrawerMenuItem>
@@ -96,19 +94,13 @@
 	<DrawerMenuItem icon={ViewListIcon} path="/logs" on:click={() => dispatch('navigate')}>
 		Logs
 	</DrawerMenuItem>
-	<DrawerMenuItem icon={QuestionMarkCircleIcon} path="/docs" on:click={() => dispatch('navigate')}>
-		Documentation
-	</DrawerMenuItem>
 
 
-	<li class="mt-auto pt-4">
-		<button class="btn btn-sm mt-4 text-xs btn-ghost font-semibold" on:click={() => {
-			const newTheme = currentTheme === 'default-light' ? 'default-dark' : 'default-light';
-			dispatch('changeTheme', newTheme);
-		}}>
-			Switch to {currentTheme === 'default-light' ? 'dark' : 'light'} theme
-		</button>
-	</li>
+	<div class="mt-auto pt-8">
+		<DrawerMenuItem icon={QuestionMarkCircleIcon} path="/docs" on:click={() => dispatch('navigate')}>
+			Documentation
+		</DrawerMenuItem>
+	</div>
 </ul>
 
 
