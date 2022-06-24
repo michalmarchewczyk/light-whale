@@ -41,3 +41,9 @@ export const pullImage = async (name:string, tag:string):Promise<boolean> => {
 	logger.log(LogType.Info, `Pulled image with name: ${name} and tag: ${tag}`);
 	return res.status === 200;
 };
+
+
+export const getImagesNames = async ():Promise<string[]> => {
+	const images = await getImages();
+	return images.map(image => image.tags.map(tag => tag.split(':')[0])).flat();
+};

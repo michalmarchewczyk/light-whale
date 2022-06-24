@@ -10,6 +10,7 @@ import validator from 'validator';
 import YAML from 'yaml';
 import type {ComposeSpecification} from '$lib/server/typings/docker/ComposeFile';
 import {getContainerAndComposeNames} from '$lib/server/docker/containers';
+import {getImagesNames} from '$lib/server/docker/images';
 
 const gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
@@ -200,7 +201,7 @@ export const buildRepo = async (repoUrl:string, name:string, selectedFile:string
 	if(file.envVars.join(' ') !== Object.keys(envVariables).join(' ')){
 		return '';
 	}
-	const names = await getContainerAndComposeNames();
+	const names = [...await getContainerAndComposeNames(), ...await getImagesNames()];
 	if(names.includes(name)){
 		return 'name';
 	}
