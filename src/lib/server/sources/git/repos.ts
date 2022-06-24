@@ -22,6 +22,7 @@ const options:Partial<SimpleGitOptions> = {
 const git:SimpleGit = simpleGit(options);
 
 export interface RepoInfo {
+	service:string,
 	remoteName:string,
 	branchName:string,
 	author:string,
@@ -151,7 +152,8 @@ export const fetchRepo = async (repoUrl:string):Promise<RepoInfo|null> => {
 			...basicInfo,
 			...dockerInfo,
 			topLanguage,
-			languages
+			languages,
+			service: 'local'
 		};
 		await fs.writeFile(path.join(gitSourcesPath, encodeURIComponent(repoUrl)+'.json'),
 			JSON.stringify(repoInfo),

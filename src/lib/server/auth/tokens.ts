@@ -71,3 +71,7 @@ export const readAllTokens = async (password:string):Promise<void>=> {
 export const getAllTokens = ():Token[] => {
 	return tokens;
 };
+
+export const getServiceTokens = (service:string):Token[] => {
+	return tokens.filter(t => t.service === service);
+};
