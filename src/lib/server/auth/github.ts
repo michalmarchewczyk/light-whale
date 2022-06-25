@@ -1,17 +1,17 @@
 import type {Token} from '$lib/server/auth/tokens';
 
 export const getGithubTokensInfo = async (tokens:Token[]) => {
-	const results = [];
-	for(const token of tokens){
+	let results:Token[] = [];
+	results = (await Promise.all(tokens.map(async (token) => {
 		const res = await fetch('https://api.github.com/user', {
 			method: 'GET',
 			headers: {'Authorization': `token ${token.token}`},
 		});
 		if(res.status !== 200){
-			continue;
+			return [];
 		}
 		const data = await res.json();
-		results.push({
+		return {
 			id: token.id,
 			date: token.date,
 			description: token.description,
@@ -19,7 +19,7 @@ export const getGithubTokensInfo = async (tokens:Token[]) => {
 			name: data.name,
 			avatarUrl: data.avatar_url,
 			url: data.html_url,
-		});
-	}
+		};
+	}))).flat();
 	return results;
 };
