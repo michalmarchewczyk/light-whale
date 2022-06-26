@@ -11,7 +11,7 @@
 	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 
 	export let repo;
-	$: isComposeFile = repo?.topFile?.includes('compose');
+	$: isComposeFile = repo?.dockerInfo.topFile?.includes('compose');
 
 	let loading = false;
 	let name;
@@ -19,14 +19,14 @@
 	let open = false;
 
 	$: {
-		name = decodeURIComponent(repo?.remoteName);
+		name = decodeURIComponent(repo?.gitInfo.remoteName);
 		if(name.startsWith('https://github.com/')){
 			name = name.split('github.com/')[1];
 		}
 		if(name.endsWith('.git')){
 			name = name.slice(0, -4);
 		}
-		topLangSrc = repo?.topLanguage.toLowerCase();
+		topLangSrc = repo?.languageInfo.topLanguage.toLowerCase();
 	}
 </script>
 
@@ -43,16 +43,16 @@
 		<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt=''
 			 class="absolute w-10 h-10 sm:h-16 sm:w-16 mx-auto mt-1 stroke-[1.5px] bg-white p-1.5 rounded-md opacity-80 border-white border-2"/>
 	</div>
-	<a href="/sources/git/{encodeURIComponent(repo.remoteName)}" class="block w-48 flex-auto overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus">
+	<a href="/sources/git/{encodeURIComponent(repo.gitInfo.remoteName)}" class="block w-48 flex-auto overflow-hidden mr-1 sm:mr-3 pr-1 sm:pr-4 hover:text-primary-focus">
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
 			{name}
 		</span>
 		<ItemInfo icon={CodeIcon} class="mt-1">
-			{repo.languages.join(', ')}
+			{repo.languageInfo.languages.join(', ')}
 		</ItemInfo>
-		{#if repo.topFile.length > 0}
+		{#if repo.dockerInfo.topFile.length > 0}
 			<ItemInfo icon={CubeIcon}>
-				{repo.topFile}
+				{repo.dockerInfo.topFile}
 			</ItemInfo>
 		{:else}
 			<ItemInfo icon={CubeTransparentIcon} class='italic'>
@@ -62,17 +62,17 @@
 	</a>
 	<div class="block w-36 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4 mt-1">
 		<ItemInfo icon={UserIcon}>
-			{repo.author}
+			{repo.gitInfo.author}
 		</ItemInfo>
 		<ItemInfo icon={CommitIcon}>
-			{repo.lastCommit}
+			{repo.gitInfo.lastCommit}
 		</ItemInfo>
 		<ItemInfo icon={CalendarIcon} class="mb-0">
-			{repo.lastDate}
+			{repo.gitInfo.lastDate}
 		</ItemInfo>
 	</div>
 	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
-		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2" disabled="{repo.topFile.length === 0}"
+		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2" disabled="{repo.dockerInfo.topFile.length === 0}"
 		on:click={() => open = true}>
 			{isComposeFile ? 'Create' : 'Build'}
 		</ActionButton>

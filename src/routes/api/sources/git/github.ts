@@ -1,14 +1,15 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkSession} from '$lib/server/auth/sessions';
-import {listGithubRepos} from '$lib/server/sources/git/github';
+
+import {githubController} from '$lib/server/sources/git/GithubController';
+import { authGuard } from '$lib/server/auth/authGuard';
 
 const get:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
 	}
-	const repos = await listGithubRepos();
+	const repos = await githubController.listRepos();
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},

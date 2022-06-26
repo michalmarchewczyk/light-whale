@@ -6,7 +6,7 @@
 	export let open = false;
 	export let repo;
 
-	let selectedFile = repo?.topFile ?? '';
+	let selectedFile = repo?.dockerInfo.topFile ?? '';
 	$: isComposeFile = selectedFile?.includes('compose') ?? false;
 
 	let name = '';
@@ -15,7 +15,7 @@
 
 	let envVars:Record<string, string> = {};
 
-	$: envVarsNames = repo?.files?.find(file => file.file === selectedFile)?.envVars ?? [];
+	$: envVarsNames = repo?.dockerInfo.files?.find(file => file.file === selectedFile)?.envVars ?? [];
 
 	$: if(envVarsNames.length > 0){
 		if(envVarsNames.join(' ') !== Object.keys(envVars).join(' ')){
@@ -29,7 +29,7 @@
 
 	const build = async() => {
 		loading = true;
-		const res = await fetch(`/api/sources/git/${encodeURIComponent(repo.remoteName)}`, {
+		const res = await fetch(`/api/sources/git/${encodeURIComponent(repo.gitInfo.remoteName)}`, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({name, selectedFile, envVariables: envVars})
@@ -65,7 +65,7 @@
 					<span class="mt-2 text-base">{selectedFile}</span>
 				</button>
 				<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full ml-2">
-					{#each repo?.files?.map(file => file.file) as val}
+					{#each repo?.dockerInfo.files?.map(file => file.file) as val}
 						<li>
 							<button on:click={() => selectedFile = val}>{val}</button>
 						</li>

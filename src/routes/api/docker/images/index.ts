@@ -1,10 +1,11 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkSession} from '$lib/server/auth/sessions';
+
 import {getImages, pullImage} from '$lib/server/docker/images';
 import validator from 'validator';
+import { authGuard } from '$lib/server/auth/authGuard';
 
 const get:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -17,7 +18,7 @@ const get:RequestHandler = async ({request}) => {
 };
 
 const post:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};

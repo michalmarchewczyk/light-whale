@@ -1,8 +1,8 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {createSession} from '$lib/server/auth/sessions';
 import cookie from 'cookie';
-import {login} from '$lib/server/auth/login';
-import {readAllTokens} from '$lib/server/auth/tokens';
+import {tokenManager} from '$lib/server/auth/TokenManager';
+import {sessionManager} from '$lib/server/auth/SessionManager';
+import {authController} from '$lib/server/auth/AuthController';
 
 const post:RequestHandler = async ({request}) => {
 	const {password} = await request.json();
@@ -12,19 +12,19 @@ const post:RequestHandler = async ({request}) => {
 			body: JSON.stringify({msg: 'empty password'}),
 		};
 	}
-	if (!await login(password)) {
+	if (!await authController.login(password)) {
 		return {
 			status: 401,
 			body: JSON.stringify({msg: 'wrong password'}),
 		};
 	}
-	const session = createSession();
+	const session = sessionManager.createSession();
 	const sessionCookie = cookie.serialize('sessionId', session.id, {
 		httpOnly: true,
 		maxAge: 60 * 60 * 24,
 		path: '/',
 	});
-	await readAllTokens(password);
+	await tokenManager.initialize(password);
 	return {
 		status: 200,
 		body: JSON.stringify({msg: 'logged in', session}),

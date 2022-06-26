@@ -1,6 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import cookie from 'cookie';
-import {invalidateSession} from '$lib/server/auth/sessions';
+import {sessionManager} from '$lib/server/auth/SessionManager';
 
 const get:RequestHandler = async ({request}) => {
 	const sessionCookie = request.headers.get('cookie');
@@ -8,7 +8,7 @@ const get:RequestHandler = async ({request}) => {
 		return {status: 400};
 	}
 	const id = cookie.parse(sessionCookie).sessionId;
-	invalidateSession(id);
+	sessionManager.invalidateSession(id);
 	return {
 		status: 200,
 	};

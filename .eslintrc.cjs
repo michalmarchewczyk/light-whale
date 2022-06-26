@@ -33,6 +33,7 @@ module.exports = {
 		],
 		'@typescript-eslint/no-explicit-any': 2,
 		'@typescript-eslint/consistent-type-imports': 2,
+		'@typescript-eslint/no-empty-function': ['error', {allow: ['constructors']}],
 		'no-console': 1,
 		'no-inline-comments': 1,
 		'max-lines': [1, 120],

@@ -1,16 +1,14 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkSession} from '$lib/server/auth/sessions';
-import {getGithubTokensInfo} from '$lib/server/auth/github';
-import {getAllTokens} from '$lib/server/auth/tokens';
+import {githubController} from '$lib/server/sources/git/GithubController';
+import { authGuard } from '$lib/server/auth/authGuard';
 
 const get:RequestHandler = async ({request}) => {
-	if(!checkSession(request.headers)){
+	if(!authGuard(request.headers)){
 		return {
 			status: 401,
 		};
 	}
-	const tokens = getAllTokens();
-	const tokensInfo = await getGithubTokensInfo(tokens);
+	const tokensInfo = await githubController.getTokensInfo();
 	return {
 		status: 200,
 		headers: {'Content-Type': 'application/json'},

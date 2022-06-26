@@ -1,6 +1,5 @@
-import {getPassword} from '$lib/server/setup/password';
+import {authController} from '$lib/server/auth/AuthController';
 
 export const checkSetup = async ():Promise<boolean> => {
-	const password = await getPassword();
-	return !!password;
+	return authController.isPasswordSet();
 };

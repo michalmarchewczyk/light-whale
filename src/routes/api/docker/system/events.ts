@@ -1,9 +1,10 @@
+import { authGuard } from '$lib/server/auth/authGuard';
 import {getLastEvent} from '$lib/server/docker/events';
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkSession} from '$lib/server/auth/sessions';
+
 
 const get:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};

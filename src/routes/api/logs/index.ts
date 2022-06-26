@@ -1,9 +1,10 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import Logger from '$lib/server/utils/Logger';
-import {checkSession} from '$lib/server/auth/sessions';
+import { authGuard } from '$lib/server/auth/authGuard';
+
 
 const get:RequestHandler = ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};

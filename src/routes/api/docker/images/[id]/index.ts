@@ -1,10 +1,11 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {checkSession} from '$lib/server/auth/sessions';
+
 import validator from 'validator';
 import {removeImage} from '$lib/server/docker/images';
+import { authGuard } from '$lib/server/auth/authGuard';
 
 const del:RequestHandler = async ({params, request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};

@@ -1,19 +1,14 @@
-import {getSavedSession} from '$lib/server/auth/sessions';
 import cookie from 'cookie';
 import type {GetSession, Handle} from '@sveltejs/kit';
 import {logger, LogType} from '$lib/server/utils/Logger';
+import {sessionManager} from '$lib/server/auth/SessionManager';
 
 const handle:Handle = async ({event, resolve}) => {
 	const url = event.url.toString();
 	if(event.url.searchParams.get('skipLogger') === 'true'){
 		return resolve(event);
 	}
-	let ipAddress = '';
-	try {
-		ipAddress = event.clientAddress ?? 'unknown';
-	}catch(e){
-		ipAddress = 'unknown';
-	}
+	const ipAddress = event?.clientAddress ?? 'unknown';
 	logger.log(LogType.Router, `${event.request.method} ${url}; Origin: ${event.url.origin}; IP Address: ${ipAddress}`);
 	const response = await resolve(event);
 	logger.log(LogType.Router, `${event.request.method} RESPONSE ${url} - ${response.status} ${response.statusText}`);
@@ -26,7 +21,7 @@ const getSession:GetSession = ({request}) => {
 		return {};
 	}
 	const id = cookie.parse(sessionCookie).sessionId;
-	const session = getSavedSession(id);
+	const session = sessionManager.getSession(id);
 	if (!session || Date.now() > session.expires) {
 		return {};
 	}

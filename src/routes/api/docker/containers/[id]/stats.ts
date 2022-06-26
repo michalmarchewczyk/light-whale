@@ -1,10 +1,11 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import validator from 'validator';
 import {getContainerProcesses, getContainerStats, inspectContainer} from '$lib/server/docker/containers';
-import {checkSession} from '$lib/server/auth/sessions';
+import { authGuard } from '$lib/server/auth/authGuard';
+
 
 const get:RequestHandler = async ({params, request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};

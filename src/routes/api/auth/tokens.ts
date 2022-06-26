@@ -1,24 +1,10 @@
-import {checkSession} from '$lib/server/auth/sessions';
-import type {RequestHandler} from '@sveltejs/kit';
-import {getAllTokens, removeToken, saveToken} from '$lib/server/auth/tokens';
 
-export const get:RequestHandler = async({request}) => {
-	if(!checkSession(request.headers)){
-		return {
-			status: 401,
-		};
-	}
-	const tokens = getAllTokens();
-	const tokenServices = tokens.map(t => t.service);
-	return {
-		status: 200,
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify(tokenServices)
-	};
-};
+import type {RequestHandler} from '@sveltejs/kit';
+import {tokenManager} from '$lib/server/auth/TokenManager';
+import { authGuard } from '$lib/server/auth/authGuard';
 
 export const post:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -29,7 +15,7 @@ export const post:RequestHandler = async ({request}) => {
 			status: 400,
 		};
 	}
-	const saved = await saveToken(token, password, service, description);
+	const saved = await tokenManager.addToken(token, password, service, description);
 	if(!saved) {
 		return {
 			status: 400,
@@ -41,7 +27,7 @@ export const post:RequestHandler = async ({request}) => {
 };
 
 export const del:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -52,7 +38,7 @@ export const del:RequestHandler = async ({request}) => {
 			status: 400,
 		};
 	}
-	const deleted = await removeToken(id);
+	const deleted = await tokenManager.removeToken(id);
 	if(!deleted) {
 		return {
 			status: 400,

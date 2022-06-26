@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {setPassword} from '$lib/server/setup/password';
+import {authController} from '$lib/server/auth/AuthController';
 
 const post:RequestHandler = async ({request}) => {
 	const {password} = await request.json();
@@ -9,7 +9,7 @@ const post:RequestHandler = async ({request}) => {
 			body: 'no-password',
 		};
 	}
-	const set = await setPassword(password);
+	const set = await authController.setPassword(password);
 	if(!set){
 		return {
 			status: 500,

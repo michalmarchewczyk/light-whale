@@ -1,8 +1,8 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import type { Site} from '$lib/server/network/sites';
 import {createSite, getSites, pauseSite, removeSite, unpauseSite} from '$lib/server/network/sites';
-import {checkSession} from '$lib/server/auth/sessions';
 import validator from 'validator';
+import {authGuard} from '$lib/server/auth/authGuard';
 
 
 const get:RequestHandler = async () => {
@@ -16,7 +16,7 @@ const get:RequestHandler = async () => {
 };
 
 const put:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -43,7 +43,7 @@ const put:RequestHandler = async ({request}) => {
 
 
 const del:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
@@ -63,7 +63,7 @@ const del:RequestHandler = async ({request}) => {
 
 
 const post:RequestHandler = async ({request}) => {
-	if (!checkSession(request.headers)) {
+	if (!authGuard(request.headers)) {
 		return {
 			status: 401,
 		};
