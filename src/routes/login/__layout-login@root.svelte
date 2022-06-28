@@ -3,9 +3,9 @@
 	import type {Load} from '@sveltejs/kit';
 
 	const load:Load = async ({session, fetch}) => {
-		const res = await fetch('/api/setup/check');
-		const isSetup = await res.text();
-		if(isSetup !== 'true'){
+		const res = await fetch('/api/setup');
+		const status = await res.json();
+		if(status.stage !== 'done'){
 			return {
 				status: 302,
 				redirect: '/setup'

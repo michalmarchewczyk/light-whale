@@ -2,24 +2,20 @@
 	import type {Load} from '@sveltejs/kit';
 
 	const load:Load = async ({fetch}) => {
-		const res = await fetch('/api/setup/check');
-		const isSetup = await res.text();
-		if(isSetup !== 'false'){
+		const res = await fetch('/api/setup');
+		const setupStatus = await res.json();
+		if(setupStatus.stage === 'done'){
 			return {
 				status: 302,
 				redirect: '/login'
 			};
 		}
-		const res2 = await fetch('/api/setup/getSystem');
-		if(res2.status !== 200){
-			return {
-				stuff: {}
-			};
-		}
-		const system = await res2.text();
 		return {
 			stuff: {
-				system,
+				system: setupStatus.systemInfo.os,
+			},
+			props: {
+				status: setupStatus
 			}
 		};
 	};

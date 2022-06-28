@@ -1,97 +1,37 @@
-<script context="module" lang="ts">
-	import type {Load} from '@sveltejs/kit';
-
-	const load:Load<null, null, { docker:string, nginx:string }> = async ({fetch}) => {
-		const resDocker = await fetch('/api/setup/checkDocker');
-		const docker = await resDocker.text();
-		const resNginx = await fetch('/api/setup/checkNginx');
-		const nginx = await resNginx.text();
-		return {
-			props: {
-				docker,
-				nginx,
-			}
-		};
-	};
-
-	export {
-		load
-	};
-</script>
-
 <script lang="ts">
-	import FormPassword from '$lib/client/components/forms/FormPassword.svelte';
-	import {goto} from '$app/navigation';
-	import {page} from '$app/stores';
-	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import {onMount} from 'svelte';
+	import SetupDNS from '$lib/client/components/setup/SetupDNS.svelte';
+	import SetupDocker from '$lib/client/components/setup/SetupDocker.svelte';
+	import SetupNginx from '$lib/client/components/setup/SetupNginx.svelte';
+	import SetupPassword from '$lib/client/components/setup/SetupPassword.svelte';
+	import SetupGithub from '$lib/client/components/setup/SetupGithub.svelte';
 
-	export let docker = '';
-	export let nginx = '';
-
+	let status;
 	let step:number;
-	let dockerAvailable = docker === 'ok';
-	let nginxAvailable = nginx === 'ok';
 
-	const fetchDockerAvailable = async ():Promise<void> => {
-		const resDocker = await fetch('/api/setup/checkDocker?skipLogger=true');
-		const docker = await resDocker.text();
-		dockerAvailable = docker === 'ok';
-	};
-
-	const fetchNginxAvailable = async ():Promise<void> => {
-		const resNginx = await fetch('/api/setup/checkNginx?skipLogger=true');
-		const nginx = await resNginx.text();
-		nginxAvailable = nginx === 'ok';
+	const checkStatus = async () => {
+		const res = await fetch('/api/setup');
+		status = await res.json();
+		if(status.stage === 'no-docker'){
+			step = 2;
+		}else if(status.stage === 'no-nginx'){
+			step = 3;
+		}else if(status.stage === 'no-password'){
+			if(!(step > 3)){
+				step = 4;
+			}
+		}
 	};
 
 	onMount(() => {
-		const interval = setInterval(async () => {
-			await fetchDockerAvailable();
-			await fetchNginxAvailable();
+		checkStatus();
+		const interval = setInterval(() => {
+			checkStatus();
 		}, 1000);
 		return () => {
 			clearInterval(interval);
 		};
 	});
-
-	$: {
-		step = 4;
-		if(!dockerAvailable){
-			step = 2;
-		}else if(!nginxAvailable){
-			step = 3;
-		}
-
-	}
-
-	let loading = false;
-
-	const setupNginx = async () => {
-		loading = true;
-		const res = await fetch('/api/setup/setupNginx');
-		const data = await res.text();
-		if(data === 'ok'){
-			step = 4;
-		}
-		loading = false;
-	};
-
-	let password = '';
-
-	const setPassword = async () => {
-		loading = true;
-		const res = await fetch('/api/setup/setupPassword', {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({password})
-		});
-		const data = await res.text();
-		if(data === 'ok'){
-			await goto('/login');
-		}
-		loading = false;
-	};
 
 </script>
 
@@ -109,80 +49,16 @@
 		<div class="divider"></div>
 		<div class="min-h-6 text-lg px-2 py-2">
 			{#if step === 2}
-				<h2 class="text-2xl font-bold mb-8">Install Docker Engine</h2>
-				{#if $page.stuff?.system === 'Ubuntu'}
-					<p>
-						Let Light-Whale install Docker Engine for you ({$page.stuff?.system ?? '-'}):
-					</p>
-					<button class="btn btn-primary my-4 text-base">Install Docker</button>
-					<p>
-						or install Docker Engine yourself. <br/>
-					</p>
-				{/if}
-				<p class="leading-10">
-					In order to use Light-Whale you need to install
-					<a href="https://www.docker.com/" class="link hover:text-primary-focus font-bold">Docker Engine</a>
-					<br/>
-					Make sure Docker Engine API is reachable at
-					<span class="font-mono font-bold bg-base-300 text-base-content py-0.5 px-2 rounded-lg">http://localhost:2375</span>
-				</p>
-				<span class="inline-block font-semibold text-lg mt-4 mb-2">Current status:</span>
-				{#if $page.stuff.docker === 'no-docker'}
-					<CheckCard class="shadow-none mb-8 mx-[-1rem]" status="error" title="Docker not installed"
-							   msg="You need to install and start Docker Engine"/>
-				{/if}
-				{#if $page.stuff.docker === 'no-ping'}
-					<CheckCard class="shadow-none mb-8 mx-[-1rem]" status="error" title="Docker Engine API not reachable"
-							   msg="Docker Engine is installed, but Docker Engine API is not reachable at http://localhost:2375"/>
-				{/if}
-				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-					<button class="btn btn-primary text-base" on:click={() => step += 1} disabled={!dockerAvailable}>Next</button>
-				</div>
+				<SetupDocker status={status}/>
 			{:else if step === 3}
-				<h2 class="text-2xl font-bold mb-8">Setup NGINX</h2>
-				<p>
-					Light-Whale needs to setup NGINX container and create internal docker network:
-				</p>
-				<button class="btn btn-primary my-4 text-base" on:click={setupNginx}
-						class:loading={loading} disabled="{loading}">Setup NGINX</button>
-				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-					<button class="btn btn-primary text-base" on:click={() => step += 1} disabled={!nginxAvailable}>Next</button>
-				</div>
+				<SetupNginx status={status} on:statusChange={(s) => status = s}/>
 			{:else if step === 4}
-				<h2 class="text-2xl font-bold mb-8">Setup DNS Provider</h2>
-				<p>
-					Connect Light-Whale to your DNS Provider to more easily manage your domains.
-				</p>
-				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-					<div>
-						<button class="btn btn-primary text-base" on:click={() => step += 1} disabled>Next</button>
-					</div>
-					<button class="btn btn-primary text-base" on:click={() => step += 1}>Skip</button>
-				</div>
+				<SetupDNS status={status} on:nextPage={() => step += 1}/>
 			{:else if step === 5}
-				<h2 class="text-2xl font-bold mb-8">Setup Github account</h2>
-				<p>
-					You can connect your Github account in order to more easily create containers from your repositories.
-				</p>
-				<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-					<div>
-						<button class="btn btn-primary text-base" on:click={() => step += 1} disabled>Next</button>
-					</div>
-					<button class="btn btn-primary text-base" on:click={() => step += 1}>Skip</button>
-				</div>
+				<SetupGithub status={status} on:nextPage={() => step += 1}/>
 			{:else if step === 6}
-				<h2 class="text-2xl font-bold mb-8">Setup password</h2>
-				<p>
-					Setup password for Light-Whale's panel:
-				</p>
-				<form on:submit|preventDefault={setPassword}>
-					<FormPassword label="Password" placeholder="password" class="mt-4 mb-6" bind:value={password}/>
-					<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
-						<input type="submit" class="btn btn-primary text-base" value="Save"/>
-					</div>
-				</form>
+				<SetupPassword status={status} on:statusChange={(s) => status = s}/>
 			{/if}
-
 		</div>
 	</div>
 </div>

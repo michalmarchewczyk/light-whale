@@ -22,11 +22,12 @@ class AuthController {
 	}
 
 	public async setPassword(password:string):Promise<boolean> {
+		// TODO: check password strength
 		logger.log(LogType.Info, 'Setting up password');
 		const salt = crypto.randomBytes(8).toString('hex');
 		const hash = crypto.scryptSync(password, salt, 64).toString('hex');
 		const data = hash + ':' + salt;
-		await fs.writeFile(AuthController.passwordPath, data, {encoding: 'utf-8'});
+		await fs.writeFile(AuthController.passwordPath, data, {encoding: 'utf-8', flag: 'w'});
 		logger.log(LogType.Info, 'Password set up');
 		return true;
 	}
