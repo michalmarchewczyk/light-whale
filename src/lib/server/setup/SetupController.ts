@@ -4,6 +4,7 @@ import {exec} from 'child_process';
 import SetupChecker from '$lib/server/setup/SetupChecker';
 import {authController} from '$lib/server/auth/AuthController';
 import SetupNginxController from '$lib/server/setup/SetupNginxController';
+import {tokenManager} from '$lib/server/auth/TokenManager';
 
 export type SetupError = 'no-docker' | 'no-ping' | 'no-container' | 'no-image' | 'no-network' | 'no-paths';
 
@@ -19,6 +20,7 @@ export interface SetupStatus {
 class SetupController {
 	private static instance: SetupController;
 	private currentStatus: SetupStatus;
+	private githubToken:{token:string, description:string} | undefined;
 
 	private constructor(private setupChecker:SetupChecker, private setupNginxController:SetupNginxController) {
 		this.currentStatus = {
@@ -87,9 +89,20 @@ class SetupController {
 		this.currentStatus.working = false;
 	}
 
+	public setGithubToken(token:string, description:string){
+		this.githubToken = {
+			token,
+			description,
+		};
+	}
+
 	public async setupPassword(password:string){
 		this.currentStatus.working = true;
 		await authController.setPassword(password);
+		if(this.githubToken){
+			await tokenManager.addToken(this.githubToken.token, password, 'github', this.githubToken.description);
+			this.githubToken = undefined;
+		}
 		this.currentStatus.working = false;
 	}
 }

@@ -46,7 +46,7 @@
 			<li class="step" class:step-primary={step >= 5} class:step-current={step === 5}>Github (optional)</li>
 			<li class="step" class:step-primary={step >= 6} class:step-current={step === 6}>Setup password</li>
 		</ul>
-		<div class="divider"></div>
+		<div class="divider mb-0"></div>
 		<div class="min-h-6 text-lg px-2 py-2">
 			{#if step === 2}
 				<SetupDocker status={status}/>

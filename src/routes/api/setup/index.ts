@@ -12,7 +12,7 @@ const get:RequestHandler = async () => {
 
 const post:RequestHandler = async ({request}) => {
 	const status = await setupController.getCurrentStatus();
-	const {stage, password} = await request.json();
+	const {stage, password, token, description} = await request.json();
 	if(status.stage !== stage){
 		return {
 			status: 400
@@ -29,7 +29,10 @@ const post:RequestHandler = async ({request}) => {
 	if(stage === 'no-nginx'){
 		await setupController.setupNginx();
 	}
-	if(stage === 'no-password'){
+	if(stage === 'no-password' && token){
+		await setupController.setGithubToken(token, description);
+	}
+	if(stage === 'no-password' && password){
 		await setupController.setupPassword(password);
 	}
 	const newStatus = await setupController.getCurrentStatus();

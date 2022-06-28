@@ -14,7 +14,7 @@
 	<br/>
 	You can always do that later in settings.
 </p>
-<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+<div class="flex-row-reverse card-actions justify-between self-end bottom-0 mt-6">
 	<div>
 		<button class="btn btn-primary text-base" on:click={nextPage} disabled>Next</button>
 	</div>

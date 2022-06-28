@@ -31,7 +31,7 @@
 </p>
 <form on:submit|preventDefault={setPassword}>
 	<FormPassword label="Password" placeholder="password" class="mt-4 mb-6" bind:value={password}/>
-	<div class="flex-row-reverse card-actions justify-between self-end bottom-0">
+	<div class="flex-row-reverse card-actions justify-between self-end bottom-0 mt-4">
 		<button type="submit" class="btn btn-primary text-base" class:loading="{loading}" disabled="{loading}">
 			Save
 		</button>
