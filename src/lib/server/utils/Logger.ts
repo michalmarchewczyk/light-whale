@@ -54,8 +54,8 @@ class Logger {
 			this.lastTime = date.getTime();
 		}
 		this.logs.push({type, msg, date});
-		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}\n`;
-		fs.writeFile(this.file, log, {encoding: 'utf-8', flag: 'a'}).then(() => {
+		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}`;
+		fs.writeFile(this.file, log+'\n', {encoding: 'utf-8', flag: 'a'}).then(() => {
 			if (type === LogType.Router || type === LogType.Verbose){
 				return;
 			}
