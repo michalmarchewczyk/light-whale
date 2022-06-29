@@ -1,11 +1,11 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
 import {inspectContainer} from '$lib/server/docker/containers';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginx';
 import {getImages} from '$lib/server/docker/images';
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
 import fs from 'fs/promises';
 import path from 'path';
 import type {SetupError} from '$lib/server/setup/SetupController';
+import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
 
 const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
 const configPath = path.join(process.cwd(), 'lw-config');

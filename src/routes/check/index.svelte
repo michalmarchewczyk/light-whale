@@ -1,8 +1,7 @@
 <script lang="ts">
 	import PageHeader from '$lib/client/components/page/PageHeader.svelte';
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
-	import {dockerAvailable} from '$lib/client/stores/docker';
-	import {networkAvailable, nginxAvailable, nginxConfig, nginxConnected} from '$lib/client/stores/network';
+	import {status} from '$lib/client/stores/status';
 
 </script>
 
@@ -15,27 +14,33 @@
 		Health Check
 	</PageHeader>
 	<div class="mx-4 mt-0 mb-8">
-		<CheckCard status="{$dockerAvailable ? 'success' : 'error'}"
-				   title="Docker daemon is {$dockerAvailable ? 'running' : 'not running'}"
-				   msg="{$dockerAvailable ? 'Connected to Docker daemon' : 'Could not connect to Docker daemon'}"/>
+		<CheckCard status="{$status.dockerRunning ? 'success' : 'error'}"
+				   title="Docker daemon {$status.dockerRunning  ? 'running' : 'not running'}"
+				   msg="{$status.dockerRunning  ? 'Docker daemon is running' : 'Docker daemon is not running'}"/>
 
-		<CheckCard status="{$networkAvailable ? 'success' : 'error'}"
-				   title="Light-Whale's internal network is {$networkAvailable ? 'working' : 'not working'}"
-				   msg="{$networkAvailable ? 'Internal network is working' : 'Could not find internal network'}"/>
+		<CheckCard status="{$status.dockerPinging ? 'success' : 'error'}"
+				   title="{$status.dockerPinging ? 'C' : 'Not c'}onnected"
+				   msg="{$status.dockerPinging ? 'Connected to Docker daemon' : 'Could not connect to Docker daemon'}"/>
 
-		<CheckCard status="{$nginxAvailable ? 'success' : 'error'}"
-				   title="Light-Whale's NGINX container is {$nginxAvailable ? 'running' : 'not running'}"
-				   msg="{$nginxAvailable ? 'Container is running' : 'Container is not running'}"/>
+		<CheckCard status="{$status.network ? 'success' : 'error'}"
+				   title="Light-Whale's internal network is {$status.network ? 'working' : 'not working'}"
+				   msg="{$status.network ? 'Internal network is working' : 'Could not find internal network'}"/>
 
-		<CheckCard status="{$nginxConnected ? 'success' : 'error'}"
-				   title="Light-Whale's NGINX container is {$nginxConnected ? 'connected' : 'not connected'} to internal network"
-				   msg="{$nginxConnected ? 'Container is connected to internal network' : 'Container is not connected to internal network'}"/>
+		<CheckCard status="{$status.running ? 'success' : 'error'}"
+				   title="Light-Whale's NGINX container is {$status.running ? 'running' : 'not running'}"
+				   msg="{$status.running ? 'Container is running' : 'Container is not running'}"/>
 
-		<CheckCard status="{$nginxConfig === 'ok' ? 'success' : $nginxConfig === 'ports' ? 'error' : 'warning'}"
-				   title="Light-Whale's NGINX container {$nginxConfig === 'ok' ? 'is configured correctly' :
-			$nginxConfig === 'ports' ? 'doesn\'t have proper port bindings' : 'doesn\'t restart automatically'}"
-				   msg="{$nginxConfig === 'ok' ? 'Ports bindings and restart policy are set correctly' :
-			$nginxConfig === 'ports' ? 'Ports bindings must be 80:80' : 'Container should restart automatically'}"/>
+		<CheckCard status="{$status.connected ? 'success' : 'error'}"
+				   title="Light-Whale's NGINX container is {$status.connected ? 'connected' : 'not connected'} to internal network"
+				   msg="{$status.connected ? 'Container is connected to internal network' : 'Container is not connected to internal network'}"/>
+
+		<CheckCard status="{$status.ports ? 'success' : 'error'}"
+				   title="Ports {$status.ports ? '' : 'not'} configured correctly"
+				   msg="{$status.ports ? 'Light-Whale\'s NGINX container\' ports are configured correctly' : 'Ports bindings must be 80:80'}"/>
+
+		<CheckCard status="{$status.ports ? 'success' : 'error'}"
+				   title="Restart policy {$status.ports ? '' : 'not'} configured correctly"
+				   msg="{$status.ports ? 'Light-Whale\'s NGINX container\' restart policy is configured correctly' : 'Container should restart automatically'}"/>
 	</div>
 </div>
 

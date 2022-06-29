@@ -1,5 +1,5 @@
 import {writable} from 'svelte/store';
-import {forceUpdateEverything} from '$lib/client/stores/docker';
+import {forceUpdateEverything} from '$lib/client/stores/index';
 
 export interface Site {
 	id:string,

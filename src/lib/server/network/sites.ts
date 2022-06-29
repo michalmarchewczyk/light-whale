@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
-import {reloadNginx} from '$lib/server/network/nginx';
 import template from './template.conf?raw';
 import crypto from 'crypto';
 import {connectToLWNetwork} from '$lib/server/docker/containers';
 import {EOL} from 'os';
 import {logger, LogType} from '$lib/server/utils/Logger';
+import {nginxController} from '$lib/server/network/NginxController';
 
 export interface Site {
 	id:string,
@@ -67,7 +67,7 @@ export const unpauseSite = async (id:string):Promise<boolean> => {
 	const newContent = lines.join(EOL);
 	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
-	await reloadNginx();
+	await nginxController.reload();
 	return true;
 };
 
@@ -87,7 +87,7 @@ export const pauseSite = async (id:string):Promise<boolean> => {
 	const newContent = lines.join(EOL);
 	await fs.writeFile(path.join(nginxPath, `site-${id}.conf`), newContent, {encoding: 'utf8'});
 
-	await reloadNginx();
+	await nginxController.reload();
 	return true;
 };
 
@@ -101,7 +101,7 @@ export const removeSite = async (id:string):Promise<boolean> => {
 
 	await fs.rm(path.join(nginxPath, `site-${id}.conf`));
 
-	await reloadNginx();
+	await nginxController.reload();
 	return true;
 };
 
@@ -128,6 +128,6 @@ export const createSite = async (containerId:string, domain:string, port:number)
 
 	await fs.writeFile(path.join(nginxPath, `site-${newSite.id}.conf`), newContent, {encoding: 'utf8'});
 
-	await reloadNginx();
+	await nginxController.reload();
 	return true;
 };

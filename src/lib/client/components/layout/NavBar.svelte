@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {goto} from '$app/navigation';
 	import {session} from '$app/stores';
-	import {forceUpdateEverything, updateEverything} from '$lib/client/stores/docker';
+	import {forceUpdateEverything, updateEverything} from '$lib/client/stores';
 	import {onMount} from 'svelte';
 
 	import MenuIcon from '$icons/menu.svg';
@@ -32,7 +32,7 @@
 			ready = false;
 			await updateEverything();
 			ready = true;
-		}, 400);
+		}, 500);
 		const forceUpdateInterval = setInterval(async () => {
 			if (!ready) return;
 			ready = false;

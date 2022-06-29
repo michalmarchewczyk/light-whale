@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
-	import {dockerAvailable} from '$lib/client/stores/docker';
 	import HomeIcon from '$icons/home.svg';
 	// import ChartSquareBarIcon from '$icons/chart-square-bar.svg';
 	import CubeIcon from '$icons/cube.svg';
@@ -15,16 +14,15 @@
 	import CheckCircleIcon from '$icons/check-circle.svg';
 	import ViewListIcon from '$icons/view-list.svg';
 	import QuestionMarkCircleIcon from '$icons/question-mark-circle.svg';
+	import {status} from '$lib/client/stores/status';
 
-	import {networkAvailable, nginxConnected} from '$lib/client/stores/network';
 	import DrawerMenuItem from '$lib/client/components/layout/DrawerMenuItem.svelte';
-	import {nginxAvailable} from '$lib/client/stores/network';
 
 	const dispatch = createEventDispatcher();
 
 	let online:boolean;
 
-	$: online = $networkAvailable && $nginxAvailable && $nginxConnected;
+	$: online = $status.network && $status.running && $status.connected;
 </script>
 
 <ul class="menu menu-compact p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2 max-h-[calc(100%-4rem)] lg:max-h-full">
@@ -37,8 +35,8 @@
 
 	<li class="menu-title">
 		<span>Docker</span>
-		<div class="badge mt-0.5 {$dockerAvailable ? 'badge-success' : 'badge-error'}">
-			{$dockerAvailable ? 'Connected' : 'Disconnected'}
+		<div class="badge mt-0.5 {$status.dockerPinging ? 'badge-success' : 'badge-error'}">
+			{$status.dockerPinging ? 'Connected' : 'Disconnected'}
 		</div>
 	</li>
 
