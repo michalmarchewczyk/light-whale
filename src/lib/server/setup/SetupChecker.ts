@@ -10,6 +10,9 @@ class SetupChecker {
 
 	public async check():Promise<Pick<SetupStatus, 'stage' | 'errors'>> {
 		let stage:SetupStatus['stage'] = null;
+		if(await this.isPasswordSet()) {
+			stage = 'done';
+		}
 		const errors = [];
 		if(!await this.isDockerInstalled()){
 			stage = stage ?? 'no-docker';
