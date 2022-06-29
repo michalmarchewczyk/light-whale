@@ -2,6 +2,7 @@ import {logger, LogType} from '$lib/server/utils/Logger';
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
+import validator from 'validator';
 
 class AuthController {
 	private static instance: AuthController;
@@ -22,8 +23,19 @@ class AuthController {
 	}
 
 	public async setPassword(password:string):Promise<boolean> {
-		// TODO: check password strength
 		logger.log(LogType.Info, 'Setting up password');
+		const strength:number = <number><unknown>validator.isStrongPassword(password, {
+			minLength: 8,
+			minLowercase: 1,
+			minUppercase: 1,
+			minNumbers: 1,
+			minSymbols: 1,
+			returnScore: true,
+		});
+		if(strength < 42){
+			logger.log(LogType.Warning, 'Password strength is too low');
+			return false;
+		}
 		const salt = crypto.randomBytes(8).toString('hex');
 		const hash = crypto.scryptSync(password, salt, 64).toString('hex');
 		const data = hash + ':' + salt;
