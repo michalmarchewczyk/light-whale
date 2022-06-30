@@ -1,9 +1,9 @@
-import type {NginxStatus} from '$lib/server/network/NginxController';
 import {inspectContainer} from '$lib/server/docker/containers';
 import {LW_NETWORK_NAME} from '$lib/server/docker/config';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
+import {NGINX_CONTAINER_NAME} from '$lib/server/setup/config';
+import type {NginxStatus} from '$lib/server/network/NginxStatus.interface';
 
-class NginxChecker {
+export default class NginxChecker {
 	private container;
 
 	public async check():Promise<NginxStatus> {
@@ -36,5 +36,3 @@ class NginxChecker {
 		return this.container?.['HostConfig']?.['RestartPolicy']?.['Name'] === 'always';
 	}
 }
-
-export default NginxChecker;

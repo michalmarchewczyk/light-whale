@@ -1,6 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import cookie from 'cookie';
-import {sessionManager} from '$lib/server/auth/SessionManager';
+import {sessionManager} from '$lib/server/auth';
 
 const get:RequestHandler = async ({request}) => {
 	const sessionCookie = request.headers.get('cookie');

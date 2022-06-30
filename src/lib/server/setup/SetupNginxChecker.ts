@@ -3,14 +3,10 @@ import {inspectContainer} from '$lib/server/docker/containers';
 import {getImages} from '$lib/server/docker/images';
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
 import fs from 'fs/promises';
-import path from 'path';
-import type {SetupError} from '$lib/server/setup/SetupController';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
+import {configPath, NGINX_CONTAINER_NAME, nginxPath} from '$lib/server/setup/config';
+import type {SetupError} from '$lib/server/setup/SetupStatus';
 
-const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
-const configPath = path.join(process.cwd(), 'lw-config');
-
-class SetupNginxChecker {
+export default class SetupNginxChecker {
 	public async check():Promise<SetupError[]> {
 		logger.log(LogType.Verbose, 'Checking NGINX setup');
 		const errors:SetupError[] = [];
@@ -68,5 +64,3 @@ class SetupNginxChecker {
 	}
 
 }
-
-export default SetupNginxChecker;

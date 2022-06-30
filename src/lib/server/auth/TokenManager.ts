@@ -3,34 +3,18 @@ import fs from 'fs/promises';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import uuid from 'uuid';
 import crypto from 'crypto';
+import type {Token} from '$lib/server/auth/Token.interface';
 
-export interface Token {
-	id: string,
-	service: string;
-	token: string;
-	date: Date,
-	description: string;
-}
-
-class TokenManager {
-	private static instance: TokenManager;
+export default class TokenManager {
 	private static tokensFilepath: string;
 	private tokens:Token[] = [];
 
-	private constructor() {
+	constructor() {
 		TokenManager.tokensFilepath = path.join(process.cwd(), 'lw-config', 'tokens.txt');
 		fs.writeFile(TokenManager.tokensFilepath, '', {flag: 'a'}).then(() => {
 			logger.log(LogType.Info, 'TokenManager file initialized');
 		});
 	}
-
-	public static getInstance(): TokenManager {
-		if (!TokenManager.instance) {
-			TokenManager.instance = new TokenManager();
-		}
-		return TokenManager.instance;
-	}
-
 
 	private static encryptToken(password:string, token:Token):string {
 		const key = crypto.scryptSync(password, 'salt', 32);
@@ -107,9 +91,4 @@ class TokenManager {
 	public getTokenByService(service: string):Token[] {
 		return this.tokens.filter(token => token.service === service);
 	}
-
 }
-
-export const tokenManager = TokenManager.getInstance();
-
-export default TokenManager;

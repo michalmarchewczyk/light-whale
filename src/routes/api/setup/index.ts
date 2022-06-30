@@ -1,5 +1,5 @@
 import type {RequestHandler} from '@sveltejs/kit';
-import {setupController} from '$lib/server/setup/SetupController';
+import {setupController} from '$lib/server/setup';
 
 const get:RequestHandler = async () => {
 	const status = await setupController.getCurrentStatus();

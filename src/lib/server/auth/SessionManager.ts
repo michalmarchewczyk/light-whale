@@ -1,23 +1,9 @@
 import uuid from 'uuid';
 import {logger, LogType} from '$lib/server/utils/Logger';
+import type {Session} from '$lib/server/auth/Session.interface';
 
-interface Session {
-	id:string,
-	expires:number,
-}
-
-class SessionManager {
-	private static instance: SessionManager;
+export default class SessionManager {
 	private sessions: Session[] = [];
-
-	private constructor() {}
-
-	public static getInstance(): SessionManager {
-		if (!SessionManager.instance) {
-			SessionManager.instance = new SessionManager();
-		}
-		return SessionManager.instance;
-	}
 
 	public createSession(): Session {
 		const newId = uuid.v4();
@@ -56,7 +42,3 @@ class SessionManager {
 		return session;
 	}
 }
-
-export const sessionManager = SessionManager.getInstance();
-
-export default SessionManager;

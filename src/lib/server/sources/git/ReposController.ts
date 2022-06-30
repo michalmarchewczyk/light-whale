@@ -2,26 +2,14 @@ import fs from 'fs/promises';
 import path from 'path';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import type {SimpleGit} from 'simple-git';
-import simpleGit from 'simple-git';
-import RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
+import type RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
 import type {Repo} from '$lib/server/sources/git/Repo.interface';
-import RepoBuilder from '$lib/server/sources/git/RepoBuilder';
+import type RepoBuilder from '$lib/server/sources/git/RepoBuilder';
 
-class ReposController {
-	private static instance: ReposController;
-	private static gitSourcesPath = path.join(process.cwd(), 'git-sources');
+export default class ReposController {
+	public static gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
-	private constructor(private git:SimpleGit, private repoAnalyzer:RepoAnalyzer, private repoBuilder:RepoBuilder) {}
-
-	public static getInstance(): ReposController {
-		if (!ReposController.instance) {
-			const git = simpleGit({
-				binary: 'git'
-			});
-			ReposController.instance = new ReposController(git, new RepoAnalyzer(git), new RepoBuilder(ReposController.gitSourcesPath));
-		}
-		return ReposController.instance;
-	}
+	constructor(private git:SimpleGit, private repoAnalyzer:RepoAnalyzer, private repoBuilder:RepoBuilder) {}
 
 	private async pullRepo(repoUrl:string, repoDir:string) {
 		try {
@@ -88,7 +76,3 @@ class ReposController {
 		return await this.repoBuilder.buildRepo(repoUrl, name, selectedFile, envVariables);
 	}
 }
-
-export const reposController = ReposController.getInstance();
-
-export default ReposController;

@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
-import template from './template.conf?raw';
+import template from './templates/template.conf?raw';
 import crypto from 'crypto';
 import {connectToLWNetwork} from '$lib/server/docker/containers';
 import {EOL} from 'os';
 import {logger, LogType} from '$lib/server/utils/Logger';
-import {nginxController} from '$lib/server/network/NginxController';
+import {nginxController} from '$lib/server/network/index';
 
 export interface Site {
 	id:string,

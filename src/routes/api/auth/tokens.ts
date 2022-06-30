@@ -1,7 +1,6 @@
-
 import type {RequestHandler} from '@sveltejs/kit';
-import {tokenManager} from '$lib/server/auth/TokenManager';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {tokenManager} from '$lib/server/auth';
 
 export const post:RequestHandler = async ({request}) => {
 	if (!authGuard(request.headers)) {

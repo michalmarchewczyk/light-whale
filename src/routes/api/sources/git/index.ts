@@ -1,7 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import { authGuard } from '$lib/server/auth/authGuard';
-import {reposController} from '$lib/server/sources/git/ReposController';
-
+import {reposController} from '$lib/server/sources/git';
 
 const get:RequestHandler = async ({request}) => {
 	if (!authGuard(request.headers)) {

@@ -1,28 +1,16 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
 import process from 'process';
 import {exec} from 'child_process';
-import SetupChecker from '$lib/server/setup/SetupChecker';
-import {authController} from '$lib/server/auth/AuthController';
-import SetupNginxController from '$lib/server/setup/SetupNginxController';
-import {tokenManager} from '$lib/server/auth/TokenManager';
+import type SetupChecker from '$lib/server/setup/SetupChecker';
+import type SetupNginxController from '$lib/server/setup/SetupNginxController';
+import {authController, tokenManager} from '$lib/server/auth';
+import type {SetupStatus} from '$lib/server/setup/SetupStatus';
 
-export type SetupError = 'no-docker' | 'no-ping' | 'no-container' | 'no-image' | 'no-network' | 'no-paths';
-
-export interface SetupStatus {
-	systemInfo: {
-		os: string;
-	},
-	stage: 'no-docker' | 'no-nginx' | 'no-password' | 'done';
-	errors: SetupError[];
-	working: boolean;
-}
-
-class SetupController {
-	private static instance: SetupController;
+export default class SetupController {
 	private currentStatus: SetupStatus;
 	private githubToken:{token:string, description:string} | undefined;
 
-	private constructor(private setupChecker:SetupChecker, private setupNginxController:SetupNginxController) {
+	constructor(private setupChecker:SetupChecker, private setupNginxController:SetupNginxController) {
 		this.currentStatus = {
 			systemInfo: {
 				os: '',
@@ -31,16 +19,6 @@ class SetupController {
 			errors: [],
 			working: false,
 		};
-	}
-
-	public static getInstance(): SetupController {
-		if (!SetupController.instance) {
-			SetupController.instance = new SetupController(
-				new SetupChecker(),
-				new SetupNginxController()
-			);
-		}
-		return SetupController.instance;
 	}
 
 	private async getSystemInfo():Promise<SetupStatus['systemInfo']> {
@@ -106,7 +84,3 @@ class SetupController {
 		this.currentStatus.working = false;
 	}
 }
-
-export const setupController = SetupController.getInstance();
-
-export default SetupController;

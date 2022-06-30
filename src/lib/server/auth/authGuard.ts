@@ -1,6 +1,6 @@
 import type {RequestEvent} from '@sveltejs/kit';
 import cookie from 'cookie';
-import {sessionManager} from '$lib/server/auth/SessionManager';
+import {sessionManager} from '$lib/server/auth';
 
 export const authGuard = (headers:RequestEvent['request']['headers']):boolean => {
 	const sessionCookie = headers.get('cookie');

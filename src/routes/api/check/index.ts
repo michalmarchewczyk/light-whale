@@ -1,6 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {authGuard} from '$lib/server/auth/authGuard';
-import {statusChecker} from '$lib/server/check/StatusChecker';
+import {statusChecker} from '$lib/server/check/intex';
 
 const get:RequestHandler = async ({request}) => {
 	if(!authGuard(request.headers)) {

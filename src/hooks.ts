@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 import type {GetSession, Handle} from '@sveltejs/kit';
 import {logger, LogType} from '$lib/server/utils/Logger';
-import {sessionManager} from '$lib/server/auth/SessionManager';
+import {sessionManager} from '$lib/server/auth';
 
 const handle:Handle = async ({event, resolve}) => {
 	const url = event.url.toString();

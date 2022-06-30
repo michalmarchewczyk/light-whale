@@ -1,27 +1,12 @@
-import NginxChecker from '$lib/server/network/NginxChecker';
+import type NginxChecker from '$lib/server/network/NginxChecker';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import {inspectContainer} from '$lib/server/docker/containers';
 import {execCommand} from '$lib/server/docker/exec';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
+import {NGINX_CONTAINER_NAME} from '$lib/server/setup/config';
+import type {NginxStatus} from '$lib/server/network/NginxStatus.interface';
 
-export interface NginxStatus {
-	running: boolean;
-	connected: boolean;
-	ports: boolean;
-	restartPolicy: boolean;
-}
-
-class NginxController {
-	private static instance: NginxController;
-
-	private constructor(private nginxChecker:NginxChecker = new NginxChecker()) {}
-
-	public static getInstance(): NginxController {
-		if(!NginxController.instance) {
-			NginxController.instance = new NginxController();
-		}
-		return NginxController.instance;
-	}
+export default class NginxController {
+	constructor(private nginxChecker:NginxChecker) {}
 
 	public async check():Promise<NginxStatus> {
 		return await this.nginxChecker.check();
@@ -37,7 +22,3 @@ class NginxController {
 		return true;
 	}
 }
-
-export const nginxController = NginxController.getInstance();
-
-export default NginxController;

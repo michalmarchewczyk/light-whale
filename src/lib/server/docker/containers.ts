@@ -1,6 +1,6 @@
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
 import {logger, LogType} from '$lib/server/utils/Logger';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
+import {NGINX_CONTAINER_NAME} from '$lib/server/setup/config';
 
 interface Container {
 	id:string,

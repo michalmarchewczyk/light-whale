@@ -4,22 +4,14 @@ import fs from 'fs/promises';
 import path from 'path';
 import validator from 'validator';
 
-class AuthController {
-	private static instance: AuthController;
+export default class AuthController {
 	private static passwordPath:string;
 
-	private constructor() {
+	constructor() {
 		AuthController.passwordPath = path.join(process.cwd(), 'lw-config', 'password.txt');
 		fs.writeFile(AuthController.passwordPath, '', {flag: 'a'}).then(() => {
 			logger.log(LogType.Info, 'AuthController file initialized');
 		});
-	}
-
-	public static getInstance(): AuthController {
-		if (!AuthController.instance) {
-			AuthController.instance = new AuthController();
-		}
-		return AuthController.instance;
 	}
 
 	public async setPassword(password:string):Promise<boolean> {
@@ -62,8 +54,3 @@ class AuthController {
 		return (await fs.readFile(AuthController.passwordPath, {encoding: 'utf-8'}).catch(() => '')).length > 0;
 	}
 }
-
-
-export const authController = AuthController.getInstance();
-
-export default AuthController;

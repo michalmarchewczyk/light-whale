@@ -3,15 +3,13 @@ import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
 import {connectToLWNetwork, startContainer} from '$lib/server/docker/containers';
 import fs from 'fs/promises';
 import path from 'path';
-import defaultConfig from '$lib/server/network/default.conf?raw';
+import defaultConfig from '$lib/server/network/templates/default.conf';
 import { pullImage } from '../docker/images';
-import {NGINX_CONTAINER_NAME} from '$lib/server/network/nginxConfig';
+import {configPath, NGINX_CONTAINER_NAME, nginxPath} from '$lib/server/setup/config';
 
-const nginxPath = process.env.NGINX_PATH ?? path.join(process.cwd(), 'nginx-config');
-const configPath = path.join(process.cwd(), 'lw-config');
-
-class SetupNginxController {
+export default class SetupNginxController {
 	private containerId:string|null = null;
+
 	public async setup():Promise<boolean> {
 		logger.log(LogType.Info, 'Starting NGINX Setup');
 		const pulledImage = await this.pullImage();
@@ -122,5 +120,3 @@ class SetupNginxController {
 		return true;
 	}
 }
-
-export default SetupNginxController;

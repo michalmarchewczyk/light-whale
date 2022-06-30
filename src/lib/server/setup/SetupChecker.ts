@@ -1,12 +1,12 @@
-import type {SetupStatus} from '$lib/server/setup/SetupController';
 import {logger, LogType} from '$lib/server/utils/Logger';
 import {exec} from 'child_process';
 import {DOCKER_URL} from '$lib/server/docker/config';
-import SetupNginxChecker from '$lib/server/setup/SetupNginxChecker';
-import {authController} from '$lib/server/auth/AuthController';
+import type SetupNginxChecker from '$lib/server/setup/SetupNginxChecker';
+import type {SetupStatus} from '$lib/server/setup/SetupStatus';
+import type AuthController from '$lib/server/auth/AuthController';
 
-class SetupChecker {
-	constructor(private setupNginxChecker:SetupNginxChecker = new SetupNginxChecker()) {}
+export default class SetupChecker {
+	constructor(private setupNginxChecker:SetupNginxChecker, private authController:AuthController) {}
 
 	public async check():Promise<Pick<SetupStatus, 'stage' | 'errors'>> {
 		let stage:SetupStatus['stage'] = null;
@@ -64,8 +64,6 @@ class SetupChecker {
 	}
 
 	private async isPasswordSet():Promise<boolean> {
-		return authController.isPasswordSet();
+		return this.authController.isPasswordSet();
 	}
 }
-
-export default SetupChecker;

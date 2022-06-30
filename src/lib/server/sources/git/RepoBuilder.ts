@@ -10,8 +10,7 @@ import {LW_NETWORK_NAME} from '$lib/server/docker/config';
 import type {Repo} from '$lib/server/sources/git/Repo.interface';
 
 export default class RepoBuilder {
-	constructor(private gitSourcesPath:string) {
-	}
+	constructor(private gitSourcesPath:string) {}
 
 	public async buildRepo(repoUrl:string, name:string, selectedFile:string, envVariables:Record<string, string>):Promise<string>{
 		await logger.log(LogType.Info, `Building repo: ${repoUrl}`);
@@ -29,8 +28,7 @@ export default class RepoBuilder {
 			return 'name';
 		}
 		if(selectedFile.includes('Dockerfile')){
-			const imageId = await this.buildFromDockerfile(repoInfo, name, selectedFile);
-			return imageId;
+			return await this.buildFromDockerfile(repoInfo, name, selectedFile);
 		}else{
 			await this.buildFromComposeFile(repoInfo, name, selectedFile, envVariables);
 			return '';

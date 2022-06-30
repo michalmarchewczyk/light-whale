@@ -1,8 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import cookie from 'cookie';
-import {tokenManager} from '$lib/server/auth/TokenManager';
-import {sessionManager} from '$lib/server/auth/SessionManager';
-import {authController} from '$lib/server/auth/AuthController';
+import {authController, sessionManager, tokenManager} from '$lib/server/auth';
 
 const post:RequestHandler = async ({request}) => {
 	const {password} = await request.json();
