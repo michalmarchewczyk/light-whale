@@ -14,13 +14,13 @@ export default class SetupChecker {
 			stage = 'done';
 		}
 		const errors = [];
-		if(!await this.isDockerInstalled()){
-			stage = stage ?? 'no-docker';
-			errors.push('no-docker');
-		}
 		if(!await this.isDockerPingable()){
 			stage = stage ?? 'no-docker';
 			errors.push('no-ping');
+		}
+		if(stage === 'no-docker' && !await this.isDockerInstalled()){
+			stage = stage ?? 'no-docker';
+			errors.push('no-docker');
 		}
 		const nginxErrors = await this.setupNginxChecker.check();
 		if(nginxErrors.length > 0){
@@ -31,7 +31,6 @@ export default class SetupChecker {
 			stage = stage ?? 'no-password';
 			errors.push('no-password');
 		}
-
 		stage = stage ?? 'done';
 		return {
 			stage,
