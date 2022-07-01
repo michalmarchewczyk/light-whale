@@ -11,9 +11,6 @@
 			};
 		}
 		return {
-			stuff: {
-				system: setupStatus.systemInfo.os,
-			},
 			props: {
 				status: setupStatus
 			}
@@ -28,7 +25,8 @@
 <script lang="ts">
 	import Background from '$lib/client/assets/background.svg';
 	import Logotype from '$lib/client/assets/logotype_white.png';
-	import {page} from '$app/stores';
+
+	export let status;
 </script>
 
 <svelte:head>
@@ -38,7 +36,12 @@
 <div class="fixed top-0 left-0 h-screen w-screen">
 	<Background class="absolute top-0 left-0 h-5/6 w-auto"/>
 	<img src={Logotype} class="absolute h-20 w-auto top-8 left-8" alt="Light-Whale"/>
-	<span class="absolute bottom-0 right-0 text-base font-semibold opacity-40 p-4">{$page.stuff?.system ?? '-'}</span>
+	<span class="absolute bottom-0 right-0 text-base font-semibold opacity-40 p-4 text-right">
+		{status?.systemInfo.hostname ?? '-'}<br/>
+		{status?.systemInfo.os ?? '-'}<br/>
+		Memory use: {status?.systemInfo.memory ?? '-'}<br/>
+		CPU: {status?.systemInfo.cpu ?? '-'}
+	</span>
 </div>
 <div class="flex w-screen h-screen justify-center items-center p-8">
 	<slot></slot>

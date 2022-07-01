@@ -3,6 +3,9 @@ export type SetupError = 'no-docker' | 'no-ping' | 'no-container' | 'no-image' |
 export interface SetupStatus {
     systemInfo:{
         os:string;
+		cpu: string;
+		memory: string;
+		hostname: string;
     },
     stage:'no-docker' | 'no-nginx' | 'no-password' | 'done';
     errors:SetupError[];
