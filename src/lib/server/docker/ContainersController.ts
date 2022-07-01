@@ -1,7 +1,7 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
 import {DOCKER_URL} from '$lib/server/docker/config';
 import Container from '$lib/server/docker/Container';
-import type {ContainerSummary} from '$lib/server/typings/docker/api';
+import type {ContainerSummary} from '$lib/server/types/docker/api';
 import type {ContainerInfo} from '$lib/server/docker/ContainerInfo.interface';
 import type ContainerFilesReader from '$lib/server/docker/ContainerFilesReader';
 

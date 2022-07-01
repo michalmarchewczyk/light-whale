@@ -14,4 +14,4 @@ node_modules
 /lw-logs
 /git-sources
 
-/src/lib/server/typings/docker/api
+/src/lib/server/types/docker/api

@@ -2,7 +2,7 @@
   "name": "light-whale",
   "version": "0.0.1",
   "scripts": {
-    "openapi-gen": "openapi-generator-cli generate -i ./src/lib/server/typings/docker/v1.41.yaml -g typescript-fetch -o ./src/lib/server/typings/docker/api",
+    "openapi-gen": "openapi-generator-cli generate",
     "postinstall": "npm run openapi-gen",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",

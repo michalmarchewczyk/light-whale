@@ -2,6 +2,18 @@
   "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "6.0.0"
+    "version": "6.0.0",
+    "generators": {
+      "v3.0": {
+        "generatorName": "typescript-fetch",
+        "output": "./src/lib/server/types/docker/api",
+        "glob": "./src/lib/server/types/docker/v1.41.yaml",
+        "additionalProperties": {
+          "paramNaming": "original",
+          "modelPropertyNaming": "original",
+          "enumPropertyNaming": "original"
+        }
+      }
+    }
   }
 }

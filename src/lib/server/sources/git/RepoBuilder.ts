@@ -2,7 +2,7 @@ import {logger, LogType} from '$lib/server/utils/Logger';
 import fs from 'fs/promises';
 import path from 'path';
 import {exec} from 'child_process';
-import type {ComposeSpecification} from '$lib/server/typings/docker/ComposeFile';
+import type {ComposeSpecification} from '$lib/server/types/docker/ComposeFile';
 import YAML from 'yaml';
 import {LW_NETWORK_NAME} from '$lib/server/docker/config';
 import type {Repo} from '$lib/server/sources/git/Repo.interface';

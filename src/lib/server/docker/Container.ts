@@ -4,6 +4,7 @@ import type {ContainerStats} from '$lib/server/docker/ContainerStats.interface';
 import type {ContainerInfo} from '$lib/server/docker/ContainerInfo.interface';
 import type ContainerFilesReader from '$lib/server/docker/ContainerFilesReader';
 import type {File} from '$lib/server/docker/File.interface';
+import type {ContainerInspectResponse, ContainerTopResponse} from '$lib/server/types/docker/api';
 
 export default class Container {
 	constructor(public id:string, public info:ContainerInfo, private containerFilesReader:ContainerFilesReader) {}
@@ -32,7 +33,7 @@ export default class Container {
 		return res.status === 204;
 	}
 
-	public async inspect():Promise<Record<string, string>>{
+	public async inspect():Promise<ContainerInspectResponse>{
 		logger.log(LogType.Verbose, `Inspecting container with id: ${this.id}`);
 		const res = await fetch(DOCKER_URL + `/containers/${this.id}/json?size=true`);
 		if (res.status !== 200) {
@@ -60,7 +61,7 @@ export default class Container {
 		return await res.json();
 	}
 
-	public async getProcesses():Promise<unknown> {
+	public async getProcesses():Promise<ContainerTopResponse> {
 		logger.log(LogType.Verbose, `Getting container processes, id: ${this.id}`);
 		const res = await fetch(DOCKER_URL + `/containers/${this.id}/top?ps_args=-eo pid,user,pcpu,pmem,start,args`);
 		if (res.status !== 200) {
