@@ -13,3 +13,5 @@ node_modules
 /lw-config
 /lw-logs
 /git-sources
+
+/src/lib/server/typings/docker/api
