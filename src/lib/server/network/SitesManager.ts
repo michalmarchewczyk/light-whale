@@ -5,9 +5,9 @@ import {nginxPath} from '$lib/server/setup/config';
 import path from 'path';
 import {EOL} from 'os';
 import type NginxController from '$lib/server/network/NginxController';
-import {connectToLWNetwork} from '$lib/server/docker/containers';
 import crypto from 'crypto';
 import template from '$lib/server/network/templates/template.conf?raw';
+import {containersController} from '$lib/server/docker';
 
 export default class SitesManager {
 	constructor(private nginxController:NginxController) {}
@@ -51,7 +51,8 @@ export default class SitesManager {
 		if (sites.map(s => s.domain).includes(domain)) {
 			return false;
 		}
-		await connectToLWNetwork(containerId);
+		const container = await containersController.getContainer(containerId);
+		await container?.connectToLWNetwork();
 		const newSite:Site = {
 			id: crypto.randomBytes(6).toString('hex'),
 			paused: false,

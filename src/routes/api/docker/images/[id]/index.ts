@@ -1,8 +1,8 @@
 import type {RequestHandler} from '@sveltejs/kit';
 
 import validator from 'validator';
-import {removeImage} from '$lib/server/docker/images';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {imagesController} from '$lib/server/docker';
 
 const del:RequestHandler = async ({params, request}) => {
 	if (!authGuard(request.headers)) {
@@ -16,7 +16,7 @@ const del:RequestHandler = async ({params, request}) => {
 			status: 400,
 		};
 	}
-	const res = await removeImage(id);
+	const res = await imagesController.removeImage(id);
 	return {
 		status: 200,
 		body: JSON.stringify({success: res}),

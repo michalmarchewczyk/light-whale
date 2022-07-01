@@ -1,7 +1,7 @@
-import {inspectContainer} from '$lib/server/docker/containers';
 import {LW_NETWORK_NAME} from '$lib/server/docker/config';
 import {NGINX_CONTAINER_NAME} from '$lib/server/setup/config';
 import type {NginxStatus} from '$lib/server/network/NginxStatus.interface';
+import {containersController} from '$lib/server/docker';
 
 export default class NginxChecker {
 	private container;
@@ -17,7 +17,8 @@ export default class NginxChecker {
 	}
 
 	private async getContainerInfo():Promise<void> {
-		this.container = await inspectContainer(NGINX_CONTAINER_NAME);
+		const container = await containersController.getContainerByName(NGINX_CONTAINER_NAME);
+		this.container = await container?.inspect();
 	}
 
 	private async checkRunning():Promise<boolean> {

@@ -1,8 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
-
-import {getImages, pullImage} from '$lib/server/docker/images';
 import validator from 'validator';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {imagesController} from '$lib/server/docker';
 
 const get:RequestHandler = async ({request}) => {
 	if (!authGuard(request.headers)) {
@@ -10,7 +9,7 @@ const get:RequestHandler = async ({request}) => {
 			status: 401,
 		};
 	}
-	const images = await getImages();
+	const images = await imagesController.getImages();
 	return {
 		status: 200,
 		body: JSON.stringify(images),
@@ -30,7 +29,7 @@ const post:RequestHandler = async ({request}) => {
 			status: 400,
 		};
 	}
-	const res = await pullImage(name, tag);
+	const res = await imagesController.pullImage(name, tag);
 	return {
 		status: 200,
 		body: JSON.stringify({success: res}),

@@ -1,13 +1,12 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
 import fs from 'fs/promises';
 import path from 'path';
-import {getContainerAndComposeNames} from '$lib/server/docker/containers';
-import {getImagesNames} from '$lib/server/docker/images';
 import {exec} from 'child_process';
 import type {ComposeSpecification} from '$lib/server/typings/docker/ComposeFile';
 import YAML from 'yaml';
 import {LW_NETWORK_NAME} from '$lib/server/docker/config';
 import type {Repo} from '$lib/server/sources/git/Repo.interface';
+import {containersController, imagesController} from '$lib/server/docker';
 
 export default class RepoBuilder {
 	constructor(private gitSourcesPath:string) {}
@@ -23,7 +22,7 @@ export default class RepoBuilder {
 		if(file.envVars.join(' ') !== Object.keys(envVariables).join(' ')){
 			return '';
 		}
-		const names = [...await getContainerAndComposeNames(), ...await getImagesNames()];
+		const names = [...await containersController.getContainerAndComposeNames(), ...await imagesController.getImagesNames()];
 		if(names.includes(name)){
 			return 'name';
 		}

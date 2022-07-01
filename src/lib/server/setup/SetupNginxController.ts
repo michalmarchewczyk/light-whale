@@ -1,11 +1,10 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
-import {connectToLWNetwork, startContainer} from '$lib/server/docker/containers';
 import fs from 'fs/promises';
 import path from 'path';
-import defaultConfig from '$lib/server/network/templates/default.conf';
-import { pullImage } from '../docker/images';
+import defaultConfig from '$lib/server/network/templates/default.conf?raw';
 import {configPath, NGINX_CONTAINER_NAME, nginxPath} from '$lib/server/setup/config';
+import {containersController, imagesController} from '$lib/server/docker';
 
 export default class SetupNginxController {
 	private containerId:string|null = null;
@@ -47,7 +46,7 @@ export default class SetupNginxController {
 
 	private async pullImage():Promise<boolean> {
 		logger.log(LogType.Info, 'NGINX Setup: Pulling latest NGINX image');
-		const pulledImage = await pullImage('nginx', 'latest');
+		const pulledImage = await imagesController.pullImage('nginx', 'latest');
 		if(!pulledImage){
 			logger.log(LogType.Error, 'NGINX Setup: Failed to pull NGINX image');
 			return false;
@@ -80,7 +79,8 @@ export default class SetupNginxController {
 		const container = await res.json();
 		this.containerId = container?.['Id'] ?? '';
 		logger.log(LogType.Info, 'NGINX Setup: Starting LW container');
-		await startContainer(this.containerId);
+		const createdContainer = await containersController.getContainer(this.containerId);
+		await createdContainer.start();
 		return true;
 	}
 
@@ -104,7 +104,8 @@ export default class SetupNginxController {
 
 	private async connectToNetwork():Promise<boolean> {
 		logger.log(LogType.Info, 'NGINX Setup: Connecting LW container to network');
-		const connect = await connectToLWNetwork(this.containerId);
+		const container = await containersController.getContainer(this.containerId);
+		const connect = await container?.connectToLWNetwork();
 		if(!connect){
 			logger.log(LogType.Error, 'NGINX Setup: Failed to connect LW container to network');
 			return false;

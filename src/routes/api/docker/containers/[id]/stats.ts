@@ -1,7 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import validator from 'validator';
-import {getContainerProcesses, getContainerStats, inspectContainer} from '$lib/server/docker/containers';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {containersController} from '$lib/server/docker';
 
 
 const get:RequestHandler = async ({params, request}) => {
@@ -21,10 +21,16 @@ const get:RequestHandler = async ({params, request}) => {
 			status: 400,
 		};
 	}
+	const container = await containersController.getContainer(id);
+	if(!container) {
+		return {
+			status: 500,
+		};
+	}
 	try {
-		const data = await getContainerStats(id);
-		const data2 = await inspectContainer(id);
-		const data3 = await getContainerProcesses(id);
+		const data = await container.getStats();
+		const data2 = await container.inspect();
+		const data3 = await container.getProcesses();
 		if (!data || !data2 || !data3) {
 			return {
 				status: 500,

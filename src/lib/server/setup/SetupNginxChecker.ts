@@ -1,10 +1,9 @@
 import {logger, LogType} from '$lib/server/utils/Logger';
-import {inspectContainer} from '$lib/server/docker/containers';
-import {getImages} from '$lib/server/docker/images';
 import {DOCKER_URL, LW_NETWORK_NAME} from '$lib/server/docker/config';
 import fs from 'fs/promises';
 import {configPath, NGINX_CONTAINER_NAME, nginxPath} from '$lib/server/setup/config';
 import type {SetupError} from '$lib/server/setup/SetupStatus';
+import {containersController, imagesController} from '$lib/server/docker';
 
 export default class SetupNginxChecker {
 	public async check():Promise<SetupError[]> {
@@ -26,8 +25,8 @@ export default class SetupNginxChecker {
 	}
 
 	private async checkContainer():Promise<boolean>{
-		const container = await inspectContainer(NGINX_CONTAINER_NAME);
-		if(!container['Id']){
+		const container = await containersController.getContainerByName(NGINX_CONTAINER_NAME);
+		if(!container){
 			logger.log(LogType.Error, 'NGINX setup check: Could not find LW container');
 			return false;
 		}
@@ -36,9 +35,8 @@ export default class SetupNginxChecker {
 	}
 
 	private async checkImage():Promise<boolean> {
-		const container = await inspectContainer(NGINX_CONTAINER_NAME);
-		const images = await getImages();
-		const image = images.find(i => i.id === container?.['Image']);
+		const container = await containersController.getContainerByName(NGINX_CONTAINER_NAME);
+		const image = await imagesController.getImage(container?.info.imageId);
 		return image?.digests[0].startsWith('nginx@');
 	}
 

@@ -1,6 +1,6 @@
 import { authGuard } from '$lib/server/auth/authGuard';
-import {getLastEvent} from '$lib/server/docker/events';
 import type {RequestHandler} from '@sveltejs/kit';
+import {dockerController} from '$lib/server/docker';
 
 
 const get:RequestHandler = async ({request}) => {
@@ -9,7 +9,7 @@ const get:RequestHandler = async ({request}) => {
 			status: 401,
 		};
 	}
-	const event = await getLastEvent();
+	const event = await dockerController.getLastEvent();
 	return {
 		status: 200,
 		body: JSON.stringify(event),

@@ -1,8 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
-
 import validator from 'validator';
-import {getContainerFile, getContainerFiles} from '$lib/server/docker/files';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {containersController} from '$lib/server/docker';
 
 const get:RequestHandler = async ({params, url, request}) => {
 	if (!authGuard(request.headers)) {
@@ -26,8 +25,14 @@ const get:RequestHandler = async ({params, url, request}) => {
 			status: 400,
 		};
 	}
+	const container = await containersController.getContainer(id);
+	if(!container){
+		return {
+			status: 500,
+		};
+	}
 	if(type === 'file'){
-		const data = await getContainerFile(id, path);
+		const data = await container.readFile(path);
 		if (!data) {
 			return {
 				status: 400,
@@ -38,7 +43,7 @@ const get:RequestHandler = async ({params, url, request}) => {
 			body: data,
 		};
 	}else{
-		const data = await getContainerFiles(id, path);
+		const data = await container.getFiles(path);
 		if (!data || data.length < 1) {
 			return {
 				status: 400,

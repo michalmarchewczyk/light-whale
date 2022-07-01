@@ -1,8 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
-
-import {createContainer, getContainers} from '$lib/server/docker/containers';
 import validator from 'validator';
 import { authGuard } from '$lib/server/auth/authGuard';
+import {containersController} from '$lib/server/docker';
 
 const get:RequestHandler = async ({request}) => {
 	if (!authGuard(request.headers)) {
@@ -10,7 +9,7 @@ const get:RequestHandler = async ({request}) => {
 			status: 401,
 		};
 	}
-	const containers = await getContainers();
+	const containers = await containersController.getContainers();
 	return {
 		status: 200,
 		body: JSON.stringify(containers),
@@ -30,7 +29,7 @@ const post:RequestHandler = async ({request}) => {
 			status: 400,
 		};
 	}
-	const res = await createContainer(imageId, name, command);
+	const res = await containersController.createContainer(imageId, name, command);
 	if (res) {
 		return {
 			status: 200,
