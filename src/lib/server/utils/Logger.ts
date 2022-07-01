@@ -45,7 +45,7 @@ class Logger {
 		});
 	}
 
-	log(type:LogType, msg:string):void{
+	public log(type:LogType, msg:string):void{
 		this.logs = this.logs.slice(-100000);
 		const date = new Date();
 		let dateDiff = 0;
@@ -64,7 +64,23 @@ class Logger {
 		});
 	}
 
-	get():Log[]{
+	public logInfo(msg:string):void{
+		this.log(LogType.Info, msg);
+	}
+
+	public logWarning(msg:string):void{
+		this.log(LogType.Warning, msg);
+	}
+
+	public logError(msg:string):void{
+		this.log(LogType.Error, msg);
+	}
+
+	public logVerbose(msg:string):void{
+		this.log(LogType.Verbose, msg);
+	}
+
+	public get():Log[]{
 		return this.logs;
 	}
 }
