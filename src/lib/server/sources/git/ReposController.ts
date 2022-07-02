@@ -82,6 +82,11 @@ export default class ReposController {
 		}
 	}
 
+	public async getRepo(repoUrl:string):Promise<Repo | null> {
+		const repos = await this.listRepos();
+		return repos.find(r => r.gitInfo.remoteName.endsWith(repoUrl));
+	}
+
 	public async buildRepo(repoUrl:string, name:string, selectedFile:string, envVariables:Record<string, string>):Promise<string> {
 		return await this.repoBuilder.buildRepo(repoUrl, name, selectedFile, envVariables);
 	}

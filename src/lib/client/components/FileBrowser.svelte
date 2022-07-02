@@ -30,9 +30,7 @@
 	{:else}
 		{#if file}
 			<div class="px-6 py-4 overflow-scroll">
-				<pre class="font-mono font-medium">
-					{file}
-				</pre>
+				<pre class="font-mono font-medium">{file}</pre>
 			</div>
 		{:else}
 			<ul class="menu p-2 compact overflow-y-scroll">
