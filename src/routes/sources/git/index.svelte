@@ -7,6 +7,7 @@
 
 	let items = [];
 	let itemsGithub = [];
+	let loading = true;
 
 	const fetchItems = async ():Promise<void> => {
 		const res = await fetch('/api/sources/git');
@@ -22,6 +23,7 @@
 			return;
 		}
 		itemsGithub = await res.json();
+		loading = false;
 	};
 
 	onMount(async() => {
@@ -41,10 +43,16 @@
 		<RepoPullForm fetchItems={() => fetchItems()}/>
 		{#each items as item}
 			<RepoSourceItem repo={item}/>
+		{:else}
+			<p class="w-full text-center text-3xl p-4 opacity-50">No repositories pulled</p>
 		{/each}
 		<div class="divider"></div>
 		{#each itemsGithub as item}
 			<RepoRemoteItem repo={item}/>
+		{:else}
+			<p class="w-full text-center text-3xl p-4 opacity-50">
+				{loading ? 'Loading...' : 'Could not find any remote repositories'}
+			</p>
 		{/each}
 	</div>
 </div>
