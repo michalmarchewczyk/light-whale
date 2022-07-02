@@ -36,8 +36,9 @@ export default class ReposController {
 		let pullUrl = repoUrl;
 		if(tokenId){
 			const token = tokenManager.getTokenById(tokenId);
-			// TODO: do better URL parsing than just .slice()
-			pullUrl = `https://${token.token}@${repoUrl.slice(8)}`;
+			const url = new URL(repoUrl);
+			url.username = token.token;
+			pullUrl = url.href;
 		}
 		const pulled = await this.pullRepo(repoUrl, pullUrl, repoDir);
 		if(!pulled){
