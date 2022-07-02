@@ -8,6 +8,7 @@
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import EyeIcon from '$icons/eye.svg';
 	import EyeOffIcon from '$icons/eye-off.svg';
+	import {goto} from '$app/navigation';
 
 	export let repo;
 
@@ -35,6 +36,10 @@
 			body: JSON.stringify({remoteName: repo.remoteName})
 		});
 		loading = false;
+		if(res.status !== 200){
+			return;
+		}
+		await goto(`/sources/git/${encodeURIComponent(repo.remoteName)}`);
 	};
 </script>
 
