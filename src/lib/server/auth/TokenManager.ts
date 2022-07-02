@@ -88,7 +88,11 @@ export default class TokenManager {
 		return true;
 	}
 
-	public getTokenByService(service: string):Token[] {
+	public getTokensByService(service: string):Token[] {
 		return this.tokens.filter(token => token.service === service);
+	}
+
+	public getTokenById(id:string):Token {
+		return this.tokens.find(token => token.id === id);
 	}
 }

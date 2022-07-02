@@ -1,5 +1,6 @@
 export interface Repo {
     service:string,
+	tokenId?:string,
     gitInfo:{
         remoteName:string,
         branchName:string,

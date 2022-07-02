@@ -5,22 +5,24 @@ import type {SimpleGit} from 'simple-git';
 import type RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
 import type {Repo} from '$lib/server/sources/git/Repo.interface';
 import type RepoBuilder from '$lib/server/sources/git/RepoBuilder';
+import {tokenManager} from '$lib/server/auth';
 
 export default class ReposController {
 	public static gitSourcesPath = path.join(process.cwd(), 'git-sources');
 
 	constructor(private git:SimpleGit, private repoAnalyzer:RepoAnalyzer, private repoBuilder:RepoBuilder) {}
 
-	private async pullRepo(repoUrl:string, repoDir:string) {
+	private async pullRepo(repoUrl:string, pullUrl, repoDir:string) {
 		try {
 			await fs.access(repoDir);
 			logger.log(LogType.Info, `Pulling git repository ${repoUrl}`);
-			await this.git.cwd({path: repoDir}).pull();
+			await this.git.cwd({path: repoDir}).pull(pullUrl);
 			return true;
 		} catch (e) {
 			try {
 				logger.log(LogType.Info, `Fetching git repository ${repoUrl}`);
-				await this.git.cwd({path: ReposController.gitSourcesPath}).clone(repoUrl, repoDir);
+				await fs.mkdir(repoDir);
+				await this.git.cwd({path: repoDir}).init().pull(pullUrl, 'master').addRemote('origin', repoUrl);
 				return true;
 			} catch (e) {
 				logger.log(LogType.Error, `Could not fetch git repository ${repoUrl}`);
@@ -29,9 +31,15 @@ export default class ReposController {
 		}
 	}
 
-	public async fetchRepo(repoUrl:string) {
+	public async fetchRepo(repoUrl:string, tokenId?:string, service?:string):Promise<Repo | null> {
 		const repoDir = path.join(ReposController.gitSourcesPath, encodeURIComponent(repoUrl));
-		const pulled = await this.pullRepo(repoUrl, repoDir);
+		let pullUrl = repoUrl;
+		if(tokenId){
+			const token = tokenManager.getTokenById(tokenId);
+			// TODO: do better URL parsing than just .slice()
+			pullUrl = `https://${token.token}@${repoUrl.slice(8)}`;
+		}
+		const pulled = await this.pullRepo(repoUrl, pullUrl, repoDir);
 		if(!pulled){
 			return null;
 		}
@@ -40,7 +48,8 @@ export default class ReposController {
 			const dockerInfo:Repo['dockerInfo'] = await this.repoAnalyzer.getRepoDockerInfo(repoDir);
 			const languageInfo:Repo['languageInfo'] = await this.repoAnalyzer.getRepoLanguageInfo(repoDir);
 			const repoInfo:Repo = {
-				service: 'local',
+				service: service ?? 'local',
+				tokenId,
 				gitInfo,
 				dockerInfo,
 				languageInfo,

@@ -4,13 +4,14 @@ import type {GitServiceController} from '$lib/server/sources/git/services/GitSer
 import type {GithubToken} from '$lib/server/sources/git/services/github/GithubToken.interface';
 import type {GithubRepo} from '$lib/server/sources/git/services/github/GithubRepo.interface';
 import type {Token} from '$lib/server/auth/Token.interface';
+import {reposController} from '$lib/server/sources/git';
 
 export default class GithubController implements GitServiceController {
 
 	constructor(private tokenManager: TokenManager) {}
 
 	public async getTokensInfo():Promise<GithubToken[]> {
-		const tokens = this.tokenManager.getTokenByService('github');
+		const tokens = this.tokenManager.getTokensByService('github');
 		const results:GithubToken[] = (await Promise.all(tokens.map(async (token) => {
 			const res = await fetch('https://api.github.com/user', {
 				method: 'GET',
@@ -38,7 +39,7 @@ export default class GithubController implements GitServiceController {
 		logger.log(LogType.Info, 'Listing GitHub repositories');
 		try {
 			let repos:GithubRepo[];
-			const tokens = this.tokenManager.getTokenByService('github');
+			const tokens = this.tokenManager.getTokensByService('github');
 			repos = (await Promise.all(tokens.map(async (token) => {
 				return await this.getReposFromToken(token);
 			}))).flat();
@@ -50,7 +51,7 @@ export default class GithubController implements GitServiceController {
 		}
 	}
 
-	private async getReposFromToken(token:Token) {
+	private async getReposFromToken(token:Token):Promise<GithubRepo[]> {
 		const res = await fetch('https://api.github.com/user/repos', {
 			method: 'GET',
 			headers: {'Authorization': `token ${token.token}`},
@@ -59,7 +60,7 @@ export default class GithubController implements GitServiceController {
 			return [];
 		}
 		const data = await res.json();
-		return data.map((repo) => ({
+		return data.map((repo):GithubRepo => ({
 			service: 'github',
 			remoteName: repo.clone_url,
 			branchName: repo.default_branch,
@@ -67,6 +68,15 @@ export default class GithubController implements GitServiceController {
 			lastDate: repo.updated_at,
 			topLanguage: repo.language,
 			languages: [repo.language],
+			visibility: repo.visibility,
+			tokenId: token.id,
 		}));
+	}
+
+	public async pullRepo(remoteName:string):Promise<boolean> {
+		const repos = await this.listRepos();
+		const repo = repos.find((r) => r.remoteName === remoteName);
+		await reposController.fetchRepo(repo.remoteName, repo.tokenId);
+		return true;
 	}
 }

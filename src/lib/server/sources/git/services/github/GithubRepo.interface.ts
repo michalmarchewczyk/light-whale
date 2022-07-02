@@ -7,5 +7,7 @@ export interface GithubRepo extends GitServiceRepo {
     author:string;
     lastDate:string;
     topLanguage:string;
-    languages:string;
+    languages:string[];
+	visibility:string;
+	tokenId:string;
 }

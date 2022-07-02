@@ -6,6 +6,8 @@
 	import CodeIcon from '$icons/code.svg';
 	import UserIcon from '$icons/user.svg';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
+	import EyeIcon from '$icons/eye.svg';
+	import EyeOffIcon from '$icons/eye-off.svg';
 
 	export let repo;
 
@@ -24,6 +26,16 @@
 		}
 		topLangSrc = repo?.topLanguage?.toLowerCase() ?? '-';
 	}
+
+	const pull = async () => {
+		loading = true;
+		const res = await fetch('/api/sources/git/github', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({remoteName: repo.remoteName})
+		});
+		loading = false;
+	};
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-2 h-auto overflow-hidden">
@@ -43,8 +55,11 @@
 		<span class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl">
 			{name}
 		</span>
-		<ItemInfo icon={CodeIcon} class="mt-1">
-			{repo.languages.join(', ')}
+		<ItemInfo icon={repo.visibility === 'public' ? EyeIcon : EyeOffIcon} class="mt-1 w-24">
+			{repo.visibility}
+		</ItemInfo>
+		<ItemInfo icon={CodeIcon} class="mt-1 w-36">
+			{repo.languages.join(', ') || 'unknown'}
 		</ItemInfo>
 	</a>
 	<div class="block w-36 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4 mt-1">
@@ -60,7 +75,7 @@
 	</div>
 	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
 		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2"
-		on:click={() => open = true}>
+		on:click={pull}>
 			Pull
 		</ActionButton>
 	</div>

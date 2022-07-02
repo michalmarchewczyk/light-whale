@@ -16,6 +16,22 @@ const get:RequestHandler = async ({request}) => {
 	};
 };
 
+const post:RequestHandler = async ({request}) => {
+	if (!authGuard(request.headers)) {
+		return {
+			status: 401,
+		};
+	}
+	const {remoteName} = await request.json();
+	const res = await githubController.pullRepo(remoteName);
+	return {
+		status: 200,
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify(res),
+	};
+};
+
 export {
-	get
+	get,
+	post
 };
