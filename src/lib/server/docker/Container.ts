@@ -87,7 +87,7 @@ export default class Container {
 			body: JSON.stringify({
 				'AttachStdin': true,
 				'AttachStdout': true,
-				'AttachStderr': true,
+				'AttachStderr': false,
 				'Tty': true,
 				'Cmd': [...command.split(' ')],
 			}),
@@ -111,11 +111,7 @@ export default class Container {
 		return await resStart.text();
 	}
 
-	public async getFiles(path:string):Promise<File[]> {
-		return await this.containerFilesReader.getContainerFiles(this, path);
-	}
-
-	public async readFile(path:string):Promise<string> {
-		return await this.containerFilesReader.readContainerFile(this, path);
+	public async readPath(path:string):Promise<File[] | string> {
+		return await this.containerFilesReader.readPath(this, path);
 	}
 }

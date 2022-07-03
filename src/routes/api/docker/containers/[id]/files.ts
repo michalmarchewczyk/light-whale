@@ -16,7 +16,6 @@ const get:RequestHandler = async ({params, url, request}) => {
 		};
 	}
 	const path = url.searchParams.get('path') ?? '';
-	const type:'file'|'dir' = url.searchParams.get('type') === 'file' ? 'file' : 'dir';
 	if (!validator.isAlphanumeric(id) || !validator.isURL(path, {
 		require_valid_protocol: false,
 		require_host: false,
@@ -31,19 +30,13 @@ const get:RequestHandler = async ({params, url, request}) => {
 			status: 500,
 		};
 	}
-	if(type === 'file'){
-		const data = await container.readFile(path);
-		if (!data) {
-			return {
-				status: 400,
-			};
-		}
+	const data = await container.readPath(path);
+	if(typeof data === 'string'){
 		return {
 			status: 200,
-			body: data,
+			body: JSON.stringify({type: 'file', data}),
 		};
 	}else{
-		const data = await container.getFiles(path);
 		if (!data || data.length < 1) {
 			return {
 				status: 400,
@@ -51,7 +44,7 @@ const get:RequestHandler = async ({params, url, request}) => {
 		}
 		return {
 			status: 200,
-			body: JSON.stringify(data),
+			body: JSON.stringify({type: 'folder', data}),
 		};
 	}
 };

@@ -4,8 +4,7 @@ import {logger, LogType} from '$lib/server/utils/Logger';
 import {EOL} from 'os';
 
 export default class ContainerFilesReader {
-	public async getContainerFiles(container: Container, path:string): Promise<File[]> {
-		logger.log(LogType.Info, `Read path: ${path} from container with id: ${container.id}`);
+	private async getContainerFiles(container: Container, path:string): Promise<File[]> {
 		const data = await container.exec(`ls -lha --time-style=full-iso --group-directories-first ${path}`);
 		if (!data) {
 			return [];
@@ -35,8 +34,14 @@ export default class ContainerFilesReader {
 		return res;
 	}
 
-	public async readContainerFile(container:Container, path:string):Promise<string> {
-		logger.log(LogType.Info, `Read file: ${path} from container with id: ${container.id}`);
-		return await container.exec(`cat ${path}`);
+	public async readPath(container:Container, path:string):Promise<File[] | string> {
+		logger.log(LogType.Info, `Read path: ${path} from container with id: ${container.id}`);
+		const catRes = await container.exec(`cat ${path}`);
+		if (catRes && catRes.trim() !== `cat: ${path}: Is a directory`) {
+			logger.log(LogType.Info, `Read file: ${path} from container with id: ${container.id}`);
+			return catRes;
+		}
+		logger.log(LogType.Info, `Read folder: ${path} from container with id: ${container.id}`);
+		return await this.getContainerFiles(container, path);
 	}
 }
