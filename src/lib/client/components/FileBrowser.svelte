@@ -1,9 +1,11 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
+	import hljs from 'highlight.js';
 
 	import FolderIcon from '$icons/folder-open.svg';
 	import DocumentIcon from '$icons/document.svg';
 	import ArrowLeftIcon from '$icons/arrow-left.svg';
+	import {theme} from '$lib/client/stores/settings.js';
 
 	export let path = '';
 	export let loading = true;
@@ -12,7 +14,13 @@
 
 	const dispatch = createEventDispatcher();
 
+	let highlightedCode = '';
+	$: {
+		highlightedCode = hljs.highlightAuto(file).value;
+	}
+
 </script>
+
 <div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
 	<span class="mx-0 p-2 px-5 font-bold text-lg border-b-2 mb-0">
 		{#if file}
@@ -30,7 +38,16 @@
 	{:else}
 		{#if file}
 			<div class="px-6 py-4 overflow-scroll">
-				<pre class="font-mono font-medium">{file}</pre>
+				{#if $theme === 'default-light'}
+					<style lang="scss">
+					  @use '~highlight.js/styles/atom-one-light.css';
+					</style>
+				{:else}
+					<style lang="scss">
+					  @use '~highlight.js/styles/atom-one-dark.css';
+					</style>
+				{/if}
+				<pre class="font-mono font-semibold text-md leading-tight">{@html highlightedCode}</pre>
 			</div>
 		{:else}
 			<ul class="menu p-2 compact overflow-y-scroll">
