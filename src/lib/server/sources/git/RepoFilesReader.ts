@@ -8,6 +8,9 @@ import path from 'path';
 export default class RepoFilesReader {
 	private async getRepoFiles(repo: Repo, dirPath:string): Promise<File[]> {
 		logger.log(LogType.Info, `Read folder: ${dirPath} from repo: ${new URL(repo.gitInfo.remoteName).pathname}`);
+		if(dirPath.includes('..')) {
+			return [];
+		}
 		const pathToRead = path.join(ReposController.gitSourcesPath, encodeURIComponent(repo.gitInfo.remoteName), dirPath);
 		const files = await fs.readdir(pathToRead, {withFileTypes: true});
 		const res:File[] = [];
@@ -34,6 +37,9 @@ export default class RepoFilesReader {
 		logger.log(LogType.Info, `Read path: ${filePath} from repo: ${new URL(repo.gitInfo.remoteName).pathname}`);
 		const pathToRead = path.join(ReposController.gitSourcesPath, encodeURIComponent(repo.gitInfo.remoteName), filePath);
 		const stat = await fs.stat(pathToRead);
+		if(!stat){
+			return [];
+		}
 		if (stat.isFile()) {
 			return await this.readRepoFile(repo, filePath);
 		}
