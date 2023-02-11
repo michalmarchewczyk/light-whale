@@ -15,5 +15,7 @@ vite.config.ts.timestamp-*
 /lw-config
 /lw-logs
 /git-sources
+/lw_data
 
 /src/lib/server/types/docker/api
+
