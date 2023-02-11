@@ -1,14 +1,7 @@
 import { DOCKER_URL } from '$lib/server/config';
 import type { EventMessage } from '$lib/server/types/docker/api';
 import DockerEventsParser from '$lib/server/events/DockerEventsParser';
-
-export interface Event {
-	id: number;
-	time: number;
-	type: 'docker' | 'info' | 'warning' | 'error';
-	title: string;
-	message: string;
-}
+import type Event from '$lib/server/events/Event';
 
 class EventsController {
 	private static instance: EventsController;

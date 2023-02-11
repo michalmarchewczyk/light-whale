@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Event } from '$lib/server/events/EventsController';
+import type Event from '$lib/server/events/Event';
 
 export const events = writable<Event[]>([]);
 

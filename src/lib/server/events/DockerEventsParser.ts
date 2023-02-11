@@ -1,5 +1,5 @@
 import type { EventMessage } from '$lib/server/types/docker/api';
-import type { Event } from '$lib/server/events/EventsController';
+import type Event from '$lib/server/events/Event';
 
 export default class DockerEventsParser {
 	parseEvent(event: EventMessage): Omit<Event, 'id'> {
