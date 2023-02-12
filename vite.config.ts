@@ -1,9 +1,24 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import type { UserConfig } from 'vite';
 import path from 'path';
+import svg from '@poppanator/sveltekit-svg';
 
 const config: UserConfig = {
-	plugins: [sveltekit()],
+	plugins: [
+		sveltekit(),
+		svg({
+			svgoOptions: {
+				plugins: [
+					{
+						name: 'removeAttrs',
+						params: {
+							attrs: 'stroke-width'
+						}
+					}
+				]
+			}
+		})
+	],
 	assetsInclude: ['**/*.conf'],
 	resolve: {
 		alias: {

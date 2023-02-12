@@ -14,6 +14,7 @@
 	},
 	"devDependencies": {
 		"@openapitools/openapi-generator-cli": "^2.5.2",
+		"@poppanator/sveltekit-svg": "^2.1.2",
 		"@sveltejs/adapter-node": "^1.1.8",
 		"@sveltejs/kit": "^1.5.5",
 		"@tailwindcss/typography": "^0.5.9",

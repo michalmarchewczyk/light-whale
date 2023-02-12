@@ -1,4 +1,4 @@
 import StatusController from '$lib/server/status/StatusController';
-import { dockerController } from '$lib/server/docker';
+import { dockerController, nginxManager } from '$lib/server/docker';
 
-export const statusController = new StatusController(dockerController);
+export const statusController = new StatusController(dockerController, nginxManager);

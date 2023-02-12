@@ -1,11 +1,23 @@
 import type DockerController from '$lib/server/docker/DockerController';
 import type Status from '$lib/server/status/Status';
+import type NginxManager from '$lib/server/docker/NginxManager';
 
 export default class StatusController {
 	private controllers: ReadableStreamDefaultController[] = [];
-	private status: Status | null = null;
+	private status: Status = {
+		dockerRunning: false,
+		dockerPing: false,
+		lwNetwork: false,
+		lwNginxContainer: {
+			running: false,
+			connected: false,
+			ports: false,
+			restartPolicy: false
+		}
+	};
 
-	constructor(private dockerController: DockerController) {
+	constructor(private dockerController: DockerController, private nginxManager: NginxManager) {
+		this.updateStatus();
 		setInterval(() => this.updateStatus(), 500);
 	}
 
@@ -22,7 +34,11 @@ export default class StatusController {
 		});
 	}
 
-	private async updateStatus() {
+	getCurrentStatus() {
+		return this.status;
+	}
+
+	async updateStatus() {
 		const dockerPing = await this.dockerController.ping();
 		let dockerRunning = dockerPing;
 		if (!dockerRunning) {
@@ -33,10 +49,11 @@ export default class StatusController {
 				dockerRunning = false;
 			}
 		}
+		const lwNetwork = await this.nginxManager.checkLwNetwork();
 		this.status = {
 			dockerRunning,
 			dockerPing,
-			lwNetwork: false,
+			lwNetwork,
 			lwNginxContainer: {
 				running: false,
 				connected: false,
