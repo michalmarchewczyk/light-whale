@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import type { Session } from '$lib/server/auth/Session';
 
 export default class SessionManager {

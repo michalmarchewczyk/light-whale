@@ -12,10 +12,10 @@
 	});
 </script>
 
-<div class="toast toast-end">
+<div class="toast toast-end z-50">
 	{#each $events as event (event.id)}
 		<div
-			class="alert shadow-lg flex-col items-start gap-0.5 max-w-sm w-sm"
+			class="alert shadow-lg flex-col items-start gap-0.5 max-w-sm w-96"
 			out:fade
 			class:alert-info={event.type === 'docker' || event.type === 'info'}
 			class:alert-warning={event.type === 'warning'}
