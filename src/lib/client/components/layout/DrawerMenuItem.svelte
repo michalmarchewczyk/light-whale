@@ -11,7 +11,9 @@
 		href={path}
 		on:click={() => dispatch('click')}
 		sveltekit:prefetch
-		class:bg-base-300={path !== '/' ? $page.route.id.startsWith(path) : $page.route.id === path}
+		class:bg-base-300={path !== '/'
+			? $page.url.pathname.startsWith(path)
+			: $page.url.pathname === path}
 	>
 		<svelte:component this={icon} class="h-6 w-6 stroke-2" />
 		<span class="mx-1 text-base mt-[-0.125rem]">
