@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let label = '';
 	export let placeholder = '';
-	export let value;
+	export let value = '';
 	export let name = '';
 </script>
 
