@@ -4,6 +4,10 @@
 	let loading = false;
 </script>
 
+<svelte:head>
+	<title>NGINX Setup - Light-Whale</title>
+</svelte:head>
+
 <h2 class="text-2xl font-bold mb-8">Setup NGINX</h2>
 <p>Light-Whale needs to setup NGINX container and create internal docker network:</p>
 <form

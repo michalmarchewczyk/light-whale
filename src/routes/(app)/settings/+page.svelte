@@ -2,6 +2,10 @@
 	import { theme, animations } from '$lib/client/stores/settings';
 </script>
 
+<svelte:head>
+	<title>General Settings - Light-Whale</title>
+</svelte:head>
+
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<label class="flex align-middle items-center justify-between">

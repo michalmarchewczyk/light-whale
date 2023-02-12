@@ -20,6 +20,10 @@
 	checkPasswordStrength();
 </script>
 
+<svelte:head>
+	<title>Password Setup - Light-Whale</title>
+</svelte:head>
+
 <h2 class="text-2xl font-bold mb-8">Setup password</h2>
 <p>Setup password for Light-Whale's panel:</p>
 <form

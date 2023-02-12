@@ -4,6 +4,10 @@
 	let loading = false;
 </script>
 
+<svelte:head>
+	<title>Github Setup - Light-Whale</title>
+</svelte:head>
+
 <h2 class="text-2xl font-bold mb-8">Setup Github account</h2>
 <p>
 	You can connect your Github account in order to more easily create containers from your

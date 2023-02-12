@@ -1,6 +1,10 @@
 <script lang="ts">
 </script>
 
+<svelte:head>
+	<title>DNS Setup - Light-Whale</title>
+</svelte:head>
+
 <h2 class="text-2xl font-bold mb-8">Setup DNS Provider</h2>
 <p>
 	Connect Light-Whale to your DNS Provider to more easily manage your domains.

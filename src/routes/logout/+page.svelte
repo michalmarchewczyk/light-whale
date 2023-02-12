@@ -3,6 +3,10 @@
 	import Logotype from '$lib/client/assets/logotype_white.png';
 </script>
 
+<svelte:head>
+	<title>Logout - Light-Whale</title>
+</svelte:head>
+
 <div class="fixed top-0 left-0 h-screen w-screen">
 	<Background class="absolute top-0 left-0 h-5/6 w-auto" />
 	<img src={Logotype} class="absolute h-20 w-auto top-8 left-8" alt="Light-Whale" />

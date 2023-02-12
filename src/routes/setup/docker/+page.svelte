@@ -13,6 +13,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Docker Setup - Light-Whale</title>
+</svelte:head>
+
 <h2 class="text-2xl font-bold mb-8">Install Docker Engine</h2>
 <!--{#if status.systemInfo.os === 'Ubuntu'}-->
 <!--  <p>-->
