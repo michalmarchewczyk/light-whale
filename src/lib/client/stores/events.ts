@@ -1,7 +1,13 @@
 import { writable } from 'svelte/store';
 import type Event from '$lib/server/events/Event';
+import { createDebouncer } from '$lib/client/utils/debounce';
+import { invalidate } from '$app/navigation';
 
 export const events = writable<Event[]>([]);
+
+const refreshDebounce = createDebouncer(async () => {
+	await invalidate('docker');
+}, 500);
 
 export const fetchEvents = async () => {
 	const writeStream = new WritableStream({
@@ -12,6 +18,9 @@ export const fetchEvents = async () => {
 				const event = JSON.parse(str) as Event;
 				events.update((events) => {
 					events.push(event);
+					if (event.type === 'docker') {
+						refreshDebounce();
+					}
 					return events;
 				});
 			});

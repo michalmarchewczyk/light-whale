@@ -30,7 +30,7 @@ export default class SessionManager {
 	}
 
 	public checkSession(sessionId: string): boolean {
-		logger.logInfo(`Checking session with id ${sessionId}`);
+		logger.logVerbose(`Checking session with id ${sessionId}`);
 		const session = this.sessions.find((s) => s.id === sessionId);
 		return !(!session || Date.now() > session.expires);
 	}

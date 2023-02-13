@@ -10,7 +10,7 @@
 	};
 </script>
 
-<div class="navbar bg-navbar text-primary-content shadow-b-xl z-50">
+<div class="navbar bg-navbar text-primary-content shadow-b-xl z-[100]">
 	<div class="flex-none">
 		<button class="btn btn-square btn-ghost lg:hidden" on:click={changeDrawerOpen}>
 			{#if drawerOpen}
