@@ -27,7 +27,7 @@ export default class FilesManager {
 		const absPath = path.join(this.lwDirPath, filePath);
 		await fs.mkdir(path.dirname(absPath), { recursive: true });
 		await fs.writeFile(absPath, '', { flag: 'a' });
-		return fs.open(absPath, 'r+');
+		return fs.open(absPath, 'a+');
 	}
 
 	async readFile(filePath: string): Promise<string> {
