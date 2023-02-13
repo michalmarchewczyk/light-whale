@@ -2,6 +2,7 @@ import { DOCKER_URL } from '$lib/server/config';
 import type { EventMessage } from '$lib/server/types/docker/api';
 import DockerEventsParser from '$lib/server/events/DockerEventsParser';
 import type Event from '$lib/server/events/Event';
+import { logger } from '$lib/server/utils/Logger';
 
 class EventsController {
 	private static instance: EventsController;
@@ -17,6 +18,7 @@ class EventsController {
 	}
 
 	private constructor() {
+		logger.logVerbose('EventsController initialized');
 		this.listenToDockerEvents();
 	}
 
@@ -29,7 +31,9 @@ class EventsController {
 			write: (chunk) => {
 				try {
 					const dockerEvent: EventMessage = JSON.parse(new TextDecoder().decode(chunk));
-					this.push({ ...this.dockerEventsParser.parseEvent(dockerEvent), id: this.generateId() });
+					const parsedEvent = this.dockerEventsParser.parseEvent(dockerEvent);
+					logger.logVerbose(`Docker event: ${parsedEvent.title} - ${parsedEvent.message}`);
+					this.push({ ...parsedEvent, id: this.generateId() });
 				} catch (err) {
 					// ignore
 				}

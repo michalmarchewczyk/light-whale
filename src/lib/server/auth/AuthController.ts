@@ -2,11 +2,15 @@ import crypto from 'crypto';
 import validator from 'validator';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import { filesManager } from '$lib/server/utils/FilesManager';
+import { logger } from '$lib/server/utils/Logger';
 
 export default class AuthController {
-	constructor(private filesManager: FilesManager) {}
+	constructor(private filesManager: FilesManager) {
+		logger.logVerbose('AuthController initialized');
+	}
 
 	public async setPassword(password: string): Promise<boolean> {
+		logger.logInfo('Setting password');
 		const strength: number = <number>(<unknown>validator.isStrongPassword(password, {
 			minLength: 8,
 			minLowercase: 1,
@@ -16,12 +20,14 @@ export default class AuthController {
 			returnScore: true
 		}));
 		if (strength < 42) {
+			logger.logError('Password is not strong enough');
 			return false;
 		}
 		const salt = crypto.randomBytes(8).toString('hex');
 		const hash = crypto.scryptSync(password, salt, 64).toString('hex');
 		const data = hash + ':' + salt;
 		await filesManager.writeFile('auth/password.txt', data);
+		logger.logInfo('Password set');
 		return true;
 	}
 
@@ -33,10 +39,18 @@ export default class AuthController {
 	}
 
 	public async login(password: string): Promise<boolean> {
-		return await this.checkPassword(password);
+		logger.logInfo('Logging in');
+		const res = await this.checkPassword(password);
+		if (res) {
+			logger.logInfo('Login successful');
+		} else {
+			logger.logError('Login failed');
+		}
+		return res;
 	}
 
 	public async checkPasswordSet(): Promise<boolean> {
+		logger.logVerbose('Checking if password is set');
 		const password = await this.filesManager.readFile('auth/password.txt');
 		return password.length > 0;
 	}

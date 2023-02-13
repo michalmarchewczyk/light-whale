@@ -1,6 +1,7 @@
 import type DockerController from '$lib/server/docker/DockerController';
 import type Status from '$lib/server/status/Status';
 import type NginxManager from '$lib/server/docker/NginxManager';
+import { logger } from '$lib/server/utils/Logger';
 
 export default class StatusController {
 	private controllers: ReadableStreamDefaultController[] = [];
@@ -17,6 +18,7 @@ export default class StatusController {
 	};
 
 	constructor(private dockerController: DockerController, private nginxManager: NginxManager) {
+		logger.logVerbose('StatusController initialized');
 		this.updateStatus();
 		setInterval(() => this.updateStatus(), 500);
 	}

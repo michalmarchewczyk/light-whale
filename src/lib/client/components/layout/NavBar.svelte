@@ -24,7 +24,7 @@
 		<img src={Logotype} class="h-14 absolute top-1" alt="Light-Whale" />
 	</div>
 	<div class="flex-none">
-		<a class="btn btn-square btn-ghost" href="/logout">
+		<a class="btn btn-square btn-ghost" href="/logout" data-sveltekit-preload-data="tap">
 			<LogoutIcon class="h-6 w-6 stroke-2" />
 		</a>
 	</div>

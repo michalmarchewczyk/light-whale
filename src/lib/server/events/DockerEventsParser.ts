@@ -7,7 +7,7 @@ export default class DockerEventsParser {
 		return {
 			time: Number(event.timeNano) / 1000000 || Date.now(),
 			type: 'docker',
-			title: `Docker:  ${event.Type} / ${event.Action}`,
+			title: `Docker: ${event.Type} / ${event.Action}`,
 			message: message
 		};
 	}

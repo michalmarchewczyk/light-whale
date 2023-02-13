@@ -1,7 +1,12 @@
 import { DOCKER_URL } from '$lib/server/config';
 import { exec } from 'child_process';
+import { logger } from '$lib/server/utils/Logger';
 
 export default class DockerController {
+	constructor() {
+		logger.logVerbose('DockerController initialized');
+	}
+
 	public async ping(): Promise<boolean> {
 		try {
 			const res = await fetch(`${DOCKER_URL}/_ping`);
