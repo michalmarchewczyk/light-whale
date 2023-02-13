@@ -20,7 +20,7 @@
 </script>
 
 <ul
-	class="menu menu-compact p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2 max-h-[calc(100%-4rem)] lg:max-h-full"
+	class="menu menu-compact p-4 px-4 overflow-y-auto bg-base-100 w-60 shadow-r-lg lg:shadow-none lg:border-r-2 lg:border-base-300 pb-2 max-h-[calc(100%)] lg:max-h-full"
 >
 	<DrawerMenuItem icon={HomeIcon} path="/" on:click={() => dispatch('navigate')}>
 		Home

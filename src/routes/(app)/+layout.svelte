@@ -23,7 +23,7 @@
 >
 	<NavBar bind:drawerOpen />
 	<NotificationsOverlay />
-	<div class="drawer drawer-mobile flex-1">
+	<div class="drawer drawer-mobile flex-1 h-full">
 		<input bind:checked={drawerOpen} class="drawer-toggle" type="checkbox" />
 		<div class="drawer-content bg-base-200" style="overflow-y: scroll;">
 			<slot />
