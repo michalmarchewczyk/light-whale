@@ -52,10 +52,20 @@ export default class ContainersManager {
 	}
 
 	public async getContainerByName(name: string): Promise<Container | null> {
+		name = name.startsWith('/') ? name : '/' + name;
 		if (!this.containers.find((c) => c.data.name === name)) {
 			await this.getContainers();
 		}
 		return this.containers.find((c) => c.data.name === name) ?? null;
+	}
+
+	public async findContainer(idOrName: string) {
+		const container = await this.getContainer(idOrName);
+		if (container) {
+			return container;
+		}
+		idOrName = idOrName.startsWith('/') ? idOrName : '/' + idOrName;
+		return await this.getContainerByName(idOrName);
 	}
 
 	public async createContainer(imageId: string, name: string, command: string): Promise<boolean> {
