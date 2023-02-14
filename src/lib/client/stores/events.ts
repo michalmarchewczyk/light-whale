@@ -6,7 +6,7 @@ import { invalidate } from '$app/navigation';
 export const events = writable<Event[]>([]);
 
 const refreshDebounce = createDebouncer(async () => {
-	await invalidate('docker');
+	await invalidate('app:docker');
 }, 500);
 
 export const fetchEvents = async () => {

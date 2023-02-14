@@ -11,7 +11,7 @@ export interface ComposeAppData {
 }
 
 export const load = (async ({ depends }) => {
-	depends('docker');
+	depends('app:docker');
 	const containers = await containersManager.getContainersData();
 	const apps: ComposeAppData[] = [];
 	for (const container of containers) {

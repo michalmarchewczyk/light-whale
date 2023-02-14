@@ -38,4 +38,11 @@ export default class Container {
 		});
 		return res.status === 200;
 	}
+
+	async getLogsStream() {
+		const res = await fetch(
+			DOCKER_URL + `/containers/${this.id}/logs?follow=true&stdout=true&stderr=true&timestamps=true`
+		);
+		return res.body;
+	}
 }
