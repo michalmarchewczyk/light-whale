@@ -6,24 +6,34 @@
 	export let neutral = false;
 	export let formaction: string | undefined = undefined;
 	export let type: string | undefined = undefined;
+	export let href: string | undefined = undefined;
 	const dispatch = createEventDispatcher();
 </script>
 
-<button
-	class="btn btn-primary justify-start btn-block text-base px-2 min-h-0 {$$props.class}"
-	class:loading
-	class:btn-disabled={loading || disabled}
-	class:text-neutral-content={(loading || disabled) && neutral}
-	class:bg-neutral-focus={(loading || disabled) && neutral}
-	class:text-opacity-50={(loading || disabled) && neutral}
-	on:click={() => dispatch('click')}
-	{formaction}
-	{type}
->
-	{#if !loading}
+{#if href}
+	<a class="btn btn-primary justify-start btn-block text-base px-2 min-h-0 {$$props.class}" {href}>
 		<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
-	{/if}
-	<span class="mt-[-0.25rem]">
-		<slot />
-	</span>
-</button>
+		<span class="mt-[-0.25rem]">
+			<slot />
+		</span>
+	</a>
+{:else}
+	<button
+		class="btn btn-primary justify-start btn-block text-base px-2 min-h-0 {$$props.class}"
+		class:loading
+		class:btn-disabled={loading || disabled}
+		class:text-neutral-content={(loading || disabled) && neutral}
+		class:bg-neutral-focus={(loading || disabled) && neutral}
+		class:text-opacity-50={(loading || disabled) && neutral}
+		on:click={() => dispatch('click')}
+		{formaction}
+		{type}
+	>
+		{#if !loading}
+			<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
+		{/if}
+		<span class="mt-[-0.25rem]">
+			<slot />
+		</span>
+	</button>
+{/if}

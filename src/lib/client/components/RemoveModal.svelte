@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let label = '';
 	export let name = '';
-	export let remove;
+	export let remove = () => null;
 	export let formaction: string | undefined = undefined;
 	export let open = false;
 </script>
