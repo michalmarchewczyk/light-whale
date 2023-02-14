@@ -1,8 +1,11 @@
 import DockerController from '$lib/server/docker/DockerController';
 import NginxManager from '$lib/server/docker/NginxManager';
 import ContainersManager from '$lib/server/docker/ContainersManager';
+import ContainerFilesReader from '$lib/server/docker/ContainerFilesReader';
 
 export const containersManager = new ContainersManager();
+
+export const containerFilesReader = new ContainerFilesReader();
 
 export const dockerController = new DockerController();
 
