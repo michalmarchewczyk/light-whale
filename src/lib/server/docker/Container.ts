@@ -1,6 +1,8 @@
 import type ContainerData from '$lib/server/docker/ContainerData';
 import { logger, LogType } from '$lib/server/utils/Logger';
 import { DOCKER_URL, LW_NETWORK_NAME } from '$lib/server/config';
+import transformContainerStats from '$lib/server/docker/transformContainerStats';
+import type { ContainerInspectResponse } from '$lib/server/types/docker/api';
 
 export default class Container {
 	constructor(public id: string, public data: ContainerData) {}
@@ -44,5 +46,20 @@ export default class Container {
 			DOCKER_URL + `/containers/${this.id}/logs?follow=true&stdout=true&stderr=true&timestamps=true`
 		);
 		return res.body;
+	}
+
+	async getStatsStream() {
+		const res = await fetch(DOCKER_URL + `/containers/${this.id}/stats?stream=true`);
+		const inspectData = await this.inspect();
+		return res.body?.pipeThrough(transformContainerStats(inspectData));
+	}
+
+	public async inspect(): Promise<ContainerInspectResponse> {
+		logger.log(LogType.Verbose, `Inspecting container with id: ${this.id}`);
+		const res = await fetch(DOCKER_URL + `/containers/${this.id}/json?size=true`);
+		if (res.status !== 200) {
+			return {};
+		}
+		return await res.json().catch(() => ({}));
 	}
 }

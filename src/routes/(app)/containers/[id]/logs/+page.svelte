@@ -9,11 +9,13 @@
 	let scrollContainer;
 
 	let connected = false;
+	const abortController = new AbortController();
 
 	onMount(() => {
 		const interval = setInterval(fetchLogs, 1000);
 		return () => {
 			clearInterval(interval);
+			abortController.abort();
 		};
 	});
 
@@ -44,7 +46,7 @@
 				connected = false;
 			}
 		});
-		fetch(`/api/containers/${data?.container?.id}/logs`)
+		fetch(`/api/containers/${data?.container?.id}/logs`, { signal: abortController.signal })
 			.then((res) => res.body)
 			.then((body) => {
 				if (!body) {
