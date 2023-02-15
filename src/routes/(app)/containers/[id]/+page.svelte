@@ -93,17 +93,18 @@
 	</div>
 </div>
 <div class="card shadow-md bg-base-100 mb-6">
-	<a class="card-body p-6 pt-5 hover:text-primary-focus">
-		<!--		href="/images/{image?.id.substring(7, 19)}"-->
-
+	<a
+		class="card-body p-6 pt-5 hover:text-primary-focus"
+		href="/images/{data.container.imageId.substring(7, 19)}"
+	>
 		<h2 class="card-title text-xl">Image</h2>
 		<!--		<p>-->
 		<!--			Name:-->
 		<!--			<span class="font-bold">{image?.tags.join(',')}</span>-->
 		<!--		</p>-->
-		<!--		<p>-->
-		<!--			ID:-->
-		<!--			<span class="font-bold">{container?.imageId}</span>-->
-		<!--		</p>-->
+		<p>
+			ID:
+			<span class="font-bold">{data.container?.imageId}</span>
+		</p>
 	</a>
 </div>

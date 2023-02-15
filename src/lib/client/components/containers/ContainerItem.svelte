@@ -44,11 +44,11 @@
 		<ItemInfo icon={CalendarIcon}>
 			{new Date(container.created).toLocaleDateString()}
 		</ItemInfo>
-		<!--		<a href="/images/{image?.id.substring(7, 19)}" class="hover:text-primary-focus">-->
-		<!--			<ItemInfo icon={DiscIcon}>-->
-		<!--				{image?.tags.join(',')}-->
-		<!--			</ItemInfo>-->
-		<!--		</a>-->
+		<a href="/images/{container.imageId.substring(7, 19)}" class="hover:text-primary-focus">
+			<ItemInfo icon={DiscIcon}>
+				{container.imageId.substring(7, 19)}
+			</ItemInfo>
+		</a>
 		<ItemInfo icon={CommandLineIcon}>
 			{container.command}
 		</ItemInfo>
