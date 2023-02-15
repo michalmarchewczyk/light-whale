@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type ContainerData from '$lib/server/docker/ContainerData';
 	import { onMount } from 'svelte';
+	import Convert from 'ansi-to-html';
+	const convert = new Convert();
 
 	export let data: { container: ContainerData };
 
@@ -35,7 +37,8 @@
 				connected = true;
 				const chunkStr = new TextDecoder().decode(chunk);
 				const strings = chunkStr.split('\n').filter((str) => str);
-				logs = [...logs, ...strings];
+				const newLogs = strings.map((s) => convert.toHtml(s.slice(39)));
+				logs = [...logs, ...newLogs];
 				setTimeout(() => {
 					if (scrollContainer) {
 						scrollContainer.scrollTop = logs.length * 100;
@@ -62,14 +65,18 @@
 
 <div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
 	<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">Container logs</span>
-	<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
-		<div class="w-max">
+	<div
+		class="overflow-scroll whitespace-pre font-mono bg-base-300 font-medium"
+		bind:this={scrollContainer}
+		data-theme="default-dark"
+	>
+		<div class="w-max w-full">
 			{#each logs as log, i}
 				<p
-					class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content"
+					class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content bg-opacity-40"
 					class:bg-base-200={i % 2 === 0}
 				>
-					{log.slice(8).trim()}
+					{@html log}
 				</p>
 			{/each}
 		</div>
