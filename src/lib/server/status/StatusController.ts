@@ -52,16 +52,12 @@ export default class StatusController {
 			}
 		}
 		const lwNetwork = await this.nginxManager.checkLwNetwork();
+		const lwNginxContainer = await this.nginxManager.checkLwNginxContainer();
 		this.status = {
 			dockerRunning,
 			dockerPing,
 			lwNetwork,
-			lwNginxContainer: {
-				running: false,
-				connected: false,
-				ports: false,
-				restartPolicy: false
-			}
+			lwNginxContainer
 		};
 		this.controllers.forEach((c) => c.enqueue(JSON.stringify(this.status) + '\n'));
 	}

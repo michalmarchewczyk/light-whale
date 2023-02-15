@@ -42,6 +42,12 @@ export default class FilesManager {
 		await file.writeFile(data);
 		await file.close();
 	}
+
+	async getAbsPath(filePath: string): Promise<string> {
+		const file = await this.accessFile(filePath);
+		await file.close();
+		return path.join(this.lwDirPath, filePath);
+	}
 }
 
 export const filesManager = FilesManager.getInstance();

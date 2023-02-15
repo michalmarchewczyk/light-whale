@@ -4,8 +4,8 @@ import { redirect } from '@sveltejs/kit';
 import { nginxManager } from '$lib/server/docker';
 
 export const load = (async () => {
-	const { lwNetwork } = await statusController.getCurrentStatus();
-	if (lwNetwork) {
+	const { lwNetwork, lwNginxContainer } = await statusController.getCurrentStatus();
+	if (lwNetwork && lwNginxContainer.running && lwNginxContainer.connected) {
 		throw redirect(307, '/setup/dns');
 	}
 }) satisfies PageServerLoad;
@@ -13,6 +13,7 @@ export const load = (async () => {
 export const actions = {
 	default: async () => {
 		await nginxManager.createLwNetwork();
+		await nginxManager.createLwNginxContainer();
 		await statusController.updateStatus();
 	}
 } satisfies Actions;
