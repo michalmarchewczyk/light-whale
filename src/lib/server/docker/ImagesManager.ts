@@ -25,7 +25,7 @@ export default class ImagesManager {
 
 	public async getImagesData(): Promise<ImageData[]> {
 		const images = await this.getImages();
-		return images.map((c) => c.data);
+		return images.map((i) => i.data);
 	}
 
 	private createImageFromSummary(summary: ImageSummary): Image {
@@ -40,9 +40,12 @@ export default class ImagesManager {
 	}
 
 	public async getImage(id: string): Promise<Image | null> {
-		if (!this.images.find((c) => c.id === id)) {
+		if (!id.startsWith('sha256:')) {
+			id = `sha256:${id}`;
+		}
+		if (!this.images.find((i) => i.id.startsWith(id))) {
 			await this.getImages();
 		}
-		return this.images.find((c) => c.id === id) ?? null;
+		return this.images.find((i) => i.id.startsWith(id)) ?? null;
 	}
 }

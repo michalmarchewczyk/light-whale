@@ -78,4 +78,9 @@ export default class ContainersManager {
 		});
 		return res.status === 201;
 	}
+
+	public async getContainersByImageId(imageId: string): Promise<Container[]> {
+		const containers = await this.getContainers();
+		return containers.filter((c) => c.data.imageId === imageId);
+	}
 }
