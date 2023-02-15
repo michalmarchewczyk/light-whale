@@ -51,7 +51,11 @@ export default class ContainerFilesReader {
 	public async readPath(container: Container, path: string): Promise<File[] | string> {
 		logger.log(LogType.Info, `Read path: ${path} from container with id: ${container.id}`);
 		const catRes = await container.exec(`cat ${path}`);
-		if (catRes && catRes.trim() !== 'cat: read error: Is a directory') {
+		if (
+			catRes &&
+			catRes.trim() !== 'cat: read error: Is a directory' &&
+			catRes.trim() !== `cat: ${path}: Is a directory`
+		) {
 			logger.log(LogType.Info, `Read file: ${path} from container with id: ${container.id}`);
 			return catRes.replaceAll('\r\r\n', '\r\n');
 		}
