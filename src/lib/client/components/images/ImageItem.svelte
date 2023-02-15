@@ -59,7 +59,7 @@
 		<ActionButton
 			icon={PlusIcon}
 			{loading}
-			href="/images/{shortId}/new"
+			href="/images/{shortId}/create"
 			class="w-28 h-8 md:h-12 md:w-24 md:mr-2"
 		>
 			New

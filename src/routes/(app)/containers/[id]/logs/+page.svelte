@@ -61,9 +61,7 @@
 </script>
 
 <div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">
-	<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0"
-		>Container logs {connected ? 'true' : 'false'}</span
-	>
+	<span class="mx-0 p-3 px-5 font-bold text-lg pb-3 border-b-2 mb-0">Container logs</span>
 	<div class="overflow-scroll whitespace-pre font-mono bg-base-100" bind:this={scrollContainer}>
 		<div class="w-max">
 			{#each logs as log, i}
