@@ -48,4 +48,12 @@ export default class ImagesManager {
 		}
 		return this.images.find((i) => i.id.startsWith(id)) ?? null;
 	}
+
+	public async pullImage(image: string, tag: string): Promise<boolean> {
+		logger.logInfo(`Pulling image ${image}:${tag}`);
+		const res = await fetch(`${DOCKER_URL}/images/create?fromImage=${image}&tag=${tag}`, {
+			method: 'POST'
+		});
+		return res.status === 200;
+	}
 }
