@@ -3,7 +3,7 @@ import { logger } from '$lib/server/utils/Logger';
 import type ContainersManager from '$lib/server/docker/ContainersManager';
 import type Status from '$lib/server/status/Status';
 import type FilesManager from '$lib/server/utils/FilesManager';
-import defaultConfig from '$lib/server/docker/templates/default.conf?raw';
+import defaultConfig from '$lib/server/templates/default.conf?raw';
 
 export default class NginxManager {
 	constructor(private containersManager: ContainersManager, private filesManager: FilesManager) {

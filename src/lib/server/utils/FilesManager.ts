@@ -23,24 +23,55 @@ export default class FilesManager {
 		await fs.mkdir(this.lwDirPath, { recursive: true });
 	}
 
-	private async accessFile(filePath: string): Promise<fs.FileHandle> {
+	private async accessFile(filePath: string, flag = 'a+'): Promise<fs.FileHandle> {
 		const absPath = path.join(this.lwDirPath, filePath);
 		await fs.mkdir(path.dirname(absPath), { recursive: true });
-		await fs.writeFile(absPath, '', { flag: 'a' });
-		return fs.open(absPath, 'a+');
+		await fs.writeFile(absPath, '', { flag: 'a', encoding: 'utf-8' });
+		return fs.open(absPath, flag);
+	}
+
+	private async accessDir(dirPath: string) {
+		const absPath = path.join(this.lwDirPath, dirPath);
+		await fs.mkdir(absPath, { recursive: true });
+		return fs.opendir(absPath);
 	}
 
 	async readFile(filePath: string): Promise<string> {
 		const file = await this.accessFile(filePath);
-		const data = await file.readFile();
+		const data = await file.readFile({ encoding: 'utf-8' });
 		await file.close();
 		return data.toString();
 	}
 
-	async writeFile(filePath: string, data: string): Promise<void> {
-		const file = await this.accessFile(filePath);
-		await file.writeFile(data);
+	async writeFile(filePath: string, data: string, clear = false): Promise<void> {
+		const file = await this.accessFile(filePath, clear ? 'w+' : 'a+');
+		await file.writeFile(data, { encoding: 'utf-8' });
 		await file.close();
+	}
+
+	async removeFile(filePath: string): Promise<void> {
+		const file = await this.accessFile(filePath);
+		await file.close();
+		await fs.unlink(path.join(this.lwDirPath, filePath));
+	}
+
+	async readDir(dirPath: string): Promise<string[]> {
+		const dir = await this.accessDir(dirPath);
+		const files: string[] = [];
+		for await (const dirent of dir) {
+			files.push(dirent.name);
+		}
+		await dir.close();
+		return files;
+	}
+
+	async readDirFiles(dirPath: string): Promise<string[]> {
+		const files = await this.accessDir(dirPath);
+		const fileNames: string[] = [];
+		for await (const dirent of files) {
+			fileNames.push(dirent.name);
+		}
+		return await Promise.all(fileNames.map((file) => this.readFile(path.join(dirPath, file))));
 	}
 
 	async getAbsPath(filePath: string): Promise<string> {
