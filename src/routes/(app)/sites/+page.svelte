@@ -14,6 +14,12 @@
 
 	let onlineCount = 0;
 
+	$: onlineCount = data?.sites.filter(
+		(s) =>
+			!s.paused &&
+			data?.containers?.find((c) => c.id.startsWith(s.containerId))?.state === 'running'
+	).length;
+
 	let filteredSites: SiteData[] = [];
 
 	$: {
@@ -57,7 +63,7 @@
 </div>
 <div class="p-8 pt-2">
 	{#each filteredSites as site}
-		<SiteItem {site} container={data.containers.find((c) => site.containerId === c.id)} />
+		<SiteItem {site} container={data.containers.find((c) => c.id.startsWith(site.containerId))} />
 	{:else}
 		<p class="w-full text-center text-3xl pt-12 opacity-50">No sites</p>
 	{/each}

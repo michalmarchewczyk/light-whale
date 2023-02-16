@@ -99,4 +99,13 @@ export default class NginxManager {
 		}
 		return true;
 	}
+
+	public async reload(): Promise<boolean> {
+		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
+		if (!container) {
+			return false;
+		}
+		await container.exec('nginx -s reload');
+		return true;
+	}
 }

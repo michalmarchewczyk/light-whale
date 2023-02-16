@@ -3,6 +3,7 @@ import Site from '$lib/server/sites/Site';
 import { logger } from '$lib/server/utils/Logger';
 import { EOL } from 'os';
 import type SiteData from '$lib/server/sites/SiteData';
+import crypto from 'crypto';
 
 export default class SitesManager {
 	private sites: Site[] = [];
@@ -54,5 +55,31 @@ export default class SitesManager {
 	public async removeSite(site: Site): Promise<void> {
 		await site.remove();
 		this.sites = this.sites.filter((s) => s.id !== site.id);
+	}
+
+	public async getSitesByContainerId(containerId: string): Promise<Site[]> {
+		await this.getSites();
+		return this.sites.filter((s) => containerId.startsWith(s.data.containerId));
+	}
+
+	public async createSite(containerId: string, domain: string, port: number) {
+		if (await this.getSiteByDomain(domain)) {
+			return false;
+		}
+		const siteData: SiteData = {
+			id: this.generateSiteId(),
+			containerId,
+			containerPort: port,
+			domain,
+			paused: false,
+			created: new Date()
+		};
+		const site = new Site(siteData.id, siteData, this.filesManager);
+		this.sites.push(site);
+		return true;
+	}
+
+	private generateSiteId(): string {
+		return crypto.randomBytes(6).toString('hex');
 	}
 }

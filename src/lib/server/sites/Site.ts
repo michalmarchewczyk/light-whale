@@ -3,7 +3,9 @@ import type FilesManager from '$lib/server/utils/FilesManager';
 import siteConfigTemplate from '$lib/server/templates/site.conf?raw';
 
 export default class Site {
-	constructor(public id: string, public data: SiteData, private filesManager: FilesManager) {}
+	constructor(public id: string, public data: SiteData, private filesManager: FilesManager) {
+		this.saveFile();
+	}
 
 	public async pause() {
 		this.data.paused = true;
@@ -18,7 +20,7 @@ export default class Site {
 	private async saveFile() {
 		const newContent = siteConfigTemplate
 			.replaceAll('[site_id]', this.id)
-			.replaceAll('[container_id]', this.data.containerId)
+			.replaceAll('[container_id]', this.data.containerId.substring(0, 12))
 			.replaceAll('[container_port]', this.data.containerPort.toString())
 			.replaceAll('[domain]', this.data.domain)
 			.replaceAll('[paused]', this.data.paused.toString())

@@ -39,11 +39,11 @@ export const actions = {
 		const containers: Container[] = [];
 		for (const containerId of containerIds) {
 			if (!containerId || typeof containerId !== 'string') {
-				throw fail(400, { message: 'Invalid container id' });
+				return fail(400, { message: 'Invalid container id' });
 			}
 			const container = await containersManager.getContainer(containerId);
 			if (!container) {
-				throw fail(404, { message: 'Container not found' });
+				return fail(404, { message: 'Container not found' });
 			}
 			containers.push(container);
 		}
@@ -55,11 +55,11 @@ export const actions = {
 		const containers: Container[] = [];
 		for (const containerId of containerIds) {
 			if (!containerId || typeof containerId !== 'string') {
-				throw fail(400, { message: 'Invalid container id' });
+				return fail(400, { message: 'Invalid container id' });
 			}
 			const container = await containersManager.getContainer(containerId);
 			if (!container) {
-				throw fail(404, { message: 'Container not found' });
+				return fail(404, { message: 'Container not found' });
 			}
 			containers.push(container);
 		}
@@ -71,11 +71,11 @@ export const actions = {
 		const containers: Container[] = [];
 		for (const containerId of containerIds) {
 			if (!containerId || typeof containerId !== 'string') {
-				throw fail(400, { message: 'Invalid container id' });
+				return fail(400, { message: 'Invalid container id' });
 			}
 			const container = await containersManager.getContainer(containerId);
 			if (!container) {
-				throw fail(404, { message: 'Container not found' });
+				return fail(404, { message: 'Container not found' });
 			}
 			containers.push(container);
 		}
@@ -87,11 +87,11 @@ export const actions = {
 		const containers: Container[] = [];
 		for (const containerId of containerIds) {
 			if (!containerId || typeof containerId !== 'string') {
-				throw fail(400, { message: 'Invalid container id' });
+				return fail(400, { message: 'Invalid container id' });
 			}
 			const container = await containersManager.getContainer(containerId);
 			if (!container) {
-				throw fail(404, { message: 'Container not found' });
+				return fail(404, { message: 'Container not found' });
 			}
 			containers.push(container);
 		}

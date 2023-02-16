@@ -16,9 +16,9 @@
 
 	export let site: SiteData;
 
-	export let container: ContainerData | undefined = undefined;
+	export let container: ContainerData;
 
-	let online = false;
+	$: online = !site?.paused && container?.state === 'running';
 
 	let loading = false;
 
