@@ -54,7 +54,7 @@
 		</ItemInfo>
 	</div>
 	<form
-		class="block w-32 overflow-hidden flex-shrink-0"
+		class="block w-32 overflow-visible flex-shrink-0"
 		method="POST"
 		use:enhance={() => {
 			loading = true;

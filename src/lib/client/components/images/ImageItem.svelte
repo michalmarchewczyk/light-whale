@@ -46,7 +46,7 @@
 		</ItemInfo>
 	</div>
 	<form
-		class="block w-28 md:w-56 overflow-hidden flex-shrink-0 self-center"
+		class="block w-28 md:w-56 overflow-visible flex-shrink-0 self-center"
 		method="POST"
 		use:enhance={() => {
 			loading = true;

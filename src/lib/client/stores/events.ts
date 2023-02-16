@@ -42,8 +42,18 @@ export const fetchEvents = async () => {
 const filterOutOldEvents = () => {
 	const now = Date.now();
 	events.update((events) => {
-		return events.filter((event) => now - event.time < 1000 * 10);
+		return events.filter((event) => now - event.time < 1000 * 59);
 	});
+};
+
+export const removeEvent = (event: Event) => {
+	events.update((events) => {
+		return events.filter((e) => e !== event);
+	});
+};
+
+export const clearEvents = () => {
+	events.set([]);
 };
 
 setInterval(filterOutOldEvents, 200);
