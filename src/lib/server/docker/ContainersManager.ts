@@ -45,10 +45,10 @@ export default class ContainersManager {
 	}
 
 	public async getContainer(id: string): Promise<Container | null> {
-		if (!this.containers.find((c) => c.id === id)) {
+		if (!this.containers.find((c) => c.id.startsWith(id))) {
 			await this.getContainers();
 		}
-		return this.containers.find((c) => c.id === id) ?? null;
+		return this.containers.find((c) => c.id.startsWith(id)) ?? null;
 	}
 
 	public async getContainerByName(name: string): Promise<Container | null> {
