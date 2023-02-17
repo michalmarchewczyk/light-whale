@@ -1,4 +1,4 @@
-import { authController, sessionManager } from '$lib/server/auth';
+import { authController, sessionManager, tokensManager } from '$lib/server/auth';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -25,6 +25,7 @@ export const actions = {
 		}
 		const sessionId = sessionManager.createSession();
 		cookies.set('sessionId', sessionId.id);
+		await tokensManager.initialize(password);
 		redirect(307, '/');
 	}
 } satisfies Actions;

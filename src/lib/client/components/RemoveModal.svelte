@@ -1,9 +1,14 @@
 <script lang="ts">
+	import FormPassword from '$lib/client/components/forms/FormPassword.svelte';
+
 	export let label = '';
 	export let name = '';
 	export let remove = () => null;
 	export let formaction: string | undefined = undefined;
 	export let open = false;
+	export let confirmPassword = false;
+
+	let password = '';
 </script>
 
 <input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={open} />
@@ -12,6 +17,9 @@
 		<p>
 			Do you really want to remove {label}
 			<span class="font-bold">{name}</span> ?
+			{#if confirmPassword}
+				<FormPassword name="password" label="Confirm password" class="mt-4" bind:value={password} />
+			{/if}
 		</p>
 		<div class="modal-action">
 			<button
@@ -21,6 +29,7 @@
 					remove();
 				}}
 				{formaction}
+				disabled={confirmPassword && !password}
 			>
 				Remove
 			</button>

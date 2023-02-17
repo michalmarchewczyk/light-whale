@@ -49,6 +49,17 @@ export default class AuthController {
 		return res;
 	}
 
+	public async confirmPassword(password: string): Promise<boolean> {
+		logger.logInfo('Confirming password');
+		const res = await this.checkPassword(password);
+		if (res) {
+			logger.logInfo('Password confirmed');
+		} else {
+			logger.logError('Password confirmation failed');
+		}
+		return res;
+	}
+
 	public async checkPasswordSet(): Promise<boolean> {
 		logger.logVerbose('Checking if password is set');
 		const password = await this.filesManager.readFile('auth/password.txt');
