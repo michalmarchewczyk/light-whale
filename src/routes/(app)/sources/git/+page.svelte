@@ -2,22 +2,21 @@
 	import type GitServiceRepo from '$lib/server/sources/git/GitServiceRepo';
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 	import RepoRemoteItem from '$lib/client/components/sources/RepoRemoteItem.svelte';
+	import type Repo from '$lib/server/sources/git/Repo';
+	import RepoSourceItem from '$lib/client/components/sources/RepoSourceItem.svelte';
 
-	export let data: { remoteRepos: GitServiceRepo[] };
-
-	let items: string[] = [];
+	export let data: { remoteRepos: GitServiceRepo[]; localRepos: Repo[] };
 </script>
 
 <div class="max-w-5xl mx-auto text-base-content">
 	<ListHeader
 		title="Sources / Git"
-		badge="{items.length} downloaded repos / {data.remoteRepos.length} remote repos"
+		badge="{data.localRepos.length} downloaded repos / {data.remoteRepos.length} remote repos"
 	/>
 	<div class="p-8 pt-2">
 		<!--    <RepoPullForm fetchItems={() => fetchItems()}/>-->
-		{#each items as item}
-			<!--      <RepoSourceItem repo={item}/>-->
-			<div>{item}</div>
+		{#each data?.localRepos as repo}
+			<RepoSourceItem {repo} />
 		{:else}
 			<p class="w-full text-center text-3xl p-4 opacity-50">No repositories pulled</p>
 		{/each}

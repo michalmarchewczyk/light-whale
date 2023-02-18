@@ -68,7 +68,9 @@ export default class FilesManager {
 		const files = await this.accessDir(dirPath);
 		const fileNames: string[] = [];
 		for await (const dirent of files) {
-			fileNames.push(dirent.name);
+			if (dirent.isFile()) {
+				fileNames.push(dirent.name);
+			}
 		}
 		return await Promise.all(fileNames.map((file) => this.readFile(path.join(dirPath, file))));
 	}

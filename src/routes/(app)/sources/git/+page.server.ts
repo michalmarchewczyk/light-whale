@@ -4,8 +4,10 @@ import { fail } from '@sveltejs/kit';
 
 export const load = (async () => {
 	const remoteRepos = await gitServicesController.listAllRepos();
+	const localRepos = await reposManager.listRepos();
 	return {
-		remoteRepos
+		remoteRepos,
+		localRepos
 	};
 }) satisfies PageServerLoad;
 

@@ -95,3 +95,9 @@
 		</ActionButton>
 	</form>
 </div>
+
+<style lang="scss">
+	img:not([src]) {
+		visibility: hidden;
+	}
+</style>

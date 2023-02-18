@@ -16,4 +16,10 @@ export const gitServicesController = new GitServicesController([githubService]);
 
 export const repoAnalyzer = new RepoAnalyzer(git);
 
-export const reposManager = new ReposManager(git, filesManager, tokensManager, repoAnalyzer);
+export const reposManager = new ReposManager(
+	git,
+	filesManager,
+	tokensManager,
+	repoAnalyzer,
+	gitServicesController
+);

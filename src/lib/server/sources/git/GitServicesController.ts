@@ -33,4 +33,9 @@ export default class GitServicesController {
 		const repos = await this.listAllRepos();
 		return repos.find((r) => r.remoteUrl === remoteUrl) ?? null;
 	}
+
+	public async getTokenById(tokenId: string): Promise<GitServiceToken | null> {
+		const tokens = await this.listAllTokens();
+		return tokens.find((t) => t.id === tokenId) ?? null;
+	}
 }
