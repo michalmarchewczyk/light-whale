@@ -4,6 +4,7 @@
 	import RepoRemoteItem from '$lib/client/components/sources/RepoRemoteItem.svelte';
 	import type Repo from '$lib/server/sources/git/Repo';
 	import RepoSourceItem from '$lib/client/components/sources/RepoSourceItem.svelte';
+	import RepoPullForm from '$lib/client/components/sources/RepoPullForm.svelte';
 
 	export let data: { remoteRepos: GitServiceRepo[]; localRepos: Repo[] };
 </script>
@@ -14,7 +15,7 @@
 		badge="{data.localRepos.length} downloaded repos / {data.remoteRepos.length} remote repos"
 	/>
 	<div class="p-8 pt-2">
-		<!--    <RepoPullForm fetchItems={() => fetchItems()}/>-->
+		<RepoPullForm />
 		{#each data?.localRepos as repo}
 			<RepoSourceItem {repo} />
 		{:else}
