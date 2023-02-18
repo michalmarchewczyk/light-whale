@@ -61,7 +61,6 @@ export default class FilesManager {
 		for await (const dirent of dir) {
 			files.push(dirent.name);
 		}
-		await dir.close();
 		return files;
 	}
 

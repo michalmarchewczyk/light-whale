@@ -9,6 +9,7 @@
 	import EyeIcon from '$icons/eye.svg';
 	import EyeOffIcon from '$icons/eye-slash.svg';
 	import CalendarIcon from '$icons/calendar.svg';
+	import { enhance } from '$app/forms';
 
 	export let repo: GitServiceRepo;
 	let topLangSrc = '';
@@ -76,9 +77,21 @@
 	<div class="block w-20 flex-0 overflow-hidden mr-2 sm:mr-6  flex items-middle">
 		<GithubIcon class="w-20 my-auto" />
 	</div>
-	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
+	<form
+		class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center"
+		method="POST"
+		use:enhance={() => {
+			loading = true;
+			return ({ update }) => {
+				loading = false;
+				update();
+			};
+		}}
+		action="/sources/git?/pull"
+	>
+		<input type="hidden" name="remoteUrl" bind:value={repo.remoteUrl} />
 		<ActionButton icon={DownloadIcon} {loading} class="w-28 h-8 md:h-12 md:w-28 md:mr-2">
 			Pull
 		</ActionButton>
-	</div>
+	</form>
 </div>

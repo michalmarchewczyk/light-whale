@@ -28,4 +28,9 @@ export default class GitServicesController {
 		});
 		return repos;
 	}
+
+	public async getRepoByRemoteUrl(remoteUrl: string): Promise<GitServiceRepo | null> {
+		const repos = await this.listAllRepos();
+		return repos.find((r) => r.remoteUrl === remoteUrl) ?? null;
+	}
 }
