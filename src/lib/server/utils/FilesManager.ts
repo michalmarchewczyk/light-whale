@@ -80,6 +80,13 @@ export default class FilesManager {
 		await file.close();
 		return path.join(this.lwDirPath, filePath);
 	}
+
+	async getFileStat(filePath: string) {
+		const file = await this.accessFile(filePath);
+		const stat = await file.stat();
+		await file.close();
+		return stat;
+	}
 }
 
 export const filesManager = FilesManager.getInstance();

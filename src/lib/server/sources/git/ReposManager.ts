@@ -99,4 +99,9 @@ export default class ReposManager {
 		}
 		return repos;
 	}
+
+	public async getRepoByUrl(url: string): Promise<Repo | null> {
+		const repos = await this.listRepos();
+		return repos.find((repo) => repo.gitInfo.remoteUrl === url) ?? null;
+	}
 }
