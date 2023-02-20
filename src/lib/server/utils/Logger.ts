@@ -18,7 +18,9 @@ class Logger {
 	private static instance: Logger;
 	private filePath = '';
 	private logs: Log[] = [];
+	private logsStrings: string[] = [];
 	private lastTime = 0;
+	private controllers: ReadableStreamDefaultController[] = [];
 
 	public static getInstance(): Logger {
 		if (!Logger.instance) {
@@ -52,12 +54,16 @@ class Logger {
 		}
 		this.logs.push({ type, msg, date });
 		const log = `[${date.toISOString()}][+${dateDiff / 1000}] (${type}) ${msg}`;
+		this.logsStrings.push(log);
 		this.filesManager.writeFile(this.filePath, log + '\n').then(() => {
 			if (type === LogType.Verbose) {
 				return;
 			}
 			// eslint-disable-next-line no-console
 			console.log('LW-Logger:', log);
+		});
+		this.controllers.forEach((controller) => {
+			controller.enqueue(log + '\n');
 		});
 	}
 
@@ -79,6 +85,23 @@ class Logger {
 
 	public get(): Log[] {
 		return this.logs;
+	}
+
+	public getLogs(): string[] {
+		return this.logsStrings;
+	}
+
+	getReadableStream() {
+		let savedController: ReadableStreamDefaultController;
+		return new ReadableStream({
+			start: (controller) => {
+				savedController = controller;
+				this.controllers.push(controller);
+			},
+			cancel: () => {
+				this.controllers = this.controllers.filter((c) => c !== savedController);
+			}
+		});
 	}
 }
 

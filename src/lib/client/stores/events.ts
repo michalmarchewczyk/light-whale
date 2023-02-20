@@ -42,7 +42,7 @@ export const fetchEvents = async () => {
 const filterOutOldEvents = () => {
 	const now = Date.now();
 	events.update((events) => {
-		return events.filter((event) => now - event.time < 1000 * 59);
+		return events.filter((event) => now - event.time < 1000 * 5);
 	});
 };
 
