@@ -8,8 +8,8 @@
 	import CommitIcon from '$lib/client/assets/icons/commit.svg';
 	import CubeIcon from '$icons/cube.svg';
 	import CubeTransparentIcon from '$icons/cube-transparent.svg';
-	// import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 	import type Repo from '$lib/server/sources/git/Repo';
+	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 
 	export let repo: Repo;
 
@@ -92,8 +92,8 @@
 		>
 			{isComposeFile ? 'Create' : 'Build'}
 		</ActionButton>
-		<!--		<RepoBuildModal bind:open {repo} />-->
-		<!--		<ActionButton icon={DownloadIcon} loading={loading} class="w-28 h-8 md:h-10 md:w-28 md:mr-2 mt-2">-->
+		<RepoBuildModal bind:open {repo} />
+		<!--		<ActionButton icon={DownloadIcon} {loading} class="w-28 h-8 md:h-10 md:w-28 md:mr-2 mt-2">-->
 		<!--			Pull-->
 		<!--		</ActionButton>-->
 	</div>

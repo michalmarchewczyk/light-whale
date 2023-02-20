@@ -6,6 +6,7 @@ import { filesManager } from '$lib/server/utils/FilesManager';
 import RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
 import simpleGit from 'simple-git';
 import RepoFilesReader from '$lib/server/sources/git/RepoFilesReader';
+import RepoBuilder from '$lib/server/sources/git/RepoBuilder';
 
 const git = simpleGit({
 	binary: 'git'
@@ -26,3 +27,5 @@ export const reposManager = new ReposManager(
 );
 
 export const repoFilesReader = new RepoFilesReader(filesManager);
+
+export const repoBuilder = new RepoBuilder(filesManager);
