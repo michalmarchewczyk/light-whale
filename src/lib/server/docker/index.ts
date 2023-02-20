@@ -13,4 +13,4 @@ export const imagesManager = new ImagesManager();
 
 export const dockerController = new DockerController();
 
-export const nginxManager = new NginxManager(containersManager, filesManager);
+export const nginxManager = new NginxManager(containersManager, imagesManager, filesManager);

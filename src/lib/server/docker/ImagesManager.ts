@@ -49,11 +49,15 @@ export default class ImagesManager {
 		return this.images.find((i) => i.id.startsWith(id)) ?? null;
 	}
 
-	public async pullImage(image: string, tag: string): Promise<boolean> {
+	public async pullImage(image: string, tag: string, wait = false): Promise<boolean> {
 		logger.logInfo(`Pulling image ${image}:${tag}`);
 		const res = await fetch(`${DOCKER_URL}/images/create?fromImage=${image}&tag=${tag}`, {
 			method: 'POST'
 		});
+		if (wait) {
+			await res.text();
+			return res.status === 200;
+		}
 		return res.status === 200;
 	}
 }

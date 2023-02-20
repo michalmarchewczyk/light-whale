@@ -4,9 +4,14 @@ import type ContainersManager from '$lib/server/docker/ContainersManager';
 import type Status from '$lib/server/status/Status';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import defaultConfig from '$lib/server/templates/default.conf?raw';
+import type ImagesManager from '$lib/server/docker/ImagesManager';
 
 export default class NginxManager {
-	constructor(private containersManager: ContainersManager, private filesManager: FilesManager) {
+	constructor(
+		private containersManager: ContainersManager,
+		private imagesManager: ImagesManager,
+		private filesManager: FilesManager
+	) {
 		logger.logVerbose('NginxManager initialized');
 	}
 	public async checkLwNetwork(): Promise<boolean> {
@@ -60,6 +65,7 @@ export default class NginxManager {
 		logger.logInfo('Creating LW container');
 		await this.filesManager.writeFile('sites/default.conf', defaultConfig);
 		const sitesPath = await this.filesManager.getAbsPath('sites/');
+		await this.imagesManager.pullImage('nginx', 'latest', true);
 		const res = await fetch(DOCKER_URL + `/containers/create?name=${LW_NGINX_CONTAINER_NAME}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
