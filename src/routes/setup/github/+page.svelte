@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+
 	let pat = '';
 	let description = '';
 	let loading = false;
@@ -30,14 +32,24 @@
 	with <span class="font-bold">repo</span> permissions.
 </p>
 <br />
-<form>
-	<span class="text-lg font-semibold mb-4 block">Add PAT</span>
+<form
+	method="POST"
+	use:enhance={() => {
+		loading = true;
+		return ({ update }) => {
+			loading = false;
+			update();
+		};
+	}}
+>
+	<span class="text-lg font-semibold mb-4 block">Add Token</span>
 	<div class="flex space-x-4">
 		<label class="input-group flex-1">
 			<span>Token: </span>
 			<input
 				bind:value={pat}
 				type="text"
+				name="pat"
 				placeholder="token"
 				class="input input-bordered text-base w-full"
 			/>
@@ -47,18 +59,21 @@
 			<input
 				bind:value={description}
 				type="text"
-				placeholder="token"
+				name="description"
+				placeholder="description"
 				class="input input-bordered text-base w-full"
 			/>
 		</label>
 	</div>
-</form>
-<div class="flex-row-reverse card-actions justify-between self-end bottom-0 mt-8">
-	<div>
-		<button class="btn btn-primary text-base" disabled={!pat || loading} class:loading>Next</button>
+	<div class="flex-row-reverse card-actions justify-between self-end bottom-0 mt-8">
+		<div>
+			<button class="btn btn-primary text-base" disabled={!pat || loading} class:loading
+				>Next</button
+			>
+		</div>
+		<a class="btn btn-primary text-base" href="/setup/password">Skip</a>
 	</div>
-	<a class="btn btn-primary text-base" href="/setup/password">Skip</a>
-</div>
+</form>
 
 <style lang="scss">
 </style>

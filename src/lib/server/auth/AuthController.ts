@@ -5,8 +5,24 @@ import { filesManager } from '$lib/server/utils/FilesManager';
 import { logger } from '$lib/server/utils/Logger';
 
 export default class AuthController {
+	private tempData: Record<string, string> = {};
+
 	constructor(private filesManager: FilesManager) {
 		logger.logVerbose('AuthController initialized');
+	}
+
+	public async setTempData(key: string, value: string) {
+		if (await this.checkPasswordSet()) {
+			return;
+		}
+		this.tempData[key] = value;
+	}
+
+	public async getTempData(key: string): Promise<string | undefined> {
+		if (await this.checkPasswordSet()) {
+			return;
+		}
+		return this.tempData[key];
 	}
 
 	public async setPassword(password: string): Promise<boolean> {
