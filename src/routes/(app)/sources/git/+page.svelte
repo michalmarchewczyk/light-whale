@@ -9,6 +9,10 @@
 	export let data: { remoteRepos: GitServiceRepo[]; localRepos: Repo[] };
 </script>
 
+<svelte:head>
+	<title>Git Sources - Light-Whale</title>
+</svelte:head>
+
 <div class="max-w-5xl mx-auto text-base-content">
 	<ListHeader
 		title="Sources / Git"

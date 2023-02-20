@@ -11,6 +11,10 @@
 	export let form: ActionData;
 </script>
 
+<svelte:head>
+	<title>Create From Image - Light-Whale</title>
+</svelte:head>
+
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title">Create container</h2>

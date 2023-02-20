@@ -50,6 +50,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Sites - Light-Whale</title>
+</svelte:head>
+
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
 	<ListHeader title="Sites" badge="{onlineCount} / {data.sites.length} online">
 		<SortMenu bind:value={sort} bind:order values={['created', 'name']} class="float-right" />

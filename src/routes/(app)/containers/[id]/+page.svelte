@@ -14,6 +14,10 @@
 	let removeModal = false;
 </script>
 
+<svelte:head>
+	<title>Container - Light-Whale</title>
+</svelte:head>
+
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">State: {data.container?.state.toUpperCase()}</h2>

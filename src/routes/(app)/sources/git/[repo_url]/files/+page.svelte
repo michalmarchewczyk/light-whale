@@ -16,4 +16,8 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Git Repo Files - Light-Whale</title>
+</svelte:head>
+
 <FileBrowser {readPath} />

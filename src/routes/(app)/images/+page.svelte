@@ -43,6 +43,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Images - Light-Whale</title>
+</svelte:head>
+
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
 	<ListHeader title="Images" badge="{usedCount} / {data.images.length} used">
 		<SortMenu

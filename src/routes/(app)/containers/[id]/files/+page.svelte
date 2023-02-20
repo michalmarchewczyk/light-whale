@@ -17,6 +17,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Container Files - Light-Whale</title>
+</svelte:head>
+
 {#if data.container?.state === 'running'}
 	<FileBrowser {readPath} />
 {:else}

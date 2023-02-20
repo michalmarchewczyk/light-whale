@@ -6,6 +6,10 @@
 	export let data: { image: ImageData; imageContainers: ContainerData[] };
 </script>
 
+<svelte:head>
+	<title>Image Containers - Light-Whale</title>
+</svelte:head>
+
 {#each data.imageContainers as container}
 	<ContainerItem {container} />
 {:else}

@@ -58,6 +58,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Container Stats - Light-Whale</title>
+</svelte:head>
+
 {#if data.container?.state === 'running'}
 	<div class="w-full shadow-md bg-base-100 stats grid-cols-3">
 		<StatsCard
