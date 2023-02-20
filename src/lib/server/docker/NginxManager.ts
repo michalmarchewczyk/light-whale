@@ -14,7 +14,8 @@ export default class NginxManager {
 	) {
 		logger.logVerbose('NginxManager initialized');
 	}
-	public async checkLwNetwork(): Promise<boolean> {
+
+	public async checkLwNetwork() {
 		try {
 			const res = await fetch(`${DOCKER_URL}/networks/${LW_NETWORK_NAME}`);
 			return res.status === 200;
@@ -44,7 +45,7 @@ export default class NginxManager {
 		};
 	}
 
-	public async createLwNetwork(): Promise<boolean> {
+	public async createLwNetwork() {
 		logger.logInfo('Creating LW network');
 		const res = await fetch(`${DOCKER_URL}/networks/create`, {
 			method: 'POST',
@@ -58,10 +59,11 @@ export default class NginxManager {
 		if (res.status !== 201 && res.status !== 409) {
 			logger.logError(`Failed to create LW network: ${res.status}`);
 		}
-		return !(res.status !== 201 && res.status !== 409);
+		logger.logInfo('Created LW network');
+		return true;
 	}
 
-	public async createLwNginxContainer(): Promise<boolean> {
+	public async createLwNginxContainer() {
 		logger.logInfo('Creating LW container');
 		await this.filesManager.writeFile('sites/default.conf', defaultConfig);
 		const sitesPath = await this.filesManager.getAbsPath('sites/');
@@ -107,6 +109,7 @@ export default class NginxManager {
 	}
 
 	public async reload(): Promise<boolean> {
+		logger.logInfo('Reloading LW container');
 		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
 		if (!container) {
 			return false;

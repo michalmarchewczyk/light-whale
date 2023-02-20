@@ -12,13 +12,15 @@ export default class AuthController {
 	}
 
 	public async setTempData(key: string, value: string) {
+		logger.logInfo(`Setting temp data with key ${key}`);
 		if (await this.checkPasswordSet()) {
 			return;
 		}
 		this.tempData[key] = value;
 	}
 
-	public async getTempData(key: string): Promise<string | undefined> {
+	public async getTempData(key: string) {
+		logger.logInfo(`Getting temp data with key ${key}`);
 		if (await this.checkPasswordSet()) {
 			return;
 		}

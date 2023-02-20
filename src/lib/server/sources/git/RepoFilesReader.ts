@@ -1,5 +1,6 @@
 import type FilesManager from '$lib/server/utils/FilesManager';
 import type Repo from '$lib/server/sources/git/Repo';
+import { logger } from '$lib/server/utils/Logger';
 
 export interface File {
 	directory: boolean;
@@ -10,9 +11,12 @@ export interface File {
 }
 
 export default class RepoFilesReader {
-	constructor(private filesManager: FilesManager) {}
+	constructor(private filesManager: FilesManager) {
+		logger.logVerbose('RepoFilesReader initialized');
+	}
 
 	public async readPath(repo: Repo, filepath: string): Promise<File[] | string> {
+		logger.logVerbose(`Reading path ${filepath} in repo ${repo.gitInfo.remoteUrl}`);
 		const stat = await this.filesManager.getFileStat(
 			`/sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}/${filepath}`
 		);

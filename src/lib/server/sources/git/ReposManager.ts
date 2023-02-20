@@ -52,6 +52,7 @@ export default class ReposManager {
 		tokenId?: string,
 		service?: string
 	): Promise<Repo | null> {
+		logger.logInfo(`Downloading repo ${remoteUrl}`);
 		const repoDir = `sources/git/${encodeURIComponent(remoteUrl)}`;
 		let pullUrl = remoteUrl;
 		if (tokenId) {
@@ -64,9 +65,11 @@ export default class ReposManager {
 		}
 		const pulled = await this.pullRepo(remoteUrl, pullUrl, repoDir, defaultBranch ?? 'master');
 		if (!pulled) {
+			logger.logError(`Failed to pull repo ${remoteUrl}`);
 			return null;
 		}
 		try {
+			logger.logInfo(`Analyzing repo ${remoteUrl}`);
 			const absPath = await this.filesManager.getAbsPath(repoDir);
 			const gitInfo = await this.repoAnalyzer.getRepoGitInfo(absPath);
 			const dockerInfo = await this.repoAnalyzer.getRepoDockerInfo(absPath);
@@ -84,11 +87,13 @@ export default class ReposManager {
 			);
 			return repoInfo;
 		} catch (e) {
+			logger.logError(`Failed to analyze repo ${remoteUrl}`);
 			return null;
 		}
 	}
 
 	public async listRepos(): Promise<Repo[]> {
+		logger.logVerbose('Listing local repos');
 		const files = await this.filesManager.readDirFiles('sources/git/');
 		const repos: Repo[] = [];
 		for (const file of files) {

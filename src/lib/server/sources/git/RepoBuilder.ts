@@ -4,9 +4,12 @@ import YAML from 'yaml';
 import { exec } from 'child_process';
 import type { ComposeSpecification } from '$lib/server/types/docker/ComposeFile';
 import { LW_NETWORK_NAME } from '$lib/server/config';
+import { logger } from '$lib/server/utils/Logger';
 
 export default class RepoBuilder {
-	constructor(private filesManager: FilesManager) {}
+	constructor(private filesManager: FilesManager) {
+		logger.logVerbose('RepoBuilder initialized');
+	}
 
 	public async buildRepo(
 		repo: Repo,
@@ -14,6 +17,9 @@ export default class RepoBuilder {
 		selectedFile: string,
 		envVariables: Record<string, string>
 	) {
+		logger.logInfo(
+			`Building repo ${repo.gitInfo.remoteUrl} with name ${name} from file ${selectedFile}`
+		);
 		const file = repo.dockerInfo.files.find((f) => f.file === selectedFile);
 		if (!file) {
 			return '';
@@ -31,6 +37,7 @@ export default class RepoBuilder {
 		name: string,
 		selectedFile: string
 	): Promise<string> {
+		logger.logInfo(`Building from Dockerfile ${selectedFile}`);
 		const dockerfilePath = await this.filesManager.getAbsPath(
 			`sources/git/${encodeURIComponent(repoInfo.gitInfo.remoteUrl)}/${selectedFile}`
 		);
@@ -43,8 +50,10 @@ export default class RepoBuilder {
 				{ env: { ...process.env } },
 				(err, data) => {
 					if (err) {
+						logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
 						resolve('');
 					}
+					logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
 					resolve(data);
 				}
 			);
@@ -57,6 +66,7 @@ export default class RepoBuilder {
 		selectedFile: string,
 		envVariables: Record<string, string>
 	): Promise<string> {
+		logger.logInfo(`Building from compose file ${selectedFile}`);
 		const config: ComposeSpecification = YAML.parse(
 			repoInfo.dockerInfo.files.find((file) => file.file === selectedFile)?.content ?? ''
 		);
@@ -92,8 +102,10 @@ export default class RepoBuilder {
 				{ env: { ...process.env, ...envVariables } },
 				(err) => {
 					if (err) {
+						logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
 						resolve(false);
 					}
+					logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
 					resolve(true);
 				}
 			);

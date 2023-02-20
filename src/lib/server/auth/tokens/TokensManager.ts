@@ -70,6 +70,7 @@ export default class TokensManager {
 		};
 		this.tokens.push(newToken);
 		await this.saveTokens(password);
+		logger.logInfo(`Token added for service ${service}`);
 		return true;
 	}
 
@@ -79,14 +80,17 @@ export default class TokensManager {
 		}
 		this.tokens = this.tokens.filter((t) => t.id !== id);
 		await this.saveTokens(password);
+		logger.logInfo(`Token removed with id ${id}`);
 		return true;
 	}
 
 	public getTokensByService(service: string): Token[] {
+		logger.logVerbose(`Getting tokens for service ${service}`);
 		return this.tokens.filter((t) => t.service === service);
 	}
 
 	public getTokenById(id: string): Token | undefined {
+		logger.logVerbose(`Getting token with id ${id}`);
 		return this.tokens.find((t) => t.id === id);
 	}
 }

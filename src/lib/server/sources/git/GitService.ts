@@ -2,17 +2,21 @@ import type GitServiceToken from '$lib/server/sources/git/GitServiceToken';
 import type TokensManager from '$lib/server/auth/tokens/TokensManager';
 import type Token from '$lib/server/auth/tokens/Token';
 import type GitServiceRepo from '$lib/server/sources/git/GitServiceRepo';
+import { logger } from '$lib/server/utils/Logger';
 
 export default abstract class GitService {
-	public abstract serviceName: string;
+	public serviceName = '';
 
-	protected constructor(protected tokensManager: TokensManager) {}
+	protected constructor(protected tokensManager: TokensManager) {
+		logger.logVerbose(`GitService ${this.serviceName} initialized`);
+	}
 
 	abstract getTokens(): Promise<GitServiceToken[]>;
 
 	protected abstract getReposFromToken(token: Token): Promise<GitServiceRepo[]>;
 
 	public async listRepos(): Promise<GitServiceRepo[]> {
+		logger.logVerbose(`Listing repos for ${this.serviceName}`);
 		const tokens = this.tokensManager.getTokensByService(this.serviceName);
 		let repos = (
 			await Promise.all(

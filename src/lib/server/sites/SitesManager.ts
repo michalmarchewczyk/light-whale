@@ -13,6 +13,7 @@ export default class SitesManager {
 	}
 
 	public async getSites(): Promise<Site[]> {
+		logger.logVerbose('Listing sites');
 		const files = await this.filesManager.readDirFiles('sites/');
 		const siteFiles = files.filter((file) => this.isContentSiteConfig(file));
 		const sitesData = siteFiles.map((file) => this.parseSiteData(file));
@@ -66,6 +67,9 @@ export default class SitesManager {
 		if (await this.getSiteByDomain(domain)) {
 			return false;
 		}
+		logger.logInfo(
+			`Creating site for container ${containerId} on port ${port} with domain ${domain}`
+		);
 		const siteData: SiteData = {
 			id: this.generateSiteId(),
 			containerId,

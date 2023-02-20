@@ -9,6 +9,7 @@ export default class GitServicesController {
 	}
 
 	public async listAllTokens(): Promise<GitServiceToken[]> {
+		logger.logVerbose('Listing all git service tokens');
 		const tokens: GitServiceToken[] = [];
 		for (const service of this.services) {
 			tokens.push(...(await service.getTokens()));
@@ -17,6 +18,7 @@ export default class GitServicesController {
 	}
 
 	public async listAllRepos(): Promise<GitServiceRepo[]> {
+		logger.logVerbose('Listing all git service repos');
 		const repos: GitServiceRepo[] = [];
 		for (const service of this.services) {
 			repos.push(...(await service.listRepos()));

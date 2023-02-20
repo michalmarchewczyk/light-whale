@@ -34,12 +34,4 @@ export default class SessionManager {
 		const session = this.sessions.find((s) => s.id === sessionId);
 		return !(!session || Date.now() > session.expires);
 	}
-
-	public getSession(id: string): Session | null {
-		const session = this.sessions.find((s) => s.id === id);
-		if (!session) {
-			return null;
-		}
-		return session;
-	}
 }

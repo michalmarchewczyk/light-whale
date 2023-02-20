@@ -1,6 +1,7 @@
 import type SiteData from '$lib/server/sites/SiteData';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import siteConfigTemplate from '$lib/server/templates/site.conf?raw';
+import { logger } from '$lib/server/utils/Logger';
 
 export default class Site {
 	constructor(public id: string, public data: SiteData, private filesManager: FilesManager) {
@@ -8,11 +9,13 @@ export default class Site {
 	}
 
 	public async pause() {
+		logger.logInfo(`Pausing site ${this.id}`);
 		this.data.paused = true;
 		await this.saveFile();
 	}
 
 	public async unpause() {
+		logger.logInfo(`Unpausing site ${this.id}`);
 		this.data.paused = false;
 		await this.saveFile();
 	}
@@ -29,6 +32,7 @@ export default class Site {
 	}
 
 	public async remove() {
+		logger.logInfo(`Removing site ${this.id}`);
 		await this.filesManager.removeFile(`sites/site-${this.id}.conf`);
 	}
 }

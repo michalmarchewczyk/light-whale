@@ -13,6 +13,7 @@ export default class GithubService extends GitService {
 	}
 
 	async getTokens(): Promise<GitServiceToken[]> {
+		logger.logVerbose(`Listing tokens for ${this.serviceName}`);
 		const tokens = this.tokensManager.getTokensByService('github');
 		return (
 			await Promise.all(
