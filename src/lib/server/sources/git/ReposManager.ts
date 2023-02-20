@@ -30,6 +30,7 @@ export default class ReposManager {
 		try {
 			if (files.length > 0) {
 				await this.git.cwd({ path: absPath }).pull(pullUrl, defaultBranch);
+				await this.git.cwd({ path: absPath }).submoduleUpdate();
 				return true;
 			} else {
 				await this.git
@@ -37,6 +38,7 @@ export default class ReposManager {
 					.init()
 					.pull(pullUrl, defaultBranch)
 					.addRemote('origin', remoteUrl);
+				await this.git.cwd({ path: absPath }).submoduleInit().submoduleUpdate();
 				return true;
 			}
 		} catch (e) {
