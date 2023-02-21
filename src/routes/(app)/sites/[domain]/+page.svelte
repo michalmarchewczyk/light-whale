@@ -26,16 +26,20 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<a
 		class="card-body p-6 pt-5 hover:text-primary-focus"
-		href="/containers/{data.siteContainer.name.substring(1)}"
+		href="/containers/{data.siteContainer?.name.substring(1) ?? ''}"
 	>
 		<h2 class="card-title text-xl">Site container</h2>
-		<p>
-			ID:
-			<span class="font-bold">{data.siteContainer.id}</span>
-		</p>
-		<p>
-			Name:
-			<span class="font-bold">{data.siteContainer.name}</span>
-		</p>
+		{#if !data.siteContainer}
+			<p>No container found</p>
+		{:else}
+			<p>
+				ID:
+				<span class="font-bold">{data.siteContainer?.id}</span>
+			</p>
+			<p>
+				Name:
+				<span class="font-bold">{data.siteContainer?.name}</span>
+			</p>
+		{/if}
 	</a>
 </div>
