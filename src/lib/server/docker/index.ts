@@ -1,12 +1,16 @@
 import DockerController from '$lib/server/docker/DockerController';
-import ContainersController from '$lib/server/docker/ContainersController';
+import NginxManager from '$lib/server/docker/NginxManager';
+import ContainersManager from '$lib/server/docker/ContainersManager';
 import ContainerFilesReader from '$lib/server/docker/ContainerFilesReader';
-import ImagesController from '$lib/server/docker/ImagesController';
+import ImagesManager from '$lib/server/docker/ImagesManager';
+import { filesManager } from '$lib/server/utils/FilesManager';
+
+export const containersManager = new ContainersManager();
+
+export const containerFilesReader = new ContainerFilesReader();
+
+export const imagesManager = new ImagesManager();
 
 export const dockerController = new DockerController();
 
-const containerFilesReader = new ContainerFilesReader();
-
-export const containersController = new ContainersController(containerFilesReader);
-
-export const imagesController = new ImagesController();
+export const nginxManager = new NginxManager(containersManager, imagesManager, filesManager);

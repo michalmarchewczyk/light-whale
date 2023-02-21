@@ -1,12 +1,10 @@
 <script lang="ts">
-	import {page} from '$app/stores';
-	import {paramsToLink} from '$lib/client/utils/paramsToLink';
-
+	import { page } from '$app/stores';
+	import { paramsToLink } from '$lib/client/utils/paramsToLink';
 	export let name = '';
-	export let values:string[] = [];
+	export let values: string[] = [];
 	export let defaultValue = values[0] ?? '-';
 	export let value;
-
 	$: value = $page.url.searchParams.get(name) ?? defaultValue;
 </script>
 
@@ -23,7 +21,7 @@
 		<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-36 ml-2">
 			{#each values as val}
 				<li>
-					<a href="{paramsToLink($page.url.search, {[name]: val})}" class="capitalize">
+					<a href={paramsToLink($page.url.search, { [name]: val })} class="capitalize">
 						{val}
 					</a>
 				</li>
@@ -31,7 +29,3 @@
 		</ul>
 	</div>
 </div>
-
-<style lang="scss">
-
-</style>

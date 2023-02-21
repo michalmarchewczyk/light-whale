@@ -1,90 +1,108 @@
-import fs from 'fs/promises';
-import path from 'path';
+import type FilesManager from '$lib/server/utils/FilesManager';
+import { filesManager } from '$lib/server/utils/FilesManager';
 
 export enum LogType {
 	Info = 'Info',
 	Warning = 'Warning',
 	Error = 'Error',
-	Router = 'Router',
-	Client = 'Client',
-	Verbose = 'Verbose',
+	Verbose = 'Verbose'
 }
 
 export interface Log {
-	type:LogType;
-	msg:string;
-	date:Date;
+	type: LogType;
+	msg: string;
+	date: Date;
 }
 
 class Logger {
-	private static instance:Logger;
-	private file:string;
-	private logs:Log[] = [];
+	private static instance: Logger;
+	private filePath = '';
+	private logs: Log[] = [];
+	private logsStrings: string[] = [];
 	private lastTime = 0;
+	private controllers: ReadableStreamDefaultController[] = [];
 
-	public static getInstance():Logger {
-		if(!Logger.instance){
-			Logger.instance = new Logger();
+	public static getInstance(): Logger {
+		if (!Logger.instance) {
+			Logger.instance = new Logger(filesManager);
 		}
 
 		return Logger.instance;
 	}
 
-	private constructor(){
-		const logsFolder = path.join(process.cwd(), 'lw-logs');
-		fs.mkdir(logsFolder, {recursive: true}).then(async () => {
-			const date = new Date().toISOString()
-				.replaceAll('-', '')
-				.replaceAll('T', '_')
-				.replaceAll(':', '')
-				.replaceAll('.', '');
-			this.file = path.join(logsFolder, `logs_${date}.txt`);
-			await fs.writeFile(this.file, '===== LOGS START =====\n', {encoding: 'utf-8', flag: 'w'});
+	private constructor(private filesManager: FilesManager) {
+		const date = new Date()
+			.toISOString()
+			.replaceAll('-', '')
+			.replaceAll('T', '_')
+			.replaceAll(':', '')
+			.replaceAll('.', '');
+		this.filePath = `logs/${date}.log`;
+		this.filesManager.writeFile(this.filePath, '===== LOGS START =====\n').then(async () => {
 			this.lastTime = Date.now();
 			await this.log(LogType.Info, 'Logger initialized');
 		});
 	}
 
-	public log(type:LogType, msg:string):void{
+	public log(type: LogType, msg: string): void {
 		this.logs = this.logs.slice(-100000);
 		const date = new Date();
 		let dateDiff = 0;
-		if(type !== LogType.Verbose) {
+		if (type !== LogType.Verbose) {
 			dateDiff = date.getTime() - this.lastTime;
 			this.lastTime = date.getTime();
 		}
-		this.logs.push({type, msg, date});
-		const log = `[${date.toISOString()}][+${dateDiff/1000}] (${type}) ${msg}`;
-		fs.writeFile(this.file, log+'\n', {encoding: 'utf-8', flag: 'a'}).then(() => {
-			if (type === LogType.Router || type === LogType.Verbose){
+		this.logs.push({ type, msg, date });
+		const log = `[${date.toISOString()}][+${dateDiff / 1000}] (${type}) ${msg}`;
+		this.logsStrings.push(log);
+		this.filesManager.writeFile(this.filePath, log + '\n').then(() => {
+			if (type === LogType.Verbose) {
 				return;
 			}
 			// eslint-disable-next-line no-console
 			console.log('LW-Logger:', log);
 		});
+		this.controllers.forEach((controller) => {
+			controller.enqueue(log + '\n');
+		});
 	}
 
-	public logInfo(msg:string):void{
+	public logInfo(msg: string): void {
 		this.log(LogType.Info, msg);
 	}
 
-	public logWarning(msg:string):void{
+	public logWarning(msg: string): void {
 		this.log(LogType.Warning, msg);
 	}
 
-	public logError(msg:string):void{
+	public logError(msg: string): void {
 		this.log(LogType.Error, msg);
 	}
 
-	public logVerbose(msg:string):void{
+	public logVerbose(msg: string): void {
 		this.log(LogType.Verbose, msg);
 	}
 
-	public get():Log[]{
+	public get(): Log[] {
 		return this.logs;
+	}
+
+	public getLogs(): string[] {
+		return this.logsStrings;
+	}
+
+	getReadableStream() {
+		let savedController: ReadableStreamDefaultController;
+		return new ReadableStream({
+			start: (controller) => {
+				savedController = controller;
+				this.controllers.push(controller);
+			},
+			cancel: () => {
+				this.controllers = this.controllers.filter((c) => c !== savedController);
+			}
+		});
 	}
 }
 
 export const logger = Logger.getInstance();
-
-export default Logger;

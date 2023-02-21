@@ -1,29 +1,23 @@
-class ListCache<T> {
-	private cached:Record<string, T> = {};
+export default class ListCache<T> {
+	private cached: Record<string, T> = {};
 
-	constructor(private fetchFunction:(index:string)=>(T|Promise<T>)){
+	constructor(private readonly fetchFunction: (key: string) => T | Promise<T>) {}
 
-	}
-
-	public async prefetch(indexes:string[]):Promise<void>{
-		indexes.forEach((index) => {
-			this.fetch(index);
+	public async prefetch(keys: string[]) {
+		keys.forEach((key) => {
+			this.fetch(key);
 		});
 	}
 
-	public async get(index:string):Promise<T>{
-		const item = this.cached[index];
-		if(!item){
-			return await this.fetch(index);
+	public async get(key: string) {
+		if (this.cached[key]) {
+			return this.cached[key];
 		}
-		return item;
+		return this.fetch(key);
 	}
 
-	private async fetch(index:string):Promise<T>{
-		const fetched = await this.fetchFunction(index);
-		this.cached[index] = fetched;
-		return fetched;
+	private async fetch(key: string) {
+		this.cached[key] = await this.fetchFunction(key);
+		return this.cached[key];
 	}
 }
-
-export default ListCache;

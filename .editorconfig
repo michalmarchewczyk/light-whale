@@ -1,4 +1,0 @@
-root = true
-
-[*.{js,ts,svelte}]
-indent_style = tab

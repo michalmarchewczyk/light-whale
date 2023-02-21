@@ -1,11 +1,12 @@
-/// <reference types="@sveltejs/kit" />
-
-declare namespace App {
-	interface Session {
-		id?: string
-	}
-
-	interface Stuff {
-		system?: string
+// See https://kit.svelte.dev/docs/types#app
+// for information about these interfaces
+declare global {
+	namespace App {
+		// interface Error {}
+		// interface Locals {}
+		// interface PageData {}
+		// interface Platform {}
 	}
 }
+
+export {};

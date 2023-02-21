@@ -1,50 +1,19 @@
 import adapter from '@sveltejs/adapter-node';
-import preprocess from 'svelte-preprocess';
-import tildeImporter from 'node-sass-tilde-importer';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 import path from 'path';
-import svelteSVG from 'vite-plugin-svelte-vsvg';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
+	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: [
-		preprocess({
-			scss: {
-				importer: tildeImporter,
-			},
-		}),
-	],
-
-	extensions: ['.svelte', '.svg'],
+	preprocess: vitePreprocess(),
 
 	kit: {
 		adapter: adapter(),
-
-		vite: {
-			resolve: {
-				alias: {
-					$icons: path.resolve('./node_modules/heroicons/outline')
-				}
-			},
-			assetsInclude: ['**/*.conf'],
-			plugins: [
-				svelteSVG({
-					svgo: {
-						plugins: [
-							{
-								name: 'removeAttrs',
-								params: {
-									attrs: 'stroke-width'
-								}
-							}
-						]
-					},
-					enforce: 'pre',
-				})
-			]
+		alias: {
+			$icons: path.resolve('./node_modules/heroicons/24/outline')
 		}
-	},
+	}
 };
 
 export default config;

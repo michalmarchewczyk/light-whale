@@ -1,30 +1,27 @@
-import {writable} from 'svelte/store';
+import { writable } from 'svelte/store';
+import type Status from '$lib/server/status/Status';
 
-interface Status {
-	dockerRunning: boolean;
-	dockerPinging: boolean;
-	network: boolean;
-	running: boolean;
-	connected: boolean;
-	ports: boolean;
-	restartPolicy: boolean;
-}
+export const status = writable<Status | null>(null);
 
-export const status = writable<Status>({
-	dockerRunning: false,
-	dockerPinging: false,
-	network: false,
-	running: false,
-	connected: false,
-	ports: false,
-	restartPolicy: false,
-});
-
-export const fetchStatus = async ():Promise<void> => {
-	const res = await fetch('/api/check?skipLogger=true');
-	if(res.status !== 200){
-		return;
-	}
-	const data = await res.json();
-	status.set(data);
+export const fetchStatus = async () => {
+	const writeStream = new WritableStream({
+		write: (chunk) => {
+			const chunkStr = new TextDecoder().decode(chunk);
+			const strings = chunkStr.split('\n').filter((str) => str);
+			strings.forEach((str) => {
+				status.set(JSON.parse(str) as Status);
+			});
+		}
+	});
+	fetch('/api/status')
+		.then((res) => res.body)
+		.then((body) => {
+			if (!body) {
+				return;
+			}
+			body.pipeTo(writeStream);
+		})
+		.catch(() => {
+			//ignore
+		});
 };

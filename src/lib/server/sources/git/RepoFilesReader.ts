@@ -1,48 +1,49 @@
-import {logger, LogType} from '$lib/server/utils/Logger';
-import type {File} from '$lib/server/sources/git/File.interface';
-import type {Repo} from '$lib/server/sources/git/Repo.interface';
-import fs from 'fs/promises';
-import ReposController from '$lib/server/sources/git/ReposController';
-import path from 'path';
+import type FilesManager from '$lib/server/utils/FilesManager';
+import type Repo from '$lib/server/sources/git/Repo';
+import { logger } from '$lib/server/utils/Logger';
+
+export interface File {
+	directory: boolean;
+	symlink: boolean;
+	name: string;
+	size: string;
+	date: string;
+}
 
 export default class RepoFilesReader {
-	private async getRepoFiles(repo: Repo, dirPath:string): Promise<File[]> {
-		logger.log(LogType.Info, `Read folder: ${dirPath} from repo: ${new URL(repo.gitInfo.remoteName).pathname}`);
-		if(dirPath.includes('..')) {
-			return [];
-		}
-		const pathToRead = path.join(ReposController.gitSourcesPath, encodeURIComponent(repo.gitInfo.remoteName), dirPath);
-		const files = await fs.readdir(pathToRead, {withFileTypes: true});
-		const res:File[] = [];
-		for(const file of files) {
-			const stat = await fs.stat(`${pathToRead}/${file.name}`);
-			res.push({
-				directory: file.isDirectory(),
-				symlink: file.isSymbolicLink(),
-				name: file.name,
-				size: stat.size,
-				date: new Date(stat.mtimeMs),
-			});
-		}
-		return res;
+	constructor(private filesManager: FilesManager) {
+		logger.logVerbose('RepoFilesReader initialized');
 	}
 
-	private async readRepoFile(repo: Repo, filePath:string):Promise<string> {
-		logger.log(LogType.Info, `Read file: ${path} from repo: ${new URL(repo.gitInfo.remoteName).pathname}`);
-		const pathToRead = path.join(ReposController.gitSourcesPath, encodeURIComponent(repo.gitInfo.remoteName), filePath);
-		return await fs.readFile(pathToRead, {encoding: 'utf-8'});
-	}
-
-	public async readPath(repo:Repo, filePath:string):Promise<File[] | string> {
-		logger.log(LogType.Info, `Read path: ${filePath} from repo: ${new URL(repo.gitInfo.remoteName).pathname}`);
-		const pathToRead = path.join(ReposController.gitSourcesPath, encodeURIComponent(repo.gitInfo.remoteName), filePath);
-		const stat = await fs.stat(pathToRead);
-		if(!stat){
-			return [];
-		}
+	public async readPath(repo: Repo, filepath: string): Promise<File[] | string> {
+		logger.logVerbose(`Reading path ${filepath} in repo ${repo.gitInfo.remoteUrl}`);
+		const stat = await this.filesManager.getFileStat(
+			`/sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}/${filepath}`
+		);
 		if (stat.isFile()) {
-			return await this.readRepoFile(repo, filePath);
+			return await this.filesManager.readFile(
+				`/sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}/${filepath}`
+			);
 		}
-		return await this.getRepoFiles(repo, filePath);
+		if (stat.isDirectory()) {
+			const files = await this.filesManager.readDir(
+				`/sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}/${filepath}`
+			);
+			return Promise.all(
+				files.map(async (file) => {
+					const stat = await this.filesManager.getFileStat(
+						`/sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}/${filepath}/${file}`
+					);
+					return {
+						directory: stat.isDirectory(),
+						symlink: stat.isSymbolicLink(),
+						name: file,
+						size: stat.size.toString(),
+						date: stat.mtime.toISOString()
+					};
+				})
+			);
+		}
+		return [];
 	}
 }
