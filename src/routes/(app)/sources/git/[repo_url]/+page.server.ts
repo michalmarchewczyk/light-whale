@@ -1,6 +1,6 @@
 import type { Actions } from './$types';
 import { repoBuilder, reposManager } from '$lib/server/sources/git';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	build: async ({ request, params }) => {
@@ -25,5 +25,6 @@ export const actions = {
 		if (!built) {
 			return fail(500, { error: 'error building image' });
 		}
+		throw redirect(307, '/processes');
 	}
 } satisfies Actions;

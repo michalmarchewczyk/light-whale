@@ -7,6 +7,7 @@ import RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
 import simpleGit from 'simple-git';
 import RepoFilesReader from '$lib/server/sources/git/RepoFilesReader';
 import RepoBuilder from '$lib/server/sources/git/RepoBuilder';
+import { processesManager } from '$lib/server/processes';
 
 const git = simpleGit({
 	binary: 'git'
@@ -28,4 +29,4 @@ export const reposManager = new ReposManager(
 
 export const repoFilesReader = new RepoFilesReader(filesManager);
 
-export const repoBuilder = new RepoBuilder(filesManager);
+export const repoBuilder = new RepoBuilder(filesManager, processesManager);

@@ -1,13 +1,14 @@
 import type FilesManager from '$lib/server/utils/FilesManager';
 import type Repo from '$lib/server/sources/git/Repo';
 import YAML from 'yaml';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import type { ComposeSpecification } from '$lib/server/types/docker/ComposeFile';
 import { LW_NETWORK_NAME } from '$lib/server/config';
 import { logger } from '$lib/server/utils/Logger';
+import type ProcessesManager from '$lib/server/processes/ProcessesManager';
 
 export default class RepoBuilder {
-	constructor(private filesManager: FilesManager) {
+	constructor(private filesManager: FilesManager, private processesManager: ProcessesManager) {
 		logger.logVerbose('RepoBuilder initialized');
 	}
 
@@ -27,8 +28,7 @@ export default class RepoBuilder {
 		if (selectedFile.includes('Dockerfile')) {
 			return await this.buildFromDockerfile(repo, name, selectedFile);
 		} else {
-			await this.buildFromComposeFile(repo, name, selectedFile, envVariables);
-			return '';
+			return await this.buildFromComposeFile(repo, name, selectedFile, envVariables);
 		}
 	}
 
@@ -38,26 +38,32 @@ export default class RepoBuilder {
 		selectedFile: string
 	): Promise<string> {
 		logger.logInfo(`Building from Dockerfile ${selectedFile}`);
+		const process = await this.processesManager.createNewProcess(`Building Dockerfile: ${name}`);
 		const dockerfilePath = await this.filesManager.getAbsPath(
 			`sources/git/${encodeURIComponent(repoInfo.gitInfo.remoteUrl)}/${selectedFile}`
 		);
 		const contextPath = await this.filesManager.getAbsPath(
 			`sources/git/${encodeURIComponent(repoInfo.gitInfo.remoteUrl)}`
 		);
-		return await new Promise((resolve) => {
-			exec(
-				`docker build --quiet --tag ${name} --file ${dockerfilePath} ${contextPath}`,
-				{ env: { ...process.env } },
-				(err, data) => {
-					if (err) {
-						logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
-						resolve('');
-					}
-					logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
-					resolve(data);
-				}
-			);
+		const spawnProcess = spawn(
+			'docker',
+			`build --tag ${name} --file ${dockerfilePath} ${contextPath}`.split(' ')
+		);
+		spawnProcess.stderr.on('data', async (data) => {
+			await this.processesManager.updateProcess(process.id, 'running', data.toString());
 		});
+		spawnProcess.stdout.on('data', async (data) => {
+			await this.processesManager.updateProcess(process.id, 'running', data.toString());
+		});
+		spawnProcess.stdout.on('close', async () => {
+			logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
+			await this.processesManager.updateProcess(process.id, 'done', '');
+		});
+		spawnProcess.on('error', async (err) => {
+			logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
+			await this.processesManager.updateProcess(process.id, 'error', err.toString());
+		});
+		return name;
 	}
 
 	private async buildFromComposeFile(
@@ -93,22 +99,30 @@ export default class RepoBuilder {
 			YAML.stringify(config),
 			true
 		);
+		const buildProcess = await this.processesManager.createNewProcess(
+			`Building Compose App: ${name}`
+		);
 		const tempConfigPath = await this.filesManager.getAbsPath(
 			`sources/git/${encodeURIComponent(repoInfo.gitInfo.remoteUrl)}/${selectedFile}.temp`
 		);
-		await new Promise((resolve) => {
-			exec(
-				`docker compose -f ${tempConfigPath} -p ${name} up --no-start --build --force-recreate`,
-				{ env: { ...process.env, ...envVariables } },
-				(err) => {
-					if (err) {
-						logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
-						resolve(false);
-					}
-					logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
-					resolve(true);
-				}
-			);
+		const spawnProcess = spawn(
+			'docker',
+			`compose -f ${tempConfigPath} -p ${name} up --no-start --build --force-recreate`.split(' '),
+			{ env: { ...process.env, ...envVariables } }
+		);
+		spawnProcess.stderr.on('data', async (data) => {
+			await this.processesManager.updateProcess(buildProcess.id, 'running', data.toString());
+		});
+		spawnProcess.stdout.on('data', async (data) => {
+			await this.processesManager.updateProcess(buildProcess.id, 'running', data.toString());
+		});
+		spawnProcess.stdout.on('close', async () => {
+			logger.logInfo(`Built repo ${repoInfo.gitInfo.remoteUrl} with name ${name}`);
+			await this.processesManager.updateProcess(buildProcess.id, 'done', '');
+		});
+		spawnProcess.on('error', async (err) => {
+			logger.logError(`Error building repo ${repoInfo.gitInfo.remoteUrl}`);
+			await this.processesManager.updateProcess(buildProcess.id, 'error', err.toString());
 		});
 		return name;
 	}
