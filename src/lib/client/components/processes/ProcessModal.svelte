@@ -3,6 +3,7 @@
 	import { afterUpdate, onMount } from 'svelte';
 	import ItemInfo from '$lib/client/components/ItemInfo.svelte';
 	import BoltIcon from '$icons/bolt.svg';
+	import Portal from '$lib/client/components/Portal.svelte';
 
 	export let open = false;
 	export let process: Process;
@@ -74,37 +75,39 @@
 	});
 </script>
 
-<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={open} />
-<div class="modal">
-	<div class="modal-box w-[64rem] max-w-full">
-		<span class="text-lg mb-4 font-semibold w-full block">{process.title}</span>
-		<ItemInfo icon={BoltIcon} class="mb-4">
-			{#if process.state === 'done' || process.state === 'error'}
-				Finished: {process.lastUpdated.toLocaleString()}
-			{:else if progress === -1}
-				<progress class="progress progress-primary" />
-			{:else}
-				<progress class="progress  progress-primary" value={progress} max="100" />
-			{/if}
-		</ItemInfo>
-		<span class="text-md mb-4 font-semibold w-full block">Progress data:</span>
-		<div
-			class="overflow-scroll whitespace-pre font-mono bg-base-200 font-medium max-h-96 h-96 mx-[-1.5rem]"
-			bind:this={scrollContainer}
-		>
-			<div class="w-full">
-				{#each [...process.data.split('\n'), ...lines] as line, i}
-					<p
-						class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content bg-opacity-20"
-						class:bg-base-300={i % 2 === 0}
-					>
-						{line}
-					</p>
-				{/each}
+<Portal>
+	<input type="checkbox" id="my-modal-2" class="modal-toggle" bind:checked={open} />
+	<div class="modal">
+		<div class="modal-box w-[64rem] max-w-full">
+			<span class="text-lg mb-4 font-semibold w-full block">{process.title}</span>
+			<ItemInfo icon={BoltIcon} class="mb-4">
+				{#if process.state === 'done' || process.state === 'error'}
+					Finished: {process.lastUpdated.toLocaleString()}
+				{:else if progress === -1}
+					<progress class="progress progress-primary" />
+				{:else}
+					<progress class="progress  progress-primary" value={progress} max="100" />
+				{/if}
+			</ItemInfo>
+			<span class="text-md mb-4 font-semibold w-full block">Progress data:</span>
+			<div
+				class="overflow-scroll whitespace-pre font-mono bg-base-200 font-medium max-h-96 h-96 mx-[-1.5rem]"
+				bind:this={scrollContainer}
+			>
+				<div class="w-full">
+					{#each [...process.data.split('\n'), ...lines] as line, i}
+						<p
+							class="px-5 py-1 text-base w-full inline-block float-left clear-both text-base-content bg-opacity-20"
+							class:bg-base-300={i % 2 === 0}
+						>
+							{line}
+						</p>
+					{/each}
+				</div>
+			</div>
+			<div class="modal-action">
+				<button class="btn" on:click={() => (open = false)} type="button">Close</button>
 			</div>
 		</div>
-		<div class="modal-action">
-			<button class="btn" on:click={() => (open = false)} type="button">Close</button>
-		</div>
 	</div>
-</div>
+</Portal>
