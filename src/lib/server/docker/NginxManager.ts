@@ -4,6 +4,8 @@ import type ContainersManager from '$lib/server/docker/ContainersManager';
 import type Status from '$lib/server/status/Status';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import defaultConfig from '$lib/server/templates/default.conf?raw';
+import page404 from '$lib/server/templates/404.html?raw';
+import page502 from '$lib/server/templates/502.html?raw';
 import type ImagesManager from '$lib/server/docker/ImagesManager';
 
 export default class NginxManager {
@@ -65,7 +67,9 @@ export default class NginxManager {
 
 	public async createLwNginxContainer() {
 		logger.logInfo('Creating LW container');
-		await this.filesManager.writeFile('sites/default.conf', defaultConfig);
+		await this.filesManager.writeFile('sites/default.conf', defaultConfig, true);
+		await this.filesManager.writeFile('sites/404.html', page404, true);
+		await this.filesManager.writeFile('sites/502.html', page502, true);
 		const sitesPath = await this.filesManager.getAbsPath('sites/');
 		await this.imagesManager.pullImage('nginx', 'latest', true);
 		const res = await fetch(DOCKER_URL + `/containers/create?name=${LW_NGINX_CONTAINER_NAME}`, {
