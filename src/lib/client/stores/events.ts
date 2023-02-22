@@ -18,9 +18,7 @@ export const fetchEvents = async () => {
 				const event = JSON.parse(str) as Event;
 				events.update((events) => {
 					events.push(event);
-					if (event.type === 'docker') {
-						refreshDebounce();
-					}
+					refreshDebounce();
 					return events;
 				});
 			});

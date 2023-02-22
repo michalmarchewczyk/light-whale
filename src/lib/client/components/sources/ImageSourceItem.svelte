@@ -64,7 +64,7 @@
 		>
 			Pull
 		</ActionButton>
-		<ImagePullModal bind:open name={image['name']} />
+		<ImagePullModal bind:open bind:loading name={image['name']} />
 		<a
 			href="https://hub.docker.com/{image['publisher']['id'] === 'docker' ? '_' : 'r'}/{image[
 				'slug'

@@ -33,7 +33,7 @@ class EventsController {
 					const dockerEvent: EventMessage = JSON.parse(new TextDecoder().decode(chunk));
 					const parsedEvent = this.dockerEventsParser.parseEvent(dockerEvent);
 					logger.logVerbose(`Docker event: ${parsedEvent.title} - ${parsedEvent.message}`);
-					this.push({ ...parsedEvent, id: this.generateId() });
+					this.push(parsedEvent);
 				} catch (err) {
 					// ignore
 				}
@@ -51,9 +51,9 @@ class EventsController {
 		}
 	}
 
-	push(event: Event): void {
+	push(event: Omit<Event, 'id'>): void {
 		this.controllers.forEach((controller) => {
-			controller.enqueue(JSON.stringify(event) + '\n');
+			controller.enqueue(JSON.stringify({ ...event, id: this.generateId() }) + '\n');
 		});
 	}
 

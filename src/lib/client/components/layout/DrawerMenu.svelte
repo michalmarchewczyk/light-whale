@@ -10,6 +10,7 @@
 	import GitIcon from '$lib/client/assets/icons/git.svg';
 	import DockerIcon from '$lib/client/assets/icons/docker.svg';
 	import QuestionMarkCircleIcon from '$icons/question-mark-circle.svg';
+	import RectangleStackIcon from '$icons/rectangle-stack.svg';
 	import { status } from '$lib/client/stores/status';
 	import DrawerMenuItem from '$lib/client/components/layout/DrawerMenuItem.svelte';
 
@@ -74,6 +75,10 @@
 
 	<DrawerMenuItem icon={CogIcon} path="/settings" on:click={() => dispatch('navigate')}>
 		Settings
+	</DrawerMenuItem>
+
+	<DrawerMenuItem icon={RectangleStackIcon} path="/processes" on:click={() => dispatch('navigate')}>
+		Processes
 	</DrawerMenuItem>
 
 	<div class="mt-auto pt-8">

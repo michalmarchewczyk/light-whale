@@ -3,11 +3,12 @@ import Image from '$lib/server/docker/Image';
 import { DOCKER_URL } from '$lib/server/config';
 import type { ImageSummary } from '$lib/server/types/docker/api';
 import type ImageData from '$lib/server/docker/ImageData';
+import type ProcessesManager from '$lib/server/processes/ProcessesManager';
 
 export default class ImagesManager {
 	private images: Image[] = [];
 
-	constructor() {
+	constructor(private processesManager: ProcessesManager) {
 		logger.logVerbose('ImagesManager initialized');
 	}
 
@@ -51,13 +52,59 @@ export default class ImagesManager {
 
 	public async pullImage(image: string, tag: string, wait = false): Promise<boolean> {
 		logger.logInfo(`Pulling image ${image}:${tag}`);
-		const res = await fetch(`${DOCKER_URL}/images/create?fromImage=${image}&tag=${tag}`, {
-			method: 'POST'
+		const process = await this.processesManager.createNewProcess(`Pulling image ${image}:${tag}`);
+		const layers: Record<string, { current: number; total: number }> = {};
+		const writeStream = new WritableStream({
+			write: async (chunk) => {
+				try {
+					const data = JSON.parse(new TextDecoder().decode(chunk));
+					if (!layers[data.id]) {
+						layers[data.id] = { current: 0, total: 0 };
+					}
+					if (data.progressDetail.total && data.status === 'Downloading') {
+						layers[data.id].total = data.progressDetail.total * 2;
+					}
+					if (data.progressDetail.current && data.status === 'Downloading') {
+						layers[data.id].current = data.progressDetail.current;
+					}
+					if (data.progressDetail.current && data.status === 'Extracting') {
+						layers[data.id].current = data.progressDetail.total + data.progressDetail.current;
+					}
+					const total = Object.values(layers).reduce((acc, cur) => acc + cur.total, 0);
+					const current = Object.values(layers).reduce((acc, cur) => acc + cur.current, 0);
+					await this.processesManager.updateProcess(
+						process.id,
+						'running',
+						`(layer:${data.id}) ${data.status}: ${data.progress ?? '-'} \n`,
+						(current / total) * 100
+					);
+				} catch (err) {
+					// ignore
+				}
+			},
+			close: async () => {
+				await this.processesManager.updateProcess(process.id, 'done', 'Done');
+			}
 		});
-		if (wait) {
-			await res.text();
-			return res.status === 200;
+		try {
+			const res = await fetch(`${DOCKER_URL}/images/create?fromImage=${image}&tag=${tag}`, {
+				method: 'POST'
+			});
+			if (!res.body) {
+				return false;
+			}
+			if (wait) {
+				await res.text();
+				await this.processesManager.updateProcess(process.id, 'done', 'Done');
+				logger.logInfo(`Pulled image ${image}:${tag}`);
+				return true;
+			}
+			res.body.pipeTo(writeStream).then(() => {
+				logger.logInfo(`Pulled image ${image}:${tag}`);
+			});
+			return true;
+		} catch (err) {
+			return false;
 		}
-		return res.status === 200;
 	}
 }

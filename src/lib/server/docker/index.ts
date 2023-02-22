@@ -4,12 +4,13 @@ import ContainersManager from '$lib/server/docker/ContainersManager';
 import ContainerFilesReader from '$lib/server/docker/ContainerFilesReader';
 import ImagesManager from '$lib/server/docker/ImagesManager';
 import { filesManager } from '$lib/server/utils/FilesManager';
+import { processesManager } from '$lib/server/processes';
 
 export const containersManager = new ContainersManager();
 
 export const containerFilesReader = new ContainerFilesReader();
 
-export const imagesManager = new ImagesManager();
+export const imagesManager = new ImagesManager(processesManager);
 
 export const dockerController = new DockerController();
 
