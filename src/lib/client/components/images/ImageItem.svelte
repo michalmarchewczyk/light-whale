@@ -79,6 +79,7 @@
 			name={shortId}
 			bind:open={removeModal}
 			formaction="/images/{image.id}?/remove"
+			bind:loading
 		/>
 	</form>
 </div>

@@ -88,6 +88,7 @@
 				name={site.domain}
 				bind:open={removeModal}
 				formaction="/sites/{site.domain}?/remove"
+				bind:loading
 			/>
 		{:else}
 			<ActionButton

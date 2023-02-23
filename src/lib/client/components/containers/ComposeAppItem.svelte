@@ -49,7 +49,12 @@
 				name={app.name}
 				bind:open={removeModal}
 				formaction="/containers?/remove"
-			/>
+				bind:loading
+			>
+				{#each app.containers as container}
+					<input type="hidden" name="containers" value={container.id} />
+				{/each}
+			</RemoveModal>
 		{/if}
 		{#if running}
 			<ActionButton

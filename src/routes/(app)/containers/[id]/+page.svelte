@@ -75,6 +75,7 @@
 				name={data.container?.name}
 				formaction="?/remove"
 				bind:open={removeModal}
+				bind:loading
 			/>
 		</form>
 	</div>

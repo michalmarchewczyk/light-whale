@@ -85,6 +85,7 @@
 				name={container.name.substring(1)}
 				bind:open={removeModal}
 				formaction="/containers/{container.id}?/remove"
+				bind:loading
 			/>
 		{/if}
 		{#if container.state === 'running' || container.state === 'paused'}

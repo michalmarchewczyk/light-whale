@@ -57,7 +57,10 @@
 				name={token.login}
 				label="{token.service} token for"
 				confirmPassword="true"
-			/>
+				bind:loading
+			>
+				<input type="hidden" name="id" value={token.id} />
+			</RemoveModal>
 		</form>
 	</td>
 </tr>
