@@ -19,10 +19,13 @@ export default class GitServicesController {
 
 	public async listAllRepos(): Promise<GitServiceRepo[]> {
 		logger.logVerbose('Listing all git service repos');
-		const repos: GitServiceRepo[] = [];
-		for (const service of this.services) {
-			repos.push(...(await service.listRepos()));
-		}
+		const repos: GitServiceRepo[] = (
+			await Promise.all(
+				this.services.map(async (service) => {
+					return await service.listRepos();
+				})
+			)
+		).flat();
 		repos.sort((a, b) => {
 			const aDate = new Date(a.lastCommitDate);
 			const bDate = new Date(b.lastCommitDate);
