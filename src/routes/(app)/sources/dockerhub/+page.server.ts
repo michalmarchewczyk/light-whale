@@ -1,10 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { dockerhubProxy } from '$lib/server/sources/dockerhub';
 
-export const load = (async ({ url }) => {
+export const load = (({ url }) => {
 	const query = url.searchParams.get('search');
-	const images = await dockerhubProxy.search(query ?? '');
 	return {
-		images: images
+		results: {
+			images: dockerhubProxy.search(query ?? '')
+		}
 	};
 }) satisfies PageServerLoad;

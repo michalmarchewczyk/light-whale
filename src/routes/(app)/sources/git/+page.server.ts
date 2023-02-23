@@ -2,12 +2,12 @@ import type { Actions, PageServerLoad } from './$types';
 import { gitServicesController, reposManager } from '$lib/server/sources/git';
 import { fail } from '@sveltejs/kit';
 
-export const load = (async () => {
-	const remoteRepos = await gitServicesController.listAllRepos();
-	const localRepos = await reposManager.listRepos();
+export const load = (() => {
 	return {
-		remoteRepos,
-		localRepos
+		repos: {
+			remoteRepos: gitServicesController.listAllRepos(),
+			localRepos: reposManager.listRepos()
+		}
 	};
 }) satisfies PageServerLoad;
 
