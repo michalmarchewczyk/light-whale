@@ -4,6 +4,26 @@ import DockerEventsParser from '$lib/server/events/DockerEventsParser';
 import type Event from '$lib/server/events/Event';
 import { logger } from '$lib/server/utils/Logger';
 
+const FILTER_DOCKER_EVENTS = {
+	event: [
+		'create',
+		'remove',
+		'update',
+		'prune',
+		'reload',
+		'destroy',
+		'pull',
+		'import',
+		'load',
+		'pause',
+		'unpause',
+		'start',
+		'stop',
+		'restart',
+		'kill'
+	]
+};
+
 class EventsController {
 	private static instance: EventsController;
 	private controllers: ReadableStreamDefaultController[] = [];
@@ -40,7 +60,9 @@ class EventsController {
 			}
 		});
 		try {
-			const res = await fetch(`${DOCKER_URL}/events`);
+			const res = await fetch(
+				`${DOCKER_URL}/events?filters=${JSON.stringify(FILTER_DOCKER_EVENTS)}`
+			);
 			if (!res.body) {
 				return;
 			}
