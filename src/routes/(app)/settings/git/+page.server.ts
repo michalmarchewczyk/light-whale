@@ -15,14 +15,23 @@ export const actions = {
 		const data = await request.formData();
 		const token = data.get('token');
 		const description = data.get('description');
+		const service = data.get('service');
 		if (!token || typeof token !== 'string') {
 			return fail(400, { error: 'Invalid token' });
+		}
+		if (!['github', 'gitlab'].includes(<string>service)) {
+			return fail(400, { error: 'Invalid service' });
 		}
 		const password = data.get('password');
 		if (!password || typeof password !== 'string') {
 			return fail(400, { error: 'Invalid password' });
 		}
-		const added = await tokensManager.addToken(token, password, 'github', <string>description);
+		const added = await tokensManager.addToken(
+			token,
+			password,
+			<string>service,
+			<string>description
+		);
 		if (!added) {
 			return fail(400, { error: 'Invalid password' });
 		}

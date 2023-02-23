@@ -6,6 +6,7 @@
 	import CodeIcon from '$icons/code-bracket.svg';
 	import UserIcon from '$icons/user.svg';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
+	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 	import EyeIcon from '$icons/eye.svg';
 	import EyeOffIcon from '$icons/eye-slash.svg';
 	import CalendarIcon from '$icons/calendar.svg';
@@ -18,6 +19,9 @@
 		name = decodeURIComponent(repo?.remoteUrl || '');
 		if (name.startsWith('https://github.com/')) {
 			name = name.split('github.com/')[1];
+		}
+		if (name.startsWith('https://gitlab.com/')) {
+			name = name.split('gitlab.com/')[1];
 		}
 		if (name.endsWith('.git')) {
 			name = name.slice(0, -4);
@@ -74,8 +78,12 @@
 			{repo.lastCommitDate}
 		</ItemInfo>
 	</div>
-	<div class="block w-20 flex-0 overflow-hidden mr-2 sm:mr-6  flex items-middle">
-		<GithubIcon class="w-20 my-auto" />
+	<div class="block w-24 flex-0 overflow-hidden mr-2 sm:mr-6  flex items-middle">
+		{#if repo.service === 'github'}
+			<GithubIcon class="w-20 my-auto ml-2" />
+		{:else if repo.service === 'gitlab'}
+			<GitlabIcon class="w-24 my-auto" />
+		{/if}
 	</div>
 	<form
 		class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center"

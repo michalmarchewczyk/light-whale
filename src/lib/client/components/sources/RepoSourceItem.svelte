@@ -24,6 +24,9 @@
 		if (name.startsWith('https://github.com/')) {
 			name = name.split('github.com/')[1];
 		}
+		if (name.startsWith('https://gitlab.com/')) {
+			name = name.split('gitlab.com/')[1];
+		}
 		if (name.endsWith('.git')) {
 			name = name.slice(0, -4);
 		}

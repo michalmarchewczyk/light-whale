@@ -10,6 +10,10 @@
 	let loading = false;
 
 	export let form: ActionData;
+
+	let selectedService = 'GitHub';
+
+	let tokenInput: HTMLInputElement;
 </script>
 
 <svelte:head>
@@ -43,6 +47,36 @@
 			<span class="text-lg font-semibold mb-4 block">Add Token</span>
 			<FormError error={form?.error} />
 			<div class="flex space-x-4">
+				<label class="w-32">
+					<input type="hidden" name="service" value={selectedService.toLowerCase()} />
+					<div class="dropdown flex-1 w-32">
+						<button class="select select-bordered bg-base-100 align-middle w-full" type="button">
+							<span class="mt-2 text-base">{selectedService}</span>
+						</button>
+						<ul
+							class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full"
+						>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'GitHub';
+										tokenInput.focus();
+									}}
+									type="button">GitHub</button
+								>
+							</li>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'GitLab';
+										tokenInput.focus();
+									}}
+									type="button">GitLab</button
+								>
+							</li>
+						</ul>
+					</div>
+				</label>
 				<label class="input-group flex-1">
 					<span>Token: </span>
 					<input
@@ -50,6 +84,7 @@
 						type="text"
 						placeholder="token"
 						class="input input-bordered text-base w-full"
+						bind:this={tokenInput}
 					/>
 				</label>
 				<label class="input-group flex-1">
