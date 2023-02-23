@@ -4,6 +4,8 @@
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import type GitServiceToken from '$lib/server/sources/git/GitServiceToken';
 	import GitServiceTokenItem from '$lib/client/components/sources/GitServiceTokenItem.svelte';
+	import GithubIcon from '$lib/client/assets/icons/github.svg';
+	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 
 	export let data: { tokens: GitServiceToken[] };
 
@@ -51,7 +53,13 @@
 					<input type="hidden" name="service" value={selectedService.toLowerCase()} />
 					<div class="dropdown flex-1 w-32">
 						<button class="select select-bordered bg-base-100 align-middle w-full" type="button">
-							<span class="mt-2 text-base">{selectedService}</span>
+							<span class="mt-2 text-base">
+								{#if selectedService === 'GitHub'}
+									<GithubIcon class="w-16 h-8 ml-1" />
+								{:else if selectedService === 'GitLab'}
+									<GitlabIcon class="w-20 h-8 ml-[-0.25rem]" />
+								{/if}
+							</span>
 						</button>
 						<ul
 							class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full"
@@ -62,7 +70,9 @@
 										selectedService = 'GitHub';
 										tokenInput.focus();
 									}}
-									type="button">GitHub</button
+									type="button"
+								>
+									<GithubIcon class="w-20 h-8 ml-2" /></button
 								>
 							</li>
 							<li>
@@ -71,7 +81,9 @@
 										selectedService = 'GitLab';
 										tokenInput.focus();
 									}}
-									type="button">GitLab</button
+									type="button"
+								>
+									<GitlabIcon class="w-24 h-8" /></button
 								>
 							</li>
 						</ul>

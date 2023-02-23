@@ -6,6 +6,8 @@
 	import CalendarIcon from '$icons/calendar.svg';
 	import { enhance } from '$app/forms';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
+	import GithubIcon from '$lib/client/assets/icons/github.svg';
+	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 
 	export let token: GitServiceToken;
 
@@ -31,6 +33,13 @@
 			{token.description.length ? decodeURIComponent(token.description) : 'no description'}
 		</span>
 		<ItemInfo class="w-48" icon={CalendarIcon}>{new Date(token.date).toLocaleString()}</ItemInfo>
+	</td>
+	<td class="w-24">
+		{#if token.service === 'github'}
+			<GithubIcon class="w-20 h-8 ml-2" />
+		{:else if token.service === 'gitlab'}
+			<GitlabIcon class="w-24 h-8 mt-1" />
+		{/if}
 	</td>
 	<td>
 		<form
