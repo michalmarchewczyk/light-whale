@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate } from 'svelte';
+	import { browser } from '$app/environment';
+	import fetchStream from '$lib/client/utils/fetchStream';
 
 	let loading = false;
 
@@ -9,48 +11,14 @@
 	let logsFiltered: string[] = [];
 	let logsLength = 0;
 
-	let connected = false;
-	const abortController = new AbortController();
-
-	onMount(() => {
-		const interval = setInterval(fetchLogs, 1000);
-		return () => {
-			clearInterval(interval);
-			abortController.abort();
-		};
-	});
-
-	const fetchLogs = () => {
-		if (connected) {
-			return;
-		}
-		connected = true;
-		const writeStream = new WritableStream({
-			start: () => {
-				connected = true;
-			},
-			write: (chunk) => {
-				connected = true;
-				const chunkStr = new TextDecoder().decode(chunk);
-				const strings = chunkStr.split('\n').filter((str) => str);
+	$: {
+		if (browser) {
+			fetchStream('/api/settings/logs', (data) => {
+				const strings = data.split('\n').filter((str) => str);
 				logs = [...logs, ...strings];
-			},
-			close: () => {
-				connected = false;
-			}
-		});
-		fetch('/api/settings/logs', { signal: abortController.signal })
-			.then((res) => res.body)
-			.then((body) => {
-				if (!body) {
-					return;
-				}
-				body.pipeTo(writeStream);
-			})
-			.catch(() => {
-				connected = false;
 			});
-	};
+		}
+	}
 
 	let scrollContainer;
 	let selectInfo = true;

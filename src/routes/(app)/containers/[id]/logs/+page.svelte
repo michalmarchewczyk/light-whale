@@ -1,66 +1,44 @@
 <script lang="ts">
 	import type ContainerData from '$lib/server/docker/ContainerData';
-	import { onMount } from 'svelte';
 	import Convert from 'ansi-to-html';
+	import fetchStream from '$lib/client/utils/fetchStream';
+	import { browser } from '$app/environment';
+	import { afterUpdate } from 'svelte';
 	const convert = new Convert();
 
 	export let data: { container: ContainerData };
 
 	let logs = [];
-
 	let scrollContainer;
 
-	let connected = false;
-	const abortController = new AbortController();
-
-	onMount(() => {
-		const interval = setInterval(fetchLogs, 1000);
-		return () => {
-			clearInterval(interval);
-			abortController.abort();
-		};
-	});
-
-	const fetchLogs = () => {
-		if (connected || (data?.container?.state !== 'running' && logs.length > 0)) {
-			return;
-		}
-		connected = true;
-		const writeStream = new WritableStream({
-			start: () => {
-				if (data?.container?.state === 'running') {
-					logs = [];
-				}
-				connected = true;
-			},
-			write: (chunk) => {
-				connected = true;
-				const chunkStr = new TextDecoder().decode(chunk);
-				const strings = chunkStr.split('\n').filter((str) => str);
-				const newLogs = strings.map((s) => convert.toHtml(s.slice(39)));
-				logs = [...logs, ...newLogs];
-				setTimeout(() => {
-					if (scrollContainer) {
-						scrollContainer.scrollTop = logs.length * 100;
+	$: {
+		if (browser) {
+			fetchStream(
+				`/api/containers/${data?.container?.id}/logs`,
+				(data) => {
+					const strings = data.split('\n').filter((str) => str);
+					const newLogs = strings.map((s) => convert.toHtml(s.slice(39)));
+					logs = [...logs, ...newLogs];
+				},
+				() => {
+					if (data?.container?.state === 'running') {
+						logs = [];
 					}
-				}, 40);
-			},
-			close: () => {
-				connected = false;
-			}
-		});
-		fetch(`/api/containers/${data?.container?.id}/logs`, { signal: abortController.signal })
-			.then((res) => res.body)
-			.then((body) => {
-				if (!body) {
-					return;
+				},
+				() => {
+					if (data?.container?.state !== 'running' && logs.length > 0) {
+						return true;
+					}
 				}
-				body.pipeTo(writeStream);
-			})
-			.catch(() => {
-				connected = false;
-			});
-	};
+			);
+		}
+	}
+
+	afterUpdate(() => {
+		if (scrollContainer) {
+			scrollContainer.scrollTop = scrollContainer.scrollTop = logs.length * 100;
+		}
+	});
 </script>
 
 <svelte:head>

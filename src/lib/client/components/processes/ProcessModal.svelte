@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type Process from '$lib/server/processes/Process';
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate } from 'svelte';
 	import ItemInfo from '$lib/client/components/ItemInfo.svelte';
 	import BoltIcon from '$icons/bolt.svg';
 	import Portal from '$lib/client/components/Portal.svelte';
+	import { browser } from '$app/environment';
+	import fetchStream from '$lib/client/utils/fetchStream';
 
 	export let open = false;
 	export let process: Process;
@@ -11,38 +13,19 @@
 	let lines: string[] = [];
 
 	$: {
-		lines = process.state === 'running' ? [] : [];
+		lines = process?.state === 'running' ? [] : [];
 	}
 
 	let progress = -1;
 
 	$: progress = process?.progress ?? -1;
 
-	let connected = false;
-	const abortController = new AbortController();
 	let scrollContainer;
 
-	onMount(() => {
-		const interval = setInterval(fetchStats, 200);
-		return () => {
-			clearInterval(interval);
-			abortController.abort();
-		};
-	});
-
-	const fetchStats = () => {
-		if (connected) {
-			return;
-		}
-		connected = true;
-		const writeStream = new WritableStream({
-			start: () => {
-				connected = true;
-			},
-			write: (chunk) => {
-				connected = true;
-				const chunkStr = new TextDecoder().decode(chunk);
-				const strings = chunkStr.split('\n');
+	$: {
+		if (browser) {
+			fetchStream(`/api/processes/${process?.id}`, (data) => {
+				const strings = data.split('\n');
 				for (const string of strings) {
 					if (string.length > 0) {
 						const data = JSON.parse(string);
@@ -50,23 +33,9 @@
 						lines = lines.concat(data.newData.split('\n').filter((s) => s.length > 0));
 					}
 				}
-			},
-			close: () => {
-				connected = false;
-			}
-		});
-		fetch(`/api/processes/${process.id}`, { signal: abortController.signal })
-			.then((res) => res.body)
-			.then((body) => {
-				if (!body) {
-					return;
-				}
-				body.pipeTo(writeStream);
-			})
-			.catch(() => {
-				connected = false;
 			});
-	};
+		}
+	}
 
 	afterUpdate(() => {
 		if (scrollContainer) {
