@@ -1,0 +1,3 @@
+[submodule "src/lib/docs"]
+	path = src/lib/docs
+	url = https://github.com/michalmarchewczyk/light-whale-docs
