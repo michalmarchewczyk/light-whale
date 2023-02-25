@@ -19,7 +19,7 @@ const config: UserConfig = {
 			}
 		})
 	],
-	assetsInclude: ['**/*.conf'],
+	assetsInclude: ['**/*.conf', '**/*.{png,PNG,jpg,JPG,jpeg,JPEG}'],
 	resolve: {
 		alias: {
 			$icons: path.resolve('./node_modules/heroicons/24/outline')

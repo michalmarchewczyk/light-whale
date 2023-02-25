@@ -1,7 +1,11 @@
 <script lang="ts">
-	import type Component from 'svelte/types/compiler/compile/Component';
+	import { marked } from 'marked';
 
-	export let data: { component: Component; title: string };
+	export let data: { raw: string; title: string };
+
+	$: htmlCode = marked(data?.raw ?? '', {
+		baseUrl: '/docs/'
+	});
 </script>
 
 <svelte:head>
@@ -9,7 +13,7 @@
 </svelte:head>
 
 <div class="prose">
-	<svelte:component this={data.component} />
+	{@html htmlCode}
 </div>
 
 <style lang="scss">
