@@ -12,7 +12,9 @@
 	<title>{data.title} - Light-Whale Docs</title>
 </svelte:head>
 
-<div class="prose">
+<div
+	class="prose w-full max-w-full prose-img:rounded-xl hover:prose-a:text-primary-focus prose-h2:text-[1.75rem]"
+>
 	{@html htmlCode}
 </div>
 
