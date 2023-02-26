@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	export let icon;
-	export let loading;
+	export let loading = false;
 	export let disabled = false;
 	export let neutral = false;
 	export let formaction: string | undefined = undefined;
@@ -11,7 +11,12 @@
 </script>
 
 {#if href}
-	<a class="btn btn-primary justify-start btn-block text-base px-2 min-h-0 {$$props.class}" {href}>
+	<a
+		class="btn btn-primary justify-start btn-block text-base px-2 min-h-0 {$$props.class}"
+		{href}
+		target={href.startsWith('http') ? '_blank' : undefined}
+		rel={href.startsWith('http') ? 'noreferrer' : undefined}
+	>
 		<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
 		<span class="mt-[-0.25rem]">
 			<slot />
