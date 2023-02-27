@@ -7,7 +7,18 @@
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
 
-	export let data: { zones: DnsZone[] };
+	export let data: { dns: { zones: Promise<DnsZone[]> } };
+
+	let zones: DnsZone[] = [];
+
+	let loading = true;
+
+	$: {
+		data?.dns.zones.then((z) => {
+			zones = z;
+			loading = false;
+		});
+	}
 
 	let sort = '';
 	let order = '';
@@ -17,8 +28,8 @@
 	let filteredRecords: DnsRecord[] = [];
 
 	$: {
-		filteredZones = data.zones;
-		filteredRecords = data.zones.flatMap((zone) => zone.records);
+		filteredZones = zones;
+		filteredRecords = zones.flatMap((zone) => zone.records);
 		if (sort === 'name') {
 			filteredZones = filteredZones.sort((a, b) => (a.name < b.name ? 1 : -1));
 			filteredRecords = filteredRecords.sort((a, b) => (a.name < b.name ? 1 : -1));
@@ -40,14 +51,16 @@
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
 	<ListHeader
 		title="DNS"
-		badge="{data.zones.flatMap((z) => z.records).length} records / {data.zones.length} zones"
+		badge="{zones.flatMap((z) => z.records).length} records / {zones.length} zones"
 	>
 		<SortMenu bind:value={sort} bind:order values={['modified', 'name']} class="float-right" />
 		<FilterMenu name="Group by" bind:value={group} values={['zone', 'none']} />
 	</ListHeader>
 </div>
 <div class="p-8 pt-2">
-	{#if group === 'zone'}
+	{#if loading}
+		<p class="w-full text-center text-3xl pt-12 opacity-50">Loading...</p>
+	{:else if group === 'zone'}
 		{#each filteredZones as zone}
 			<DnsZoneItem {zone} {sort} {order} />
 		{:else}
