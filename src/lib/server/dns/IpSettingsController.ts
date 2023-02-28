@@ -69,4 +69,9 @@ export default class IpSettingsController {
 	public isAutoAdd() {
 		return this.ipSettings.autoAdd;
 	}
+
+	public async updateSettings(settings: Pick<IpSettings, 'autoAdd'>) {
+		this.ipSettings.autoAdd = settings.autoAdd;
+		await this.saveIpSettings();
+	}
 }

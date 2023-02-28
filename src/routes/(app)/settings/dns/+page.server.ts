@@ -6,17 +6,13 @@ import validator from 'validator';
 
 export const load = (async ({ depends }) => {
 	depends('app:dns');
-	const allTokens = await dnsProvidersController.listAllTokens();
-	const v4addresses = ipSettingsController.listV4Addresses();
-	const v6addresses = ipSettingsController.listV6Addresses();
-	const autoAddIp = ipSettingsController.isAutoAdd();
 	return {
-		tokens: allTokens,
+		tokens: await dnsProvidersController.listAllTokens(),
 		ipSettings: {
-			v4addresses,
-			v6addresses,
+			v4addresses: ipSettingsController.listV4Addresses(),
+			v6addresses: ipSettingsController.listV6Addresses(),
 			publicIp: ipSettingsController.detectPublicIp(),
-			autoAddIp
+			autoAddIp: ipSettingsController.isAutoAdd()
 		}
 	};
 }) satisfies PageServerLoad;
@@ -83,5 +79,10 @@ export const actions = {
 		if (!removed) {
 			return fail(500, { ipError: 'Failed to remove ip' });
 		}
+	},
+	updateIpSettings: async ({ request }) => {
+		const data = await request.formData();
+		const autoAdd = data.has('autoAdd');
+		await ipSettingsController.updateSettings({ autoAdd });
 	}
 } satisfies Actions;

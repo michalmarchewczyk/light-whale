@@ -28,6 +28,8 @@
 	let selectedService = 'Cloudflare';
 
 	let tokenInput: HTMLInputElement;
+
+	let ipSettingsForm: HTMLFormElement;
 </script>
 
 <svelte:head>
@@ -129,14 +131,28 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">IP Address Settings</h2>
-		<label class="flex align-middle items-center justify-between h-12">
-			<span class="text-lg">Automatically add new DNS records with saved public IP addresses</span>
-			<input
-				type="checkbox"
-				class="toggle mt-1 toggle-primary"
-				checked={data?.ipSettings.autoAddIp}
-			/>
-		</label>
+		<form
+			method="POST"
+			action="?/updateIpSettings"
+			bind:this={ipSettingsForm}
+			use:enhance={() => {
+				return () => null;
+			}}
+		>
+			<label class="flex align-middle items-center justify-between h-12">
+				<span class="text-lg">Automatically add new DNS records with saved public IP addresses</span
+				>
+				<input
+					type="checkbox"
+					class="toggle mt-1 toggle-primary"
+					checked={data?.ipSettings.autoAddIp}
+					name="autoAdd"
+					on:change={() => {
+						ipSettingsForm.requestSubmit();
+					}}
+				/>
+			</label>
+		</form>
 		<div class="divider mb-0 mt-2" />
 		<span class="text-lg font-semibold mb-0 block">Saved IP addresses:</span>
 		<table class="table w-full mt-0 mb-2">
