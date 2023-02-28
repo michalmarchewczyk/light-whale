@@ -5,8 +5,21 @@
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
 	import type DnsProviderToken from '$lib/server/dns/DnsProviderToken';
 	import DnsProviderTokenItem from '$lib/client/components/dns/DnsProviderTokenItem.svelte';
+	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import TrashIcon from '$icons/trash.svg';
+	import { invalidate } from '$app/navigation';
 
-	export let data: { tokens: DnsProviderToken[] };
+	export let data: {
+		tokens: DnsProviderToken[];
+		ipSettings: {
+			publicIp: Promise<string | null>;
+			v4addresses: string[];
+			v6addresses: string[];
+			autoAddIp: boolean;
+		};
+	};
+
+	let publicIp = '';
 
 	let loading = false;
 
@@ -36,7 +49,7 @@
 		<div class="divider mb-0 mt-0" />
 		<form
 			method="POST"
-			action="?/add"
+			action="?/addToken"
 			use:enhance={() => {
 				loading = true;
 				return ({ update }) => {
@@ -113,5 +126,92 @@
 	</div>
 </div>
 
-<style lang="scss">
-</style>
+<div class="card shadow-md bg-base-100 mb-6">
+	<div class="card-body p-6 pt-5">
+		<h2 class="card-title text-xl">IP Address Settings</h2>
+		<label class="flex align-middle items-center justify-between h-12">
+			<span class="text-lg">Automatically add new DNS records with saved public IP addresses</span>
+			<input
+				type="checkbox"
+				class="toggle mt-1 toggle-primary"
+				checked={data?.ipSettings.autoAddIp}
+			/>
+		</label>
+		<div class="divider mb-0 mt-2" />
+		<span class="text-lg font-semibold mb-0 block">Saved IP addresses:</span>
+		<table class="table w-full mt-0 mb-2">
+			<tbody>
+				{#each [...data.ipSettings.v4addresses, ...data.ipSettings.v6addresses] as address}
+					<tr>
+						<td class="flex items-center space-x-4 h-16">
+							<div class="flex-1">
+								<div class="text-lg font-bold">{address}</div>
+							</div>
+							<form
+								method="POST"
+								action="?/removeIp"
+								use:enhance={() => {
+									loading = true;
+									return async ({ update }) => {
+										await update();
+										loading = false;
+									};
+								}}
+							>
+								<input type="hidden" name="address" value={address} />
+								<ActionButton class="w-32 float-right" {loading} icon={TrashIcon}
+									>Remove</ActionButton
+								>
+							</form>
+						</td>
+					</tr>
+				{:else}
+					<p class="w-full text-center text-3xl p-4 opacity-50">No addresses saved</p>
+				{/each}
+			</tbody>
+		</table>
+		<form
+			method="POST"
+			action="?/addIp"
+			use:enhance={() => {
+				loading = true;
+				return ({ update }) => {
+					loading = false;
+					update();
+				};
+			}}
+		>
+			<FormError error={form?.ipError} />
+			<div class="flex space-x-4">
+				<label class="input-group flex-1">
+					<span class="whitespace-nowrap">New address: </span>
+					<input
+						name="address"
+						type="text"
+						bind:value={publicIp}
+						placeholder="0.0.0.0"
+						class="input input-bordered text-base w-full"
+					/>
+				</label>
+				<button
+					class="flex-none btn cursor-pointer btn-outline"
+					class:loading
+					type="button"
+					on:click={async () => {
+						loading = true;
+						await invalidate('app:dns');
+						data.ipSettings.publicIp.then((ip) => {
+							publicIp = ip ?? '';
+							loading = false;
+						});
+					}}
+				>
+					Detect
+				</button>
+				<button class="flex-none btn btn-primary cursor-pointer" disabled={loading} class:loading>
+					Add
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -56,7 +56,7 @@
 			>
 			<RemoveModal
 				bind:open={removeModal}
-				formaction="/settings/dns?/remove"
+				formaction="/settings/dns?/removeToken"
 				name={token.login}
 				label="{token.service} token for"
 				confirmPassword="true"
