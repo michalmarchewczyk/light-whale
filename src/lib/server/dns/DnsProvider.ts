@@ -28,4 +28,8 @@ export default abstract class DnsProvider {
 		zones = zones.filter((r, i, a) => a.findIndex((t) => t.name === r.name) === i);
 		return zones;
 	}
+
+	public abstract createRecord(domain: string, address: string, zone: DnsZone): Promise<boolean>;
+
+	public abstract deleteRecords(domain: string, zone: DnsZone): Promise<boolean>;
 }

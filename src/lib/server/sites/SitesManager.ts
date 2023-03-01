@@ -4,11 +4,17 @@ import { logger } from '$lib/server/utils/Logger';
 import { EOL } from 'os';
 import type SiteData from '$lib/server/sites/SiteData';
 import crypto from 'crypto';
+import type IpSettingsController from '$lib/server/dns/IpSettingsController';
+import type DnsProvidersController from '$lib/server/dns/DnsProvidersController';
 
 export default class SitesManager {
 	private sites: Site[] = [];
 
-	constructor(private filesManager: FilesManager) {
+	constructor(
+		private filesManager: FilesManager,
+		private dnsProvidersController: DnsProvidersController,
+		private ipSettingsController: IpSettingsController
+	) {
 		logger.logVerbose('SitesManager initialized');
 	}
 
@@ -55,6 +61,7 @@ export default class SitesManager {
 
 	public async removeSite(site: Site): Promise<void> {
 		await site.remove();
+		await this.dnsProvidersController.deleteRecords(site.data.domain);
 		this.sites = this.sites.filter((s) => s.id !== site.id);
 	}
 
@@ -80,6 +87,15 @@ export default class SitesManager {
 		};
 		const site = new Site(siteData.id, siteData, this.filesManager);
 		this.sites.push(site);
+		if (this.ipSettingsController.isAutoAdd()) {
+			const addresses = [
+				...this.ipSettingsController.listV4Addresses(),
+				...this.ipSettingsController.listV6Addresses()
+			];
+			for (const address of addresses) {
+				await this.dnsProvidersController.createRecord(domain, address);
+			}
+		}
 		return true;
 	}
 

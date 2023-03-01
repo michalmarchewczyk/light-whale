@@ -6,6 +6,8 @@
 	import type SiteData from '$lib/server/sites/SiteData';
 	import { enhance } from '$app/forms';
 	import type DnsZone from '$lib/server/dns/DnsZone';
+	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import PlusIcon from '$icons/plus.svg';
 
 	export let form: ActionData;
 
@@ -23,8 +25,6 @@
 	let selectedZone = data?.zones[0].name ?? 'Custom';
 
 	let domainInput: HTMLInputElement;
-
-	let submitButton: HTMLInputElement;
 
 	let port: number = parseInt(data?.ports[0] ?? '80', 10) ?? 80;
 </script>
@@ -55,9 +55,9 @@
 			method="POST"
 			use:enhance={() => {
 				loading = true;
-				return ({ update }) => {
+				return async ({ update }) => {
+					await update();
 					loading = false;
-					update();
 				};
 			}}
 		>
@@ -139,7 +139,6 @@
 										type="button"
 										on:click={() => {
 											port = parseInt(p.split(' ')[0], 10);
-											submitButton.focus();
 										}}
 										class="w-full overflow-hidden overflow-ellipsis"
 									>
@@ -152,7 +151,9 @@
 				</div>
 			</div>
 			<div class="card-actions mt-4">
-				<input class="btn btn-primary" type="submit" value="Create" bind:this={submitButton} />
+				<ActionButton {loading} disabled={loading} class="w-28" icon={PlusIcon}>
+					Create
+				</ActionButton>
 			</div>
 		</form>
 	</div>

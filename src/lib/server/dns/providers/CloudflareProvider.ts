@@ -59,13 +59,14 @@ export default class CloudflareProvider extends DnsProvider {
 			return [];
 		}
 		const data = await res.json();
-		let zones = data.result.map((zone: Record<string, string>) => {
+		let zones: DnsZone[] = data.result.map((zone: Record<string, string>) => {
 			return {
 				provider: 'cloudflare',
 				id: zone.id,
 				name: zone.name,
 				records: [],
-				modifiedDate: new Date(zone.modified_on)
+				modifiedDate: new Date(zone.modified_on),
+				tokenId: token.id
 			};
 		});
 		zones = await Promise.all(
@@ -100,5 +101,44 @@ export default class CloudflareProvider extends DnsProvider {
 				modifiedDate: new Date(record.modified_on)
 			})
 		);
+	}
+
+	public async createRecord(domain: string, address: string, zone: DnsZone): Promise<boolean> {
+		const token = await this.tokensManager.getTokenById(zone.tokenId);
+		if (!token) {
+			return false;
+		}
+		const type = address.includes(':') ? 'AAAA' : 'A';
+		const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${zone.id}/dns_records`, {
+			method: 'POST',
+			headers: { Authorization: `Bearer ${token.token}` },
+			body: JSON.stringify({
+				type,
+				name: domain,
+				content: address,
+				ttl: 1
+			})
+		});
+		return res.status === 200;
+	}
+
+	public async deleteRecords(domain: string, zone: DnsZone): Promise<boolean> {
+		const token = await this.tokensManager.getTokenById(zone.tokenId);
+		if (!token) {
+			return false;
+		}
+		const records = zone.records.filter((record) => record.name === domain);
+		const res = await Promise.all(
+			records.map(async (record) => {
+				return await fetch(
+					`https://api.cloudflare.com/client/v4/zones/${zone.id}/dns_records/${record.id}`,
+					{
+						method: 'DELETE',
+						headers: { Authorization: `Bearer ${token.token}` }
+					}
+				);
+			})
+		);
+		return res.every((r) => r.status === 200);
 	}
 }

@@ -43,4 +43,32 @@ export default class DnsProvidersController {
 		}
 		return this.cachedZones;
 	}
+
+	public async createRecord(domain: string, address: string) {
+		logger.logInfo(`Creating DNS record for ${domain} with address ${address}`);
+		const zones = await this.listAllZones();
+		const zone = zones.find((z) => domain.endsWith(z.name));
+		if (!zone) {
+			return false;
+		}
+		const provider = this.providers.find((p) => p.serviceName === zone.provider);
+		if (!provider) {
+			return false;
+		}
+		return await provider.createRecord(domain, address, zone);
+	}
+
+	public async deleteRecords(domain: string) {
+		logger.logInfo(`Deleting DNS records for ${domain}`);
+		const zones = await this.listAllZones();
+		const zone = zones.find((z) => domain.endsWith(z.name));
+		if (!zone) {
+			return false;
+		}
+		const provider = this.providers.find((p) => p.serviceName === zone.provider);
+		if (!provider) {
+			return false;
+		}
+		return await provider.deleteRecords(domain, zone);
+	}
 }

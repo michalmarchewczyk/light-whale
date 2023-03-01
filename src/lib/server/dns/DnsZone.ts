@@ -6,4 +6,5 @@ export default interface DnsZone {
 	name: string;
 	records: DnsRecord[];
 	modifiedDate: Date;
+	tokenId: string;
 }
