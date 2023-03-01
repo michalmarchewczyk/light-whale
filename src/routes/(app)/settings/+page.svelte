@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { theme, animations } from '$lib/client/stores/settings';
+	import { theme, animations, hideLwContainer } from '$lib/client/stores/settings';
 </script>
 
 <svelte:head>
@@ -31,6 +31,21 @@
 				checked={!$animations}
 				on:change={() => {
 					$animations = !$animations;
+				}}
+			/>
+		</label>
+	</div>
+</div>
+<div class="card shadow-md bg-base-100 mb-6">
+	<div class="card-body p-6 pt-5">
+		<label class="flex align-middle items-center justify-between">
+			<span class="text-xl w-40 font-semibold whitespace-nowrap">Hide LW Container</span>
+			<input
+				type="checkbox"
+				class="toggle mt-1"
+				checked={$hideLwContainer}
+				on:change={() => {
+					$hideLwContainer = !$hideLwContainer;
 				}}
 			/>
 		</label>

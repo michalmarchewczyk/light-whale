@@ -6,6 +6,8 @@
 	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
 	import type { ComposeAppData } from './+page.server';
 	import ComposeAppItem from '$lib/client/components/containers/ComposeAppItem.svelte';
+	import { hideLwContainer } from '$lib/client/stores/settings';
+	import { LW_NGINX_CONTAINER_NAME } from '$lib/client/config';
 
 	export let data: { containers: ContainerData[]; apps: ComposeAppData[] };
 
@@ -19,6 +21,12 @@
 	$: {
 		let filteredApps = data.apps;
 		let filteredContainers = data.containers.filter((c) => !c.compose);
+
+		if ($hideLwContainer) {
+			filteredContainers = filteredContainers.filter(
+				(c) => c.name !== '/' + LW_NGINX_CONTAINER_NAME
+			);
+		}
 
 		if (['running', 'created', 'exited'].includes(state)) {
 			filteredContainers = filteredContainers.filter((c) => c.state === state);
