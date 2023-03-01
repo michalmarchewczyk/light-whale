@@ -5,14 +5,28 @@
 	import SiteItem from '$lib/client/components/sites/SiteItem.svelte';
 	import type SiteData from '$lib/server/sites/SiteData';
 	import { enhance } from '$app/forms';
+	import type DnsZone from '$lib/server/dns/DnsZone';
 
 	export let form: ActionData;
 
-	export let data: { container: ContainerData; containerSites: SiteData[] };
+	export let data: {
+		container: ContainerData;
+		containerSites: SiteData[];
+		zones: DnsZone[];
+		ports: string[];
+	};
 
 	let loading = false;
 
-	$: network = data.container?.networks['light-whale-network'] ?? null;
+	$: network = data?.container?.networks['light-whale-network'] ?? null;
+
+	let selectedZone = data?.zones[0].name ?? 'Custom';
+
+	let domainInput: HTMLInputElement;
+
+	let submitButton: HTMLInputElement;
+
+	let port: number = parseInt(data?.ports[0] ?? '80', 10) ?? 80;
 </script>
 
 <svelte:head>
@@ -52,26 +66,93 @@
 				<div class="flex space-x-4 mt-4 w-full">
 					<label class="pl-0 flex flex-1 space-x-4">
 						<span class="text-lg mb-0 mt-2 ">Domain: </span>
-						<input
-							class="input input-bordered w-full text-base"
-							placeholder="example.com"
-							type="text"
-							name="domain"
-						/>
+						<label class="input-group">
+							<input
+								class="input input-bordered w-full text-base"
+								placeholder={selectedZone === 'Custom' ? 'example.com' : 'subdomain'}
+								type="text"
+								name="domain"
+								bind:this={domainInput}
+							/>
+							<input type="hidden" name="zone" bind:value={selectedZone} />
+							<div class="dropdown w-64">
+								<button
+									class="select select-bordered bg-base-100 align-middle w-full rounded-l-none"
+									type="button"
+								>
+									{#if selectedZone === 'Custom'}
+										<span class="text-base bg-base-100 px-0 mt-2.5 italic">Custom</span>
+									{:else}
+										<span class="text-base bg-base-100 px-0 mt-2.5">.{selectedZone}</span>
+									{/if}
+								</button>
+								<ul
+									class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full"
+								>
+									{#each data.zones as zone}
+										<li>
+											<button
+												type="button"
+												on:click={() => {
+													selectedZone = zone.name;
+													domainInput.focus();
+												}}
+											>
+												.{zone.name}
+											</button>
+										</li>
+									{/each}
+									<li>
+										<button
+											type="button"
+											class="italic"
+											on:click={() => {
+												selectedZone = 'Custom';
+												domainInput.focus();
+											}}
+										>
+											Custom
+										</button>
+									</li>
+								</ul>
+							</div>
+						</label>
 					</label>
-					<label class="pl-0 flex space-x-4">
-						<span class="text-lg mb-0 mt-2 whitespace-nowrap">Application port: </span>
-						<input
-							class="input input-bordered w-full text-base w-32"
-							placeholder="80"
-							type="number"
-							name="port"
-						/>
-					</label>
+					<div class="dropdown  dropdown-end">
+						<label class="pl-0 flex space-x-4" tabindex="0">
+							<span class="text-lg mb-0 mt-2 whitespace-nowrap">Application port: </span>
+							<input
+								class="input input-bordered text-base w-32"
+								placeholder="80"
+								type="number"
+								name="port"
+								bind:value={port}
+							/>
+						</label>
+						<ul
+							tabindex="0"
+							class="dropdown-content menu bg-base-100 rounded-box shadow-xl font-semibold w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"
+						>
+							{#each data.ports as p}
+								<li class="w-full overflow-hidden overflow-ellipsis">
+									<button
+										type="button"
+										on:click={() => {
+											port = parseInt(p.split(' ')[0], 10);
+											submitButton.focus();
+										}}
+										class="w-full overflow-hidden overflow-ellipsis"
+									>
+										{p}
+									</button>
+								</li>
+							{/each}
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="card-actions mt-4">
-				<input class="btn btn-primary" type="submit" value="Create" />
+				<input class="btn btn-primary" type="submit" value="Create" bind:this={submitButton} />
 			</div>
 		</form>
 	</div>

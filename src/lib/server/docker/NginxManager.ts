@@ -109,6 +109,9 @@ export default class NginxManager {
 			logger.logError('Failed to connect LW container to LW network');
 			return false;
 		}
+		logger.logInfo('Installing nmap on LW container');
+		await container.exec('apt-get update');
+		await container.exec('apt-get install -y nmap');
 		return true;
 	}
 
@@ -120,5 +123,21 @@ export default class NginxManager {
 		}
 		await container.exec('nginx -s reload');
 		return true;
+	}
+
+	public async scanContainerPorts(containerId: string): Promise<string[]> {
+		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
+		if (!container) {
+			return [];
+		}
+		const res = await container.exec(
+			`nmap -sT --top-ports 5000 -v0 -oN /dev/stdout ${containerId.slice(0, 12)}`
+		);
+		return (
+			res
+				?.split('\n')
+				.filter((l) => /^\d+\/tcp/.test(l))
+				.map((l) => `${l.split('/')[0]} (${l.split('open')[1].trim()})`) ?? []
+		);
 	}
 }

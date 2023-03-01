@@ -4,6 +4,8 @@ import type DnsProviderToken from '$lib/server/dns/DnsProviderToken';
 import type DnsZone from '$lib/server/dns/DnsZone';
 
 export default class DnsProvidersController {
+	private cachedZones: DnsZone[] = [];
+
 	constructor(private providers: DnsProvider[] = []) {
 		logger.logVerbose('DnsProvidersController initialized');
 	}
@@ -31,6 +33,14 @@ export default class DnsProvidersController {
 			const bDate = new Date(b.modifiedDate);
 			return bDate.getTime() - aDate.getTime();
 		});
+		this.cachedZones = zones;
 		return zones;
+	}
+
+	public async getCachedZones() {
+		if (this.cachedZones.length === 0) {
+			await this.listAllZones();
+		}
+		return this.cachedZones;
 	}
 }
