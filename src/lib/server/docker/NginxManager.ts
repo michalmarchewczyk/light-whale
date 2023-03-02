@@ -71,12 +71,12 @@ export default class NginxManager {
 		await this.filesManager.writeFile('sites/404.html', page404, true);
 		await this.filesManager.writeFile('sites/502.html', page502, true);
 		const sitesPath = await this.filesManager.getAbsPath('sites/');
-		await this.imagesManager.pullImage('nginx', 'latest', true);
+		await this.imagesManager.pullImage('mmarchewczyk/light-whale-nginx', 'latest', true);
 		const res = await fetch(DOCKER_URL + `/containers/create?name=${LW_NGINX_CONTAINER_NAME}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				Image: 'nginx:latest',
+				Image: 'mmarchewczyk/light-whale-nginx:latest',
 				HostConfig: {
 					Binds: [`${sitesPath}:/etc/nginx/conf.d`],
 					PortBindings: {
@@ -109,9 +109,6 @@ export default class NginxManager {
 			logger.logError('Failed to connect LW container to LW network');
 			return false;
 		}
-		logger.logInfo('Installing nmap on LW container');
-		await container.exec('apt-get update');
-		await container.exec('apt-get install -y nmap');
 		return true;
 	}
 
