@@ -5,6 +5,7 @@
 	import type ContainerData from '$lib/server/docker/ContainerData';
 	import type ImageData from '$lib/server/docker/ImageData';
 	import ImageItem from '$lib/client/components/images/ImageItem.svelte';
+	import { hideLwContainer } from '$lib/client/stores/settings';
 
 	export let data: { images: ImageData[]; containers: ContainerData[] };
 
@@ -20,6 +21,11 @@
 
 	$: {
 		filteredImages = data.images;
+		if ($hideLwContainer) {
+			filteredImages = filteredImages.filter(
+				(i) => !i.tags[0].startsWith('mmarchewczyk/light-whale-nginx')
+			);
+		}
 		if (used === 'used') {
 			filteredImages = filteredImages.filter(
 				(i) => data.containers.filter((c) => c.imageId === i.id).length > 0
