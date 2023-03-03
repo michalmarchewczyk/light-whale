@@ -25,7 +25,7 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">Git Service Tokens</h2>
-		<table class="table w-full mt-4 mb-0">
+		<table class="table w-full mt-2 mb-0">
 			<tbody>
 				{#each data.tokens as token}
 					<GitServiceTokenItem {token} />
@@ -34,7 +34,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<div class="divider mb-0 mt-0" />
+		<div class="divider mb-1 mt-0 mx-[-1.5rem]" />
 		<form
 			method="POST"
 			action="?/add"

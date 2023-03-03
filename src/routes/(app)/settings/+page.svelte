@@ -8,8 +8,9 @@
 
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
-		<label class="flex align-middle items-center justify-between">
-			<span class="text-xl w-40 font-semibold">Dark mode</span>
+		<span class="card-title mb-4">Appearance</span>
+		<label class="flex align-middle items-center justify-between mb-4">
+			<span class="text-lg w-40">Dark mode</span>
 			<input
 				type="checkbox"
 				class="toggle mt-1"
@@ -19,12 +20,8 @@
 				}}
 			/>
 		</label>
-	</div>
-</div>
-<div class="card shadow-md bg-base-100 mb-6">
-	<div class="card-body p-6 pt-5">
 		<label class="flex align-middle items-center justify-between">
-			<span class="text-xl w-40 font-semibold whitespace-nowrap">Disable animations</span>
+			<span class="text-lg w-40 whitespace-nowrap">Disable animations</span>
 			<input
 				type="checkbox"
 				class="toggle mt-1"
@@ -39,7 +36,7 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<label class="flex align-middle items-center justify-between">
-			<span class="text-xl w-40 font-semibold whitespace-nowrap">Hide LW Container</span>
+			<span class="text-lg w-40  whitespace-nowrap">Hide LW Container</span>
 			<input
 				type="checkbox"
 				class="toggle mt-1"

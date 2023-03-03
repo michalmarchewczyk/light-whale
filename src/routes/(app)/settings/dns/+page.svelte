@@ -39,7 +39,7 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<h2 class="card-title text-xl">DNS Providers Tokens</h2>
-		<table class="table w-full mt-4 mb-0">
+		<table class="table w-full mt-2 mb-0">
 			<tbody>
 				{#each data.tokens as token}
 					<DnsProviderTokenItem {token} />
@@ -48,7 +48,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<div class="divider mb-0 mt-0" />
+		<div class="divider mb-1 mt-0  mx-[-1.5rem]" />
 		<form
 			method="POST"
 			action="?/addToken"
@@ -130,7 +130,7 @@
 
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
-		<h2 class="card-title text-xl">IP Address Settings</h2>
+		<h2 class="card-title text-xl mb-2">IP Address Settings</h2>
 		<form
 			method="POST"
 			action="?/updateIpSettings"
@@ -139,7 +139,7 @@
 				return () => null;
 			}}
 		>
-			<label class="flex align-middle items-center justify-between h-12">
+			<label class="flex align-middle items-center justify-between h-10">
 				<span class="text-lg">Automatically add new DNS records with saved public IP addresses</span
 				>
 				<input
@@ -153,9 +153,9 @@
 				/>
 			</label>
 		</form>
-		<div class="divider mb-0 mt-2" />
+		<div class="divider mb-1 mt-2  mx-[-1.5rem]" />
 		<span class="text-lg font-semibold mb-0 block">Saved IP addresses:</span>
-		<table class="table w-full mt-0 mb-2">
+		<table class="table w-full mt-2 mb-4">
 			<tbody>
 				{#each [...data.ipSettings.v4addresses, ...data.ipSettings.v6addresses] as address}
 					<tr>
