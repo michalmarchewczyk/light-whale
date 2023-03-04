@@ -6,6 +6,7 @@ import type SiteData from '$lib/server/sites/SiteData';
 import crypto from 'crypto';
 import type IpSettingsController from '$lib/server/dns/IpSettingsController';
 import type DnsProvidersController from '$lib/server/dns/DnsProvidersController';
+import type NginxManager from '$lib/server/docker/NginxManager';
 
 export default class SitesManager {
 	private sites: Site[] = [];
@@ -13,7 +14,8 @@ export default class SitesManager {
 	constructor(
 		private filesManager: FilesManager,
 		private dnsProvidersController: DnsProvidersController,
-		private ipSettingsController: IpSettingsController
+		private ipSettingsController: IpSettingsController,
+		private nginxManager: NginxManager
 	) {
 		logger.logVerbose('SitesManager initialized');
 	}
@@ -44,12 +46,13 @@ export default class SitesManager {
 			containerPort: parseInt(lines[3].split(' ')[2].trim(), 10),
 			domain: lines[4].split(' ')[2].trim(),
 			paused: lines[5].split(' ')[2].trim() === 'true',
-			created: new Date(lines[6].split(' ')[2].trim())
+			created: new Date(lines[6].split(' ')[2].trim()),
+			ssl: lines[7].split(' ')[2].trim() === 'true'
 		};
 	}
 
 	private createSiteFromData(data: SiteData): Site {
-		return new Site(data.id, data, this.filesManager);
+		return new Site(data.id, data, this.filesManager, this.nginxManager);
 	}
 
 	public async getSiteByDomain(domain: string): Promise<Site | undefined> {
@@ -83,9 +86,10 @@ export default class SitesManager {
 			containerPort: port,
 			domain,
 			paused: false,
-			created: new Date()
+			created: new Date(),
+			ssl: false
 		};
-		const site = new Site(siteData.id, siteData, this.filesManager);
+		const site = new Site(siteData.id, siteData, this.filesManager, this.nginxManager);
 		this.sites.push(site);
 		if (this.ipSettingsController.isAutoAdd()) {
 			const addresses = [

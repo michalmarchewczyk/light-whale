@@ -27,5 +27,19 @@ export const actions = {
 		}
 		await sitesManager.removeSite(site);
 		await nginxManager.reload();
+	},
+	changeSsl: async ({ params, request }) => {
+		const site = await sitesManager.getSiteByDomain(params.domain);
+		if (!site) {
+			return fail(404, { message: 'Site not found' });
+		}
+		const data = await request.formData();
+		const ssl = data.get('ssl') === 'on';
+		if (ssl) {
+			await site.enableSsl();
+		} else {
+			await site.disableSsl();
+		}
+		await nginxManager.reload();
 	}
 } satisfies Actions;

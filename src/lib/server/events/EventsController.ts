@@ -73,9 +73,11 @@ class EventsController {
 		}
 	}
 
-	push(event: Omit<Event, 'id'>): void {
+	push(event: Omit<Omit<Event, 'id'>, 'time'>): void {
 		this.controllers.forEach((controller) => {
-			controller.enqueue(JSON.stringify({ ...event, id: this.generateId() }) + '\n');
+			controller.enqueue(
+				JSON.stringify({ ...event, id: this.generateId(), time: Date.now() }) + '\n'
+			);
 		});
 	}
 

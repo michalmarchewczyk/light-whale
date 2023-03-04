@@ -5,4 +5,5 @@ export default interface SiteData {
 	domain: string;
 	created: Date;
 	paused: boolean;
+	ssl: boolean;
 }

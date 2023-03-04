@@ -12,6 +12,8 @@
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 	import type SiteData from '$lib/server/sites/SiteData';
+	import LockClosedIcon from '$icons/lock-closed.svg';
+	import LockOpenIcon from '$icons/lock-open.svg';
 	import { enhance } from '$app/forms';
 
 	export let site: SiteData;
@@ -23,6 +25,8 @@
 	let loading = false;
 
 	let removeModal = false;
+
+	let form: HTMLFormElement;
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-[5.5rem] overflow-hidden">
@@ -55,8 +59,10 @@
 		{/if}
 	</div>
 	<form
-		class="block w-28 md:w-64 overflow-visible flex-shrink-0 self-center"
+		class="block w-28 md:w-96 overflow-visible flex-shrink-0 self-center flex items-center justify-end pr-1"
 		method="POST"
+		action="/sites/{site.domain}?/changeSsl"
+		bind:this={form}
 		use:enhance={() => {
 			loading = true;
 			return ({ update }) => {
@@ -65,6 +71,19 @@
 			};
 		}}
 	>
+		<div class="inline-block w-20 mr-2">
+			<ItemInfo icon={site?.ssl ? LockClosedIcon : LockOpenIcon} class="font-semibold mb-1.5 mt-2"
+				>SSL</ItemInfo
+			>
+			<input
+				type="checkbox"
+				class="toggle toggle-primary ml-0.5"
+				checked={site?.ssl}
+				disabled={!online || loading}
+				name="ssl"
+				on:change={() => form.requestSubmit()}
+			/>
+		</div>
 		{#if site?.paused}
 			<ActionButton
 				icon={PlayIcon}

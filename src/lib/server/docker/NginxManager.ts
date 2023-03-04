@@ -71,6 +71,8 @@ export default class NginxManager {
 		await this.filesManager.writeFile('sites/404.html', page404, true);
 		await this.filesManager.writeFile('sites/502.html', page502, true);
 		const sitesPath = await this.filesManager.getAbsPath('sites/');
+		await this.filesManager.writeFile('ssl/.keep', '');
+		const sslPath = await this.filesManager.getAbsPath('ssl/');
 		await this.imagesManager.pullImage('mmarchewczyk/light-whale-nginx', 'latest', true);
 		const res = await fetch(DOCKER_URL + `/containers/create?name=${LW_NGINX_CONTAINER_NAME}`, {
 			method: 'POST',
@@ -78,9 +80,10 @@ export default class NginxManager {
 			body: JSON.stringify({
 				Image: 'mmarchewczyk/light-whale-nginx:latest',
 				HostConfig: {
-					Binds: [`${sitesPath}:/etc/nginx/conf.d`],
+					Binds: [`${sitesPath}:/etc/nginx/conf.d`, `${sslPath}:/etc/letsencrypt`],
 					PortBindings: {
-						'80/tcp': [{ HostPort: '80' }]
+						'80/tcp': [{ HostPort: '80' }],
+						'443/tcp': [{ HostPort: '443' }]
 					},
 					RestartPolicy: {
 						Name: 'always'
@@ -135,6 +138,23 @@ export default class NginxManager {
 				?.split('\n')
 				.filter((l) => /^\d+\/tcp/.test(l))
 				.map((l) => `${l.split('/')[0]} (${l.split('open')[1].trim()})`) ?? []
+		);
+	}
+
+	public async generateSslCertificate(domain: string): Promise<boolean> {
+		logger.logInfo(`Generating SSL certificate for ${domain}`);
+		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
+		if (!container) {
+			return false;
+		}
+		const res = await container.exec(
+			`certbot certonly --agree-tos --register-unsafely-without-email -n --nginx -d ${domain}`
+		);
+		console.log('res', res);
+		return (
+			res?.includes('Successfully received certificate') ||
+			res?.includes('Successfully deployed certificate') ||
+			false
 		);
 	}
 }
