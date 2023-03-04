@@ -22,7 +22,7 @@
 
 	$: network = data?.container?.networks['light-whale-network'] ?? null;
 
-	let selectedZone = data?.zones[0].name ?? 'Custom';
+	let selectedZone = data?.zones[0]?.name ?? 'Custom';
 
 	let domainInput: HTMLInputElement;
 

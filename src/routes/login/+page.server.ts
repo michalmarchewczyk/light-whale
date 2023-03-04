@@ -24,7 +24,7 @@ export const actions = {
 			return fail(400, { passwordError: 'Invalid password' });
 		}
 		const sessionId = sessionManager.createSession();
-		cookies.set('sessionId', sessionId.id);
+		cookies.set('sessionId', sessionId.id, { secure: false });
 		await tokensManager.initialize(password);
 		redirect(307, '/');
 	}
