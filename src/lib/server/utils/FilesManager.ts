@@ -76,6 +76,12 @@ export default class FilesManager {
 	}
 
 	async getAbsPath(filePath: string): Promise<string> {
+		const isDir = (await fs.stat(path.join(this.lwDirPath, filePath))).isDirectory();
+		if (isDir) {
+			const dir = await this.accessDir(filePath);
+			await dir.close();
+			return path.join(this.lwDirPath, filePath);
+		}
 		const file = await this.accessFile(filePath);
 		await file.close();
 		return path.join(this.lwDirPath, filePath);
