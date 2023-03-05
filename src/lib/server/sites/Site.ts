@@ -31,6 +31,11 @@ export default class Site {
 	public async enableSsl() {
 		logger.logInfo(`Enabling SSL for site ${this.id}`);
 		this.data.ssl = true;
+		eventsController.push({
+			type: 'info',
+			title: 'Enabling SSL',
+			message: `Generating SSL certificate for domain ${this.data.domain}`
+		});
 		const generated = await this.nginxManager.generateSslCertificate(this.data.domain);
 		if (!generated) {
 			logger.logError(`Failed to enable SSL certificate for site ${this.id}`);
@@ -40,6 +45,12 @@ export default class Site {
 				message: `Failed to generate SSL certificate for domain ${this.data.domain}`
 			});
 			this.data.ssl = false;
+		} else {
+			eventsController.push({
+				type: 'info',
+				title: 'SSL enabled',
+				message: `SSL certificate for domain ${this.data.domain} was generated successfully`
+			});
 		}
 		await this.saveFile();
 	}
@@ -47,6 +58,11 @@ export default class Site {
 	public async disableSsl() {
 		logger.logInfo(`Disabling SSL for site ${this.id}`);
 		this.data.ssl = false;
+		eventsController.push({
+			type: 'info',
+			title: 'Disabling SSL',
+			message: `Disabling SSL for domain ${this.data.domain}`
+		});
 		await this.saveFile();
 	}
 

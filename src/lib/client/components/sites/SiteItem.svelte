@@ -78,8 +78,8 @@
 			<input
 				type="checkbox"
 				class="toggle toggle-primary ml-0.5"
-				checked={site?.ssl}
-				disabled={!online || loading}
+				bind:checked={site.ssl}
+				disabled={site.paused || loading}
 				name="ssl"
 				on:change={() => form.requestSubmit()}
 			/>

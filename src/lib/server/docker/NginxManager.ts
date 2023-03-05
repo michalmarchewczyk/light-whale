@@ -150,10 +150,10 @@ export default class NginxManager {
 		const res = await container.exec(
 			`certbot certonly --agree-tos --register-unsafely-without-email -n --nginx -d ${domain}`
 		);
-		console.log('res', res);
 		return (
 			res?.includes('Successfully received certificate') ||
 			res?.includes('Successfully deployed certificate') ||
+			res?.includes('Certificate not yet due for renewal; no action taken.') ||
 			false
 		);
 	}
