@@ -8,8 +8,8 @@ export default class RepoAnalyzer {
 
 	public async getRepoGitInfo(repoDir: string): Promise<Repo['gitInfo']> {
 		const remotes = await this.git.cwd({ path: repoDir }).getRemotes(true);
-		const mainRemote = remotes.find((r) => r.name === 'origin') ?? remotes[0];
-		const remoteUrl = mainRemote.refs.fetch;
+		const mainRemote = remotes.find((r) => r.name === 'origin') ?? remotes[0] ?? null;
+		const remoteUrl = mainRemote?.refs.fetch ?? '';
 		const branchName = await this.git.cwd({ path: repoDir }).revparse(['--abbrev-ref', 'HEAD']);
 		const lastCommitInfo = (await this.git.cwd({ path: repoDir }).log({ maxCount: 1 })).latest;
 		const owner = `${lastCommitInfo?.author_name} <${lastCommitInfo?.author_email}>`;

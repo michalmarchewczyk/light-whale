@@ -9,6 +9,7 @@ import RepoFilesReader from '$lib/server/sources/git/RepoFilesReader';
 import RepoBuilder from '$lib/server/sources/git/RepoBuilder';
 import { processesManager } from '$lib/server/processes';
 import GitlabService from '$lib/server/sources/git/gitlab/GitlabService';
+import BitbucketService from '$lib/server/sources/git/bitbucket/BitbucketService';
 
 const git = simpleGit({
 	binary: 'git'
@@ -18,7 +19,13 @@ const githubService = new GithubService(tokensManager);
 
 const gitlabService = new GitlabService(tokensManager);
 
-export const gitServicesController = new GitServicesController([githubService, gitlabService]);
+const bitbucketService = new BitbucketService(tokensManager);
+
+export const gitServicesController = new GitServicesController([
+	githubService,
+	gitlabService,
+	bitbucketService
+]);
 
 export const repoAnalyzer = new RepoAnalyzer(git);
 

@@ -6,6 +6,7 @@
 	import GitServiceTokenItem from '$lib/client/components/sources/GitServiceTokenItem.svelte';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
+	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
 
 	export let data: { tokens: GitServiceToken[] };
 
@@ -58,6 +59,8 @@
 									<GithubIcon class="w-16 h-8 ml-1" />
 								{:else if selectedService === 'GitLab'}
 									<GitlabIcon class="w-20 h-8 ml-[-0.25rem]" />
+								{:else if selectedService === 'Bitbucket'}
+									<BitbucketIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{/if}
 							</span>
 						</button>
@@ -86,9 +89,31 @@
 									<GitlabIcon class="w-24 h-8" /></button
 								>
 							</li>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'Bitbucket';
+										tokenInput.focus();
+									}}
+									type="button"
+								>
+									<BitbucketIcon class="w-24 h-8" /></button
+								>
+							</li>
 						</ul>
 					</div>
 				</label>
+				{#if selectedService === 'Bitbucket'}
+					<label class="input-group flex-1">
+						<span>Username: </span>
+						<input
+							name="username"
+							type="text"
+							placeholder="username"
+							class="input input-bordered text-base w-full"
+						/>
+					</label>
+				{/if}
 				<label class="input-group flex-1">
 					<span>Token: </span>
 					<input
@@ -99,6 +124,8 @@
 						bind:this={tokenInput}
 					/>
 				</label>
+			</div>
+			<div class="flex space-x-4 mt-4 w-full justify-end">
 				<label class="input-group flex-1">
 					<span>Description: </span>
 					<input
@@ -108,10 +135,8 @@
 						class="input input-bordered text-base w-full"
 					/>
 				</label>
-			</div>
-			<div class="flex space-x-4 mt-4 w-full justify-end">
 				<label class="pl-0 flex flex-0 space-x-4">
-					<span class="text-lg mb-0 mt-2 whitespace-nowrap">Confirm Password: </span>
+					<span class="text-lg mb-0 mt-2 whitespace-nowrap ml-4">Confirm Password: </span>
 					<input
 						name="password"
 						class="input input-bordered w-full text-base"

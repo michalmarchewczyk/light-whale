@@ -61,6 +61,9 @@ export default class ReposManager {
 			const url = new URL(remoteUrl);
 			url.username = serviceToken?.login ?? '';
 			url.password = token?.token ?? '';
+			if (serviceToken?.login && token?.token.startsWith(serviceToken.login + ':')) {
+				url.password = token?.token.split(':')[1] ?? '';
+			}
 			pullUrl = url.href;
 		}
 		const pulled = await this.pullRepo(remoteUrl, pullUrl, repoDir, defaultBranch ?? 'master');
@@ -72,6 +75,9 @@ export default class ReposManager {
 			logger.logInfo(`Analyzing repo ${remoteUrl}`);
 			const absPath = await this.filesManager.getAbsPath(repoDir);
 			const gitInfo = await this.repoAnalyzer.getRepoGitInfo(absPath);
+			if (!gitInfo.remoteUrl) {
+				gitInfo.remoteUrl = remoteUrl;
+			}
 			const dockerInfo = await this.repoAnalyzer.getRepoDockerInfo(absPath);
 			const languageInfo = await this.repoAnalyzer.getRepoLanguageInfo(absPath);
 			const repoInfo: Repo = {

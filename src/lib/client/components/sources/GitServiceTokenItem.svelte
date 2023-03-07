@@ -8,6 +8,7 @@
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
+	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
 
 	export let token: GitServiceToken;
 
@@ -39,6 +40,8 @@
 			<GithubIcon class="w-20 h-8 ml-2" />
 		{:else if token.service === 'gitlab'}
 			<GitlabIcon class="w-24 h-8 mt-1" />
+		{:else if token.service === 'bitbucket'}
+			<BitbucketIcon class="w-24 h-8 mt-1" />
 		{/if}
 	</td>
 	<td>

@@ -7,6 +7,7 @@
 	import UserIcon from '$icons/user.svg';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
+	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
 	import EyeIcon from '$icons/eye.svg';
 	import EyeOffIcon from '$icons/eye-slash.svg';
 	import CalendarIcon from '$icons/calendar.svg';
@@ -22,6 +23,9 @@
 		}
 		if (name.startsWith('https://gitlab.com/')) {
 			name = name.split('gitlab.com/')[1];
+		}
+		if (name.includes('@bitbucket.org/')) {
+			name = name.split('bitbucket.org/')[1];
 		}
 		if (name.endsWith('.git')) {
 			name = name.slice(0, -4);
@@ -83,6 +87,8 @@
 			<GithubIcon class="w-20 my-auto ml-2" />
 		{:else if repo.service === 'gitlab'}
 			<GitlabIcon class="w-24 my-auto" />
+		{:else if repo.service === 'bitbucket'}
+			<BitbucketIcon class="w-24 my-auto" />
 		{/if}
 	</div>
 	<form
