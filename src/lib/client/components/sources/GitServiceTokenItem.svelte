@@ -6,6 +6,7 @@
 	import CalendarIcon from '$icons/calendar.svg';
 	import { enhance } from '$app/forms';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
+	import GitIcon from '$lib/client/assets/icons/git.svg';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
@@ -20,7 +21,11 @@
 <tr>
 	<td class="flex items-center space-x-4">
 		<div class="avatar rounded-md w-16 h-16">
-			<img src={token.avatarUrl} alt="" class="rounded-md" />
+			{#if token.avatarUrl}
+				<img src={token.avatarUrl} alt="" class="rounded-md" />
+			{:else}
+				<GitIcon class="w-full h-full opacity-50" />
+			{/if}
 		</div>
 		<a class="hover:text-primary-focus" href={token.profileUrl} target="_blank" rel="noreferrer">
 			<div class="text-lg font-bold">{token.name}</div>
