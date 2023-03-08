@@ -11,11 +11,13 @@
 <div class="inline-block {$$props.class}">
 	<span class="text-lg font-semibold align-middle capitalize">{name}:</span>
 	<div class="dropdown">
-		<button class="select select-bordered bg-base-100 align-middle ml-2 w-36 capitalize">
+		<button
+			class="select select-bordered bg-base-100 align-middle ml-2 w-36 capitalize whitespace-nowrap"
+		>
 			{#if $page.url.searchParams.get(name)}
-				<span class="mt-2 text-base">{value}</span>
+				<span class="mt-2.5 text-base overflow-ellipsis overflow-hidden">{value}</span>
 			{:else}
-				<span class="mt-2 text-base">{defaultValue}</span>
+				<span class="mt-2.5 text-base overflow-ellipsis overflow-hidden">{defaultValue}</span>
 			{/if}
 		</button>
 		<ul class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-36 ml-2">

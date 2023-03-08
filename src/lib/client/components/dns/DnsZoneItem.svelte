@@ -8,14 +8,23 @@
 
 	export let zone: DnsZone;
 	export let sites: SiteData[];
+	export let ipAddresses: string[];
 
 	export let sort = 'modified';
 	export let order = 'desc';
+	export let show = 'all';
 
 	let filteredRecords: DnsRecord[] = [];
 
 	$: {
 		filteredRecords = zone.records;
+		if (show === 'with saved IP') {
+			filteredRecords = filteredRecords.filter((record) => ipAddresses.includes(record.content));
+		} else if (show === 'with site') {
+			filteredRecords = filteredRecords.filter((record) =>
+				sites.find((s) => s.domain === record.name)
+			);
+		}
 		if (sort === 'name') {
 			filteredRecords = filteredRecords.sort((a, b) => (a.name < b.name ? 1 : -1));
 		} else if (sort === 'modified') {
