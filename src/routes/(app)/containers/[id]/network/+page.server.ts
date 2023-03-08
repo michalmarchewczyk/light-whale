@@ -39,7 +39,14 @@ export const actions = {
 			return fail(400, { error: 'Invalid port' });
 		}
 		await container.connectToLWNetwork();
-		const newDomain = zone === 'Custom' ? domain : `${domain}.${zone}`;
+		let newDomain: string;
+		if (zone === 'Custom') {
+			newDomain = domain;
+		} else if (domain === '@') {
+			newDomain = `${zone}`;
+		} else {
+			newDomain = `${domain}.${zone}`;
+		}
 		const created = await sitesManager.createSite(container.id, newDomain, port);
 		if (!created) {
 			return fail(400, { error: 'Site already exists' });
