@@ -11,11 +11,6 @@ vite.config.ts.timestamp-*
 
 .idea
 
-/nginx-config
-/lw-config
-/lw-logs
-/git-sources
 /lw_data
-
 /src/lib/server/types/docker/api
 
