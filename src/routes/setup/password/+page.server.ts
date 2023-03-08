@@ -9,14 +9,32 @@ export const actions = {
 		if (!password || typeof password !== 'string') {
 			return fail(400, { message: 'Invalid password' });
 		}
-		const setupToken = await authController.getTempData('setupToken');
-		const setupTokenDescription = await authController.getTempData('setupTokenDescription');
+		const setupDnsService = await authController.getTempData('setupDnsService');
+		const setupDnsToken = await authController.getTempData('setupDnsToken');
+		const setupDnsTokenDescription = await authController.getTempData('setupDnsTokenDescription');
+		const setupGithubToken = await authController.getTempData('setupGithubToken');
+		const setupGithubTokenDescription = await authController.getTempData(
+			'setupGithubTokenDescription'
+		);
 		const setPassword = await authController.setPassword(password);
 		if (!setPassword) {
 			return fail(400, { message: 'Password strength too low' });
 		}
-		if (setupToken) {
-			await tokensManager.addToken(setupToken, password, 'github', setupTokenDescription);
+		if (setupDnsService && setupDnsToken) {
+			await tokensManager.addToken(
+				setupDnsToken,
+				password,
+				<string>setupDnsService,
+				setupDnsTokenDescription
+			);
+		}
+		if (setupGithubToken) {
+			await tokensManager.addToken(
+				setupGithubToken,
+				password,
+				'github',
+				setupGithubTokenDescription
+			);
 		}
 		redirect(307, '/');
 	}
