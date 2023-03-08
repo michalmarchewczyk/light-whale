@@ -1,10 +1,9 @@
 @use 'src/lib/client/styles/tailwind.css';
 @use 'src/lib/client/styles/utils';
 
-
 * [data-animations='false'] {
- * {
-   transition: none !important;
-   animation: none !important;
- }
+	* {
+		transition: none !important;
+		animation: none !important;
+	}
 }

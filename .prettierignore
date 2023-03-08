@@ -13,4 +13,6 @@ package-lock.json
 yarn.lock
 
 /lw_data
-/src/lib/server/types/docker/api
+/src/lib/server/templates
+/src/lib/server/types/docker
+*.md
