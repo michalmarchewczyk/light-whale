@@ -1,7 +1,17 @@
 import { writable } from 'svelte/store';
 import type Status from '$lib/server/status/Status';
 
-export const status = writable<Status | null>(null);
+export const status = writable<Status>({
+	dockerRunning: false,
+	dockerPing: false,
+	lwNetwork: false,
+	lwNginxContainer: {
+		running: false,
+		connected: false,
+		ports: false,
+		restartPolicy: false
+	}
+});
 
 export const fetchStatus = async () => {
 	const writeStream = new WritableStream({

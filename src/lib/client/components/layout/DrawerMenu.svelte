@@ -6,7 +6,7 @@
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import GlobeIcon from '$icons/globe-europe-africa.svg';
 	import CogIcon from '$icons/cog-6-tooth.svg';
-	import FolderIcon from '$icons/folder.svg';
+	// import FolderIcon from '$icons/folder.svg';
 	import GitIcon from '$lib/client/assets/icons/git.svg';
 	import DockerIcon from '$lib/client/assets/icons/docker.svg';
 	import QuestionMarkCircleIcon from '$icons/question-mark-circle.svg';
@@ -65,9 +65,9 @@
 	<DrawerMenuItem icon={DockerIcon} path="/sources/dockerhub" on:click={() => dispatch('navigate')}>
 		DockerHub
 	</DrawerMenuItem>
-	<DrawerMenuItem icon={FolderIcon} path="/sources/files" on:click={() => dispatch('navigate')}>
-		Files
-	</DrawerMenuItem>
+	<!--	<DrawerMenuItem icon={FolderIcon} path="/sources/files" on:click={() => dispatch('navigate')}>-->
+	<!--		Files-->
+	<!--	</DrawerMenuItem>-->
 
 	<li class="menu-title">
 		<span>Settings</span>

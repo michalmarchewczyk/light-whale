@@ -1,6 +1,19 @@
 <script lang="ts">
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import { status } from '$lib/client/stores/status';
+	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import WrenchScrewdriverIcon from '$icons/wrench-screwdriver.svg';
+	import { enhance } from '$app/forms';
+
+	$: fixableErrors =
+		$status?.dockerPing &&
+		(!$status.lwNetwork ||
+			!$status.lwNginxContainer.running ||
+			!$status.lwNginxContainer.connected ||
+			!$status.lwNginxContainer.ports ||
+			!$status.lwNginxContainer.restartPolicy);
+
+	let loading = false;
 </script>
 
 <svelte:head>
@@ -8,6 +21,28 @@
 </svelte:head>
 
 <div class="mx-0 mt-0 mb-8">
+	{#if fixableErrors}
+		<form
+			class="card shadow-md bg-base-100 mb-6"
+			action="?/fix"
+			method="POST"
+			use:enhance={() => {
+				loading = true;
+				return ({ update }) => {
+					update();
+					loading = false;
+				};
+			}}
+		>
+			<div class="card-body p-6 py-4 pl-5 flex flex-row justify-between items-center">
+				<div>
+					<h2 class="card-title text-xl mb-1">Fix errors</h2>
+					<p>Light-Whale can try to automatically fix detected errors.</p>
+				</div>
+				<ActionButton class="w-20" icon={WrenchScrewdriverIcon} {loading}>Fix</ActionButton>
+			</div>
+		</form>
+	{/if}
 	<CheckCard
 		status={$status.dockerRunning ? 'success' : 'error'}
 		title="Docker daemon {$status.dockerRunning ? 'running' : 'not running'}"
@@ -16,7 +51,7 @@
 
 	<CheckCard
 		status={$status.dockerPing ? 'success' : 'error'}
-		title="{$status.dockerPing ? 'C' : 'Not c'}onnected"
+		title={$status.dockerPing ? 'Connected' : 'Not connected'}
 		msg={$status.dockerPing ? 'Connected to Docker daemon' : 'Could not connect to Docker daemon'}
 	/>
 

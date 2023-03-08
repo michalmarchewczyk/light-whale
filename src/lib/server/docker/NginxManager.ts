@@ -65,6 +65,14 @@ export default class NginxManager {
 		return true;
 	}
 
+	public async fixLwNetwork() {
+		logger.logInfo('Fixing LW network');
+		await fetch(`${DOCKER_URL}/networks/${LW_NETWORK_NAME}`, {
+			method: 'DELETE'
+		});
+		return await this.createLwNetwork();
+	}
+
 	public async createLwNginxContainer() {
 		logger.logInfo('Creating LW container');
 		await this.filesManager.writeFile('sites/default.conf', defaultConfig, true);
@@ -96,7 +104,10 @@ export default class NginxManager {
 			return false;
 		}
 		logger.logInfo('Starting LW container');
-		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
+		const container = await this.containersManager.getContainerByName(
+			LW_NGINX_CONTAINER_NAME,
+			true
+		);
 		if (!container) {
 			logger.logError('Failed to start LW container');
 			return false;
@@ -113,6 +124,18 @@ export default class NginxManager {
 			return false;
 		}
 		return true;
+	}
+
+	public async fixLwNginxContainer() {
+		logger.logInfo('Fixing LW container');
+		const container = await this.containersManager.getContainerByName(LW_NGINX_CONTAINER_NAME);
+		if (!container) {
+			return await this.createLwNginxContainer();
+		} else {
+			await container.stop();
+			await container.remove();
+			return await this.createLwNginxContainer();
+		}
 	}
 
 	public async reload(): Promise<boolean> {

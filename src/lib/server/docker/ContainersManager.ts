@@ -51,9 +51,9 @@ export default class ContainersManager {
 		return this.containers.find((c) => c.id.startsWith(id)) ?? null;
 	}
 
-	public async getContainerByName(name: string): Promise<Container | null> {
+	public async getContainerByName(name: string, refresh?: boolean): Promise<Container | null> {
 		name = name.startsWith('/') ? name : '/' + name;
-		if (!this.containers.find((c) => c.data.name === name)) {
+		if (refresh || !this.containers.find((c) => c.data.name === name)) {
 			await this.getContainers();
 		}
 		return this.containers.find((c) => c.data.name === name) ?? null;

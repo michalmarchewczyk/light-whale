@@ -4,6 +4,7 @@ import { DOCKER_URL } from '$lib/server/config';
 import type { ImageSummary } from '$lib/server/types/docker/api';
 import type ImageData from '$lib/server/docker/ImageData';
 import type ProcessesManager from '$lib/server/processes/ProcessesManager';
+import type Process from '$lib/server/processes/Process';
 
 export default class ImagesManager {
 	private images: Image[] = [];
@@ -52,7 +53,10 @@ export default class ImagesManager {
 
 	public async pullImage(image: string, tag: string, wait = false): Promise<boolean> {
 		logger.logInfo(`Pulling image ${image}:${tag}`);
-		const process = await this.processesManager.createNewProcess(`Pulling image ${image}:${tag}`);
+		let process: Process | null = null;
+		if (!wait) {
+			process = await this.processesManager.createNewProcess(`Pulling image ${image}:${tag}`);
+		}
 		const layers: Record<string, { current: number; total: number }> = {};
 		const writeStream = new WritableStream({
 			write: async (chunk) => {
@@ -72,18 +76,22 @@ export default class ImagesManager {
 					}
 					const total = Object.values(layers).reduce((acc, cur) => acc + cur.total, 0);
 					const current = Object.values(layers).reduce((acc, cur) => acc + cur.current, 0);
-					await this.processesManager.updateProcess(
-						process.id,
-						'running',
-						`(layer:${data.id}) ${data.status}: ${data.progress ?? '-'} \n`,
-						(current / total) * 100
-					);
+					if (process) {
+						await this.processesManager.updateProcess(
+							process.id,
+							'running',
+							`(layer:${data.id}) ${data.status}: ${data.progress ?? '-'} \n`,
+							(current / total) * 100
+						);
+					}
 				} catch (err) {
 					// ignore
 				}
 			},
 			close: async () => {
-				await this.processesManager.updateProcess(process.id, 'done', 'Done');
+				if (process) {
+					await this.processesManager.updateProcess(process.id, 'done', 'Done');
+				}
 			}
 		});
 		try {
@@ -95,7 +103,6 @@ export default class ImagesManager {
 			}
 			if (wait) {
 				await res.text();
-				await this.processesManager.updateProcess(process.id, 'done', 'Done');
 				logger.logInfo(`Pulled image ${image}:${tag}`);
 				return true;
 			}
