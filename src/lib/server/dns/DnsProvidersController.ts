@@ -71,4 +71,18 @@ export default class DnsProvidersController {
 		}
 		return await provider.deleteRecords(domain, zone);
 	}
+
+	public async deleteRecordByDomainAndAddress(domain: string, address: string) {
+		logger.logInfo(`Deleting DNS record for ${domain} with address ${address}`);
+		const zones = await this.listAllZones();
+		const zone = zones.find((z) => domain.endsWith(z.name));
+		if (!zone) {
+			return false;
+		}
+		const provider = this.providers.find((p) => p.serviceName === zone.provider);
+		if (!provider) {
+			return false;
+		}
+		return await provider.deleteRecordsByDomainAndAddress(domain, address, zone);
+	}
 }

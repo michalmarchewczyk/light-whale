@@ -140,7 +140,8 @@
 			}}
 		>
 			<label class="flex align-middle items-center justify-between h-10">
-				<span class="text-lg">Automatically add new DNS records with saved public IP addresses</span
+				<span class="text-lg"
+					>Automatically add and delete DNS records with saved public IP addresses</span
 				>
 				<input
 					type="checkbox"

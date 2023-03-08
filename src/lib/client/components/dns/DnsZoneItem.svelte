@@ -4,8 +4,10 @@
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
+	import type SiteData from '$lib/server/sites/SiteData';
 
 	export let zone: DnsZone;
+	export let sites: SiteData[];
 
 	export let sort = 'modified';
 	export let order = 'desc';
@@ -48,7 +50,7 @@
 	</div>
 	<div class="px-4 pb-1 mt-[-1rem]">
 		{#each filteredRecords as record}
-			<DnsRecordItem {record} />
+			<DnsRecordItem {record} site={sites.find((s) => s.domain === record.name)} />
 		{/each}
 	</div>
 </div>

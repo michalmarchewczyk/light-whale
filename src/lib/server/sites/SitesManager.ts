@@ -64,7 +64,15 @@ export default class SitesManager {
 
 	public async removeSite(site: Site): Promise<void> {
 		await site.remove();
-		await this.dnsProvidersController.deleteRecords(site.data.domain);
+		if (this.ipSettingsController.isAutoAdd()) {
+			const addresses = [
+				...this.ipSettingsController.listV4Addresses(),
+				...this.ipSettingsController.listV6Addresses()
+			];
+			for (const address of addresses) {
+				await this.dnsProvidersController.deleteRecordByDomainAndAddress(site.data.domain, address);
+			}
+		}
 		this.sites = this.sites.filter((s) => s.id !== site.id);
 	}
 

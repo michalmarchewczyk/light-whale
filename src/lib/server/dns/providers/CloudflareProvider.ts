@@ -141,4 +141,30 @@ export default class CloudflareProvider extends DnsProvider {
 		);
 		return res.every((r) => r.status === 200);
 	}
+
+	public async deleteRecordsByDomainAndAddress(
+		domain: string,
+		address: string,
+		zone: DnsZone
+	): Promise<boolean> {
+		const token = await this.tokensManager.getTokenById(zone.tokenId);
+		if (!token) {
+			return false;
+		}
+		const records = zone.records.filter(
+			(record) => record.name === domain && record.content === address
+		);
+		const res = await Promise.all(
+			records.map(async (record) => {
+				return await fetch(
+					`https://api.cloudflare.com/client/v4/zones/${zone.id}/dns_records/${record.id}`,
+					{
+						method: 'DELETE',
+						headers: { Authorization: `Bearer ${token.token}` }
+					}
+				);
+			})
+		);
+		return res.every((r) => r.status === 200);
+	}
 }

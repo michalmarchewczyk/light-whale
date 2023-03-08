@@ -32,4 +32,10 @@ export default abstract class DnsProvider {
 	public abstract createRecord(domain: string, address: string, zone: DnsZone): Promise<boolean>;
 
 	public abstract deleteRecords(domain: string, zone: DnsZone): Promise<boolean>;
+
+	public abstract deleteRecordsByDomainAndAddress(
+		domain: string,
+		address: string,
+		zone: DnsZone
+	): Promise<boolean>;
 }

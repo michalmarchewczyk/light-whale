@@ -6,8 +6,9 @@
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
+	import type SiteData from '$lib/server/sites/SiteData';
 
-	export let data: { dns: { zones: Promise<DnsZone[]> } };
+	export let data: { dns: { zones: Promise<DnsZone[]> }; sites: SiteData[] };
 
 	let zones: DnsZone[] = [];
 
@@ -62,13 +63,13 @@
 		<p class="w-full text-center text-3xl pt-12 opacity-50">Loading...</p>
 	{:else if group === 'zone'}
 		{#each filteredZones as zone}
-			<DnsZoneItem {zone} {sort} {order} />
+			<DnsZoneItem {zone} {sort} {order} sites={data?.sites} />
 		{:else}
 			<p class="w-full text-center text-3xl pt-12 opacity-50">No zones found</p>
 		{/each}
 	{:else if group === 'none'}
 		{#each filteredRecords as record}
-			<DnsRecordItem {record} />
+			<DnsRecordItem {record} site={data.sites.find((s) => s.domain === record.name)} />
 		{:else}
 			<p class="w-full text-center text-3xl pt-12 opacity-50">No zones found</p>
 		{/each}

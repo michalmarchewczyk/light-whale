@@ -7,8 +7,10 @@
 	import ExternalLinkIcon from '$icons/arrow-top-right-on-square.svg';
 	import DocumentTextIcon from '$icons/document-text.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
+	import type SiteData from '$lib/server/sites/SiteData';
 
 	export let record: DnsRecord;
+	export let site: SiteData | undefined;
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
@@ -32,9 +34,15 @@
 		<ItemInfo icon={DocumentTextIcon}>
 			Type: {record.type}
 		</ItemInfo>
-		<ItemInfo icon={GlobeAltIcon}>
-			Site: {'-'}
-		</ItemInfo>
+		{#if site}
+			<a href="/sites/{site.domain}" class="hover:text-primary-focus block">
+				<ItemInfo icon={GlobeAltIcon}>
+					Site: {site.domain}
+				</ItemInfo>
+			</a>
+		{:else}
+			<ItemInfo icon={GlobeAltIcon} class="italic">Site: not found</ItemInfo>
+		{/if}
 	</div>
 	<div class="block w-32 overflow-visible flex-shrink-0">
 		<ActionButton icon={PencilSquareIcon} class="w-32 h-10">Edit</ActionButton>
