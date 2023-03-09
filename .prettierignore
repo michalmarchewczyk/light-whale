@@ -16,3 +16,4 @@ yarn.lock
 /src/lib/server/templates
 /src/lib/server/types/docker
 *.md
+.github

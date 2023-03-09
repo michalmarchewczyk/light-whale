@@ -14,3 +14,4 @@ yarn.lock
 
 /lw_data
 /src/lib/server/types/docker
+.github
