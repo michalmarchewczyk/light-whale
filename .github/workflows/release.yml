@@ -34,6 +34,11 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
   release:
     needs: [lint, build]
     runs-on: ubuntu-latest
