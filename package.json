@@ -6,6 +6,7 @@
 		"postinstall": "npm run openapi-gen",
 		"dev": "vite dev",
 		"build": "vite build && rimraf -g \"./build/**/*.map\"",
+		"postbuild": "cd build && npm init -y && npm pkg set name=light-whale type=module license=MIT scripts.start=\"node index.js\"",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
