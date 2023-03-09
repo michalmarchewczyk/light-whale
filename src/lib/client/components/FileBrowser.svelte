@@ -1,10 +1,13 @@
 <script lang="ts">
-	import hljs from 'highlight.js';
+	import hljs from 'highlight.js/lib/common';
 	import path from 'path-browserify';
 	import FolderIcon from '$icons/folder-open.svg';
 	import DocumentIcon from '$icons/document.svg';
 	import ArrowLeftIcon from '$icons/arrow-left.svg';
 	import { theme } from '$lib/client/stores/settings';
+
+	import dockerfile from 'highlight.js/lib/languages/dockerfile';
+	hljs.registerLanguage('dockerfile', dockerfile);
 
 	interface File {
 		directory: boolean;

@@ -11,9 +11,14 @@ const config = {
 	extensions: ['.svelte', '.md'],
 
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			precompress: true
+		}),
 		alias: {
 			$icons: path.resolve('./node_modules/heroicons/24/outline')
+		},
+		csrf: {
+			checkOrigin: false
 		}
 	}
 };
