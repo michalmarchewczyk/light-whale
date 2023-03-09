@@ -3,14 +3,18 @@
 	import ItemInfo from '$lib/client/components/ItemInfo.svelte';
 	import CalendarIcon from '$icons/calendar.svg';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
-	import PencilSquareIcon from '$icons/pencil-square.svg';
+	import TrashIcon from '$icons/trash.svg';
 	import ExternalLinkIcon from '$icons/arrow-top-right-on-square.svg';
 	import DocumentTextIcon from '$icons/document-text.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import type SiteData from '$lib/server/sites/SiteData';
+	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 
 	export let record: DnsRecord;
 	export let site: SiteData | undefined;
+
+	let loading = false;
+	let removeModal = false;
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
@@ -45,7 +49,19 @@
 		{/if}
 	</div>
 	<div class="block w-32 overflow-visible flex-shrink-0">
-		<ActionButton icon={PencilSquareIcon} class="w-32 h-10">Edit</ActionButton>
+		<ActionButton icon={TrashIcon} class="w-32 h-10" {loading} on:click={() => (removeModal = true)}
+			>Remove</ActionButton
+		>
+		<RemoveModal
+			label="this DNS record for"
+			name={record.name}
+			bind:open={removeModal}
+			formaction="/dns?/remove"
+			bind:loading
+		>
+			<input type="hidden" name="record_name" value={record.name} />
+			<input type="hidden" name="record_content" value={record.content} />
+		</RemoveModal>
 		<ActionButton
 			icon={ExternalLinkIcon}
 			class="w-32 h-10 btn-ghost mt-2"

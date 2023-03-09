@@ -19,9 +19,9 @@
 		method="POST"
 		use:enhance={() => {
 			loading = true;
-			return ({ update }) => {
+			return async ({ update }) => {
+				await update();
 				loading = false;
-				update();
 			};
 		}}
 	>
