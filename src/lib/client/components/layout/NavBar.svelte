@@ -21,7 +21,7 @@
 		</button>
 	</div>
 	<div class="flex-1 mx-2 ml-2 lg:ml-0">
-		<img src={Logotype} class="h-14 absolute top-1" alt="Light-Whale" />
+		<img src={Logotype} class="h-12 absolute top-2 ml-1" alt="Light-Whale" />
 	</div>
 	<div class="flex-none">
 		<a class="btn btn-square btn-ghost" href="/logout" data-sveltekit-preload-data="tap">
