@@ -1,6 +1,6 @@
 {
 	"name": "light-whale",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"scripts": {
 		"openapi-gen": "openapi-generator-cli generate",
 		"postinstall": "npm run openapi-gen",
