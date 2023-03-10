@@ -35,6 +35,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Processes - Light-Whale</title>
+</svelte:head>
+
 <div class="bg-base-200 top-0 sticky z-40 rounded-b-xl">
 	<ListHeader title="Processes" badge="{data.processes.length} processes">
 		<SortMenu bind:value={sort} bind:order values={['started', 'name']} class="float-right" />
