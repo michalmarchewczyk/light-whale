@@ -5,6 +5,7 @@ import type TokensManager from '$lib/server/auth/tokens/TokensManager';
 import type RepoAnalyzer from '$lib/server/sources/git/RepoAnalyzer';
 import { logger } from '$lib/server/utils/Logger';
 import type GitServicesController from '$lib/server/sources/git/GitServicesController';
+import { eventsController } from '$lib/server/events/EventsController';
 
 export default class ReposManager {
 	constructor(
@@ -53,6 +54,11 @@ export default class ReposManager {
 		service?: string
 	): Promise<Repo | null> {
 		logger.logInfo(`Downloading repo ${remoteUrl}`);
+		eventsController.push({
+			type: 'info',
+			title: 'Downloading repo',
+			message: `Downloading repo ${remoteUrl}`
+		});
 		const repoDir = `sources/git/${encodeURIComponent(remoteUrl)}`;
 		let pullUrl = remoteUrl;
 		if (tokenId) {
@@ -69,6 +75,11 @@ export default class ReposManager {
 		const pulled = await this.pullRepo(remoteUrl, pullUrl, repoDir, defaultBranch ?? 'master');
 		if (!pulled) {
 			logger.logError(`Failed to pull repo ${remoteUrl}`);
+			eventsController.push({
+				type: 'error',
+				title: 'Failed to pull repo',
+				message: `Failed to pull repo ${remoteUrl}`
+			});
 			return null;
 		}
 		try {
@@ -91,6 +102,11 @@ export default class ReposManager {
 				JSON.stringify(repoInfo),
 				true
 			);
+			eventsController.push({
+				type: 'success',
+				title: 'Repo downloaded',
+				message: `Repo ${remoteUrl} downloaded`
+			});
 			return repoInfo;
 		} catch (e) {
 			logger.logError(`Failed to analyze repo ${remoteUrl}`);
