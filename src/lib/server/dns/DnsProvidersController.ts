@@ -55,6 +55,9 @@ export default class DnsProvidersController {
 		if (!provider) {
 			return false;
 		}
+		if (zone.records.some((r) => r.name === domain && r.content === address)) {
+			return true;
+		}
 		return await provider.createRecord(domain, address, zone);
 	}
 
