@@ -20,6 +20,7 @@
 			class="alert shadow-lg flex-col items-start gap-0 max-w-xs w-80 p-3.5"
 			out:fade
 			class:alert-info={event.type === 'docker' || event.type === 'info'}
+			class:alert-success={event.type === 'success'}
 			class:alert-warning={event.type === 'warning'}
 			class:alert-error={event.type === 'error'}
 			on:click={() => {

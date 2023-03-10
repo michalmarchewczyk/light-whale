@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import * as uuid from 'uuid';
 import type AuthController from '$lib/server/auth/AuthController';
+import { eventsController } from '$lib/server/events/EventsController';
 
 export default class TokensManager {
 	private tokens: Token[] = [];
@@ -71,6 +72,11 @@ export default class TokensManager {
 		this.tokens.push(newToken);
 		await this.saveTokens(password);
 		logger.logInfo(`Token added for service ${service}`);
+		eventsController.push({
+			type: 'success',
+			title: 'New token added',
+			message: `Token added for service ${service}`
+		});
 		return true;
 	}
 
@@ -81,6 +87,11 @@ export default class TokensManager {
 		this.tokens = this.tokens.filter((t) => t.id !== id);
 		await this.saveTokens(password);
 		logger.logInfo(`Token removed with id ${id}`);
+		eventsController.push({
+			type: 'success',
+			title: 'Token removed',
+			message: `Token removed with id ${id}`
+		});
 		return true;
 	}
 

@@ -20,12 +20,22 @@ export default class Site {
 		logger.logInfo(`Pausing site ${this.id}`);
 		this.data.paused = true;
 		await this.saveFile();
+		eventsController.push({
+			type: 'success',
+			title: 'Disabled site',
+			message: `Site ${this.data.domain} was disabled`
+		});
 	}
 
 	public async unpause() {
 		logger.logInfo(`Unpausing site ${this.id}`);
 		this.data.paused = false;
 		await this.saveFile();
+		eventsController.push({
+			type: 'success',
+			title: 'Enabled site',
+			message: `Site ${this.data.domain} was enabled`
+		});
 	}
 
 	public async enableSsl() {
@@ -47,7 +57,7 @@ export default class Site {
 			this.data.ssl = false;
 		} else {
 			eventsController.push({
-				type: 'info',
+				type: 'success',
 				title: 'SSL enabled',
 				message: `SSL certificate for domain ${this.data.domain} was generated successfully`
 			});
@@ -59,7 +69,7 @@ export default class Site {
 		logger.logInfo(`Disabling SSL for site ${this.id}`);
 		this.data.ssl = false;
 		eventsController.push({
-			type: 'info',
+			type: 'success',
 			title: 'Disabling SSL',
 			message: `Disabling SSL for domain ${this.data.domain}`
 		});
@@ -84,5 +94,10 @@ export default class Site {
 	public async remove() {
 		logger.logInfo(`Removing site ${this.id}`);
 		await this.filesManager.removeFile(`sites/site-${this.id}.conf`);
+		eventsController.push({
+			type: 'success',
+			title: 'Site removed',
+			message: `Site ${this.data.domain} was removed`
+		});
 	}
 }

@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import type IpSettingsController from '$lib/server/dns/IpSettingsController';
 import type DnsProvidersController from '$lib/server/dns/DnsProvidersController';
 import type NginxManager from '$lib/server/docker/NginxManager';
+import { eventsController } from '$lib/server/events/EventsController';
 
 export default class SitesManager {
 	private sites: Site[] = [];
@@ -63,16 +64,23 @@ export default class SitesManager {
 	}
 
 	public async removeSite(site: Site): Promise<void> {
-		await site.remove();
+		eventsController.push({
+			type: 'info',
+			title: 'Removing site',
+			message: `Removing site with domain ${site.data.domain}`
+		});
 		if (this.ipSettingsController.isAutoAdd()) {
 			const addresses = [
 				...this.ipSettingsController.listV4Addresses(),
 				...this.ipSettingsController.listV6Addresses()
 			];
-			for (const address of addresses) {
-				await this.dnsProvidersController.deleteRecordByDomainAndAddress(site.data.domain, address);
-			}
+			await Promise.all(
+				addresses.map((address) =>
+					this.dnsProvidersController.deleteRecordByDomainAndAddress(site.data.domain, address)
+				)
+			);
 		}
+		await site.remove();
 		this.sites = this.sites.filter((s) => s.id !== site.id);
 	}
 
@@ -88,6 +96,11 @@ export default class SitesManager {
 		logger.logInfo(
 			`Creating site for container ${containerId} on port ${port} with domain ${domain}`
 		);
+		eventsController.push({
+			type: 'info',
+			title: 'Creating site',
+			message: `Creating site with domain ${domain}`
+		});
 		const siteData: SiteData = {
 			id: this.generateSiteId(),
 			containerId,
@@ -104,10 +117,15 @@ export default class SitesManager {
 				...this.ipSettingsController.listV4Addresses(),
 				...this.ipSettingsController.listV6Addresses()
 			];
-			for (const address of addresses) {
-				await this.dnsProvidersController.createRecord(domain, address);
-			}
+			await Promise.all(
+				addresses.map((address) => this.dnsProvidersController.createRecord(domain, address))
+			);
 		}
+		eventsController.push({
+			type: 'success',
+			title: 'Site created',
+			message: `Site with domain ${domain} created`
+		});
 		return true;
 	}
 

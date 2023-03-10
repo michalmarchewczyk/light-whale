@@ -1,6 +1,7 @@
 import type FilesManager from '$lib/server/utils/FilesManager';
 import { logger } from '$lib/server/utils/Logger';
 import type IpSettings from '$lib/server/dns/IpSettings';
+import { eventsController } from '$lib/server/events/EventsController';
 
 export default class IpSettingsController {
 	private ipSettings: IpSettings = { v4addresses: [], v6addresses: [], autoAdd: true };
@@ -43,6 +44,11 @@ export default class IpSettingsController {
 			this.ipSettings.v4addresses.push(ip);
 		}
 		await this.saveIpSettings();
+		eventsController.push({
+			type: 'success',
+			title: 'New IP address added',
+			message: `IP address ${ip} has been added to the list of saved IPs`
+		});
 		return true;
 	}
 
@@ -55,6 +61,11 @@ export default class IpSettingsController {
 			return false;
 		}
 		await this.saveIpSettings();
+		eventsController.push({
+			type: 'success',
+			title: 'IP address removed',
+			message: `IP address ${ip} has been removed from the list of saved IPs`
+		});
 		return true;
 	}
 

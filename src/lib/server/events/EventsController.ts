@@ -8,6 +8,7 @@ const FILTER_DOCKER_EVENTS = {
 	event: [
 		'create',
 		'remove',
+		'delete',
 		'update',
 		'prune',
 		'reload',
