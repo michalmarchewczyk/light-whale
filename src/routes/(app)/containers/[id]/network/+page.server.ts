@@ -10,20 +10,28 @@ export const load = (async ({ params, depends }) => {
 	if (!container) {
 		return fail(404, { message: 'Container not found' });
 	}
-	const [sites, zones, ports] = await Promise.all([
-		sitesManager.getSitesByContainerId(container.id),
-		dnsProvidersController.getCachedZones(),
-		nginxManager.scanContainerPorts(container.id)
-	]);
+	const sites = await sitesManager.getSitesByContainerId(container.id);
 	return {
 		containerSites: sites.map((s) => s.data),
-		zones,
-		ports
+		info: {
+			zones: dnsProvidersController.getCachedZones(),
+			ports: nginxManager.scanContainerPorts(container.id)
+		}
 	};
 }) satisfies PageServerLoad;
 
 export const actions = {
-	default: async ({ params, request }) => {
+	connect: async ({ params }) => {
+		const container = await containersManager.findContainer(params.id);
+		if (!container) {
+			return fail(404, { error: 'Container not found' });
+		}
+		const connected = await container.connectToLWNetwork();
+		if (!connected) {
+			return fail(500, { error: 'Failed to connect to network' });
+		}
+	},
+	create: async ({ params, request }) => {
 		const container = await containersManager.findContainer(params.id);
 		if (!container) {
 			return fail(404, { error: 'Container not found' });

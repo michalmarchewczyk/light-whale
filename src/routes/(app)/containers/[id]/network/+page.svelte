@@ -8,56 +8,83 @@
 	import type DnsZone from '$lib/server/dns/DnsZone';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import PlusIcon from '$icons/plus.svg';
+	import CheckCard from '$lib/client/components/CheckCard.svelte';
+	import LinkIcon from '$icons/link.svg';
 
 	export let form: ActionData;
 
 	export let data: {
 		container: ContainerData;
 		containerSites: SiteData[];
-		zones: DnsZone[];
-		ports: string[];
+		info: {
+			zones: Promise<DnsZone[]>;
+			ports: Promise<string[]>;
+		};
 	};
 
 	let loading = false;
 
 	$: network = data?.container?.networks['light-whale-network'] ?? null;
 
-	let selectedZone = data?.zones[0]?.name ?? 'Custom';
+	let selectedZone = 'Custom';
+
+	data.info.zones.then((zones) => {
+		selectedZone = zones[0]?.name ?? 'Custom';
+	});
 
 	let domainInput: HTMLInputElement;
 
-	let port: number = parseInt(data?.ports[0] ?? '80', 10) ?? 80;
+	let defaultPort = 80;
+	let port = defaultPort;
+
+	data.info.ports.then((ports) => {
+		port = parseInt(ports[0] ?? '80', 10) ?? 80;
+		defaultPort = port;
+	});
 </script>
 
 <svelte:head>
 	<title>Container Network - Light-Whale</title>
 </svelte:head>
 
-<div class="card shadow-md bg-base-100 mb-6">
-	<div class="card-body p-6 pt-5">
-		<h2 class="card-title text-xl">Network</h2>
-		<p class="text-lg">
-			Connected to Light-Whale's internal network:
-			<span class="font-bold">{!!network}</span>
-		</p>
-		{#if network}
-			<p class="text-lg">
-				IPv4 Address:
-				<span class="font-bold">{network['IPAddress'] || '-'}</span>
-			</p>
-		{/if}
-	</div>
-</div>
-<div class="card shadow-md bg-base-100 mb-6">
-	<div class="card-body p-6 pt-5">
-		<h2 class="card-title text-xl">Create Site</h2>
+<CheckCard
+	class="mb-6"
+	title={(!network ? 'Not' : '') + ' Connected to Light-Whale internal network'}
+	status={!network ? 'warning' : 'success'}
+	msg={network
+		? `IP Address: ${network['IPAddress'] || '-'}`
+		: 'Connect container to Light-Whale internal network to access sites'}
+>
+	{#if !network}
 		<form
+			action="?/connect"
 			method="POST"
 			use:enhance={() => {
 				loading = true;
 				return async ({ update }) => {
 					await update();
 					loading = false;
+				};
+			}}
+		>
+			<ActionButton class="w-32" icon={LinkIcon} {loading}>Connect</ActionButton>
+		</form>
+	{/if}
+</CheckCard>
+
+<div class="card shadow-md bg-base-100 mb-6">
+	<div class="card-body p-6 pt-5">
+		<h2 class="card-title text-xl">Create Site</h2>
+		<form
+			method="POST"
+			action="?/create"
+			use:enhance={() => {
+				loading = true;
+				return async ({ update }) => {
+					await update();
+					loading = false;
+					port = 0;
+					port = defaultPort;
 				};
 			}}
 		>
@@ -89,19 +116,21 @@
 								<ul
 									class="menu dropdown-content bg-base-100 rounded-box shadow-xl font-semibold w-full"
 								>
-									{#each data.zones as zone}
-										<li>
-											<button
-												type="button"
-												on:click={() => {
-													selectedZone = zone.name;
-													domainInput.focus();
-												}}
-											>
-												.{zone.name}
-											</button>
-										</li>
-									{/each}
+									{#await data.info.zones then zones}
+										{#each zones as zone}
+											<li>
+												<button
+													type="button"
+													on:click={() => {
+														selectedZone = zone.name;
+														domainInput.focus();
+													}}
+												>
+													.{zone.name}
+												</button>
+											</li>
+										{/each}
+									{/await}
 									<li>
 										<button
 											type="button"
@@ -133,19 +162,22 @@
 							tabindex="0"
 							class="dropdown-content menu bg-base-100 rounded-box shadow-xl font-semibold w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"
 						>
-							{#each data.ports as p}
-								<li class="w-full overflow-hidden overflow-ellipsis">
-									<button
-										type="button"
-										on:click={() => {
-											port = parseInt(p.split(' ')[0], 10);
-										}}
-										class="w-full overflow-hidden overflow-ellipsis"
-									>
-										{p}
-									</button>
-								</li>
-							{/each}
+							{#await data.info.ports then ports}
+								{#each ports as p}
+									<li class="w-full overflow-hidden overflow-ellipsis">
+										<button
+											type="button"
+											on:click={() => {
+												port = parseInt(p.split(' ')[0], 10);
+												domainInput.focus();
+											}}
+											class="w-full overflow-hidden overflow-ellipsis"
+										>
+											{p}
+										</button>
+									</li>
+								{/each}
+							{/await}
 						</ul>
 					</div>
 				</div>
