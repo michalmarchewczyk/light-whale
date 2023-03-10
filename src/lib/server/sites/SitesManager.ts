@@ -64,11 +64,7 @@ export default class SitesManager {
 	}
 
 	public async removeSite(site: Site): Promise<void> {
-		eventsController.push({
-			type: 'info',
-			title: 'Removing site',
-			message: `Removing site with domain ${site.data.domain}`
-		});
+		eventsController.pushInfo('Removing site', `Removing site with domain ${site.data.domain}`);
 		if (this.ipSettingsController.isAutoAdd()) {
 			const addresses = [
 				...this.ipSettingsController.listV4Addresses(),
@@ -96,11 +92,7 @@ export default class SitesManager {
 		logger.logInfo(
 			`Creating site for container ${containerId} on port ${port} with domain ${domain}`
 		);
-		eventsController.push({
-			type: 'info',
-			title: 'Creating site',
-			message: `Creating site with domain ${domain}`
-		});
+		eventsController.pushInfo('Creating site', `Creating site with domain ${domain}`);
 		const siteData: SiteData = {
 			id: this.generateSiteId(),
 			containerId,
@@ -121,11 +113,7 @@ export default class SitesManager {
 				addresses.map((address) => this.dnsProvidersController.createRecord(domain, address))
 			);
 		}
-		eventsController.push({
-			type: 'success',
-			title: 'Site created',
-			message: `Site with domain ${domain} created`
-		});
+		eventsController.pushSuccess('Site created', `Site with domain ${domain} created`);
 		return true;
 	}
 

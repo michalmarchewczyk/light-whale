@@ -18,12 +18,7 @@ export default class ProcessesManager {
 		};
 		this.processes.push(process);
 		this.controllers[process.id] = [];
-		eventsController.push({
-			type: 'info',
-			time: process.started.getTime(),
-			title: 'Process started',
-			message: process.title
-		});
+		eventsController.pushInfo('Process started', process.title);
 		return process;
 	}
 
@@ -45,12 +40,7 @@ export default class ProcessesManager {
 			controller.enqueue(JSON.stringify({ state, progress: process.progress, newData }) + '\n');
 		}
 		if (process.state === 'done' || process.state === 'error') {
-			eventsController.push({
-				type: 'info',
-				time: process.lastUpdated.getTime(),
-				title: 'Process ended',
-				message: process.title
-			});
+			eventsController.pushInfo('Process ended', process.title);
 			for (const controller of this.controllers[id]) {
 				controller.close();
 			}

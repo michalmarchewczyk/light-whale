@@ -50,35 +50,31 @@ export default class DnsProvidersController {
 		const zones = await this.listAllZones();
 		const zone = zones.find((z) => domain.endsWith(z.name));
 		if (!zone) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to create DNS record',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to create DNS record',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
 		const provider = this.providers.find((p) => p.serviceName === zone.provider);
 		if (!provider) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to create DNS record',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to create DNS record',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
 		if (zone.records.some((r) => r.name === domain && r.content === address)) {
-			eventsController.push({
-				type: 'success',
-				title: 'Created DNS record',
-				message: `DNS record for ${domain} with address ${address} already exists`
-			});
+			eventsController.pushSuccess(
+				'Created DNS record',
+				`DNS record for ${domain} with address ${address} already exists`
+			);
 			return true;
 		}
-		eventsController.push({
-			type: 'success',
-			title: 'Created DNS record',
-			message: `DNS record for ${domain} with address ${address} created`
-		});
+		eventsController.pushSuccess(
+			'Created DNS record',
+			`DNS record for ${domain} with address ${address} created`
+		);
 		return await provider.createRecord(domain, address, zone);
 	}
 
@@ -87,27 +83,21 @@ export default class DnsProvidersController {
 		const zones = await this.listAllZones();
 		const zone = zones.find((z) => domain.endsWith(z.name));
 		if (!zone) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to delete DNS records',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to delete DNS records',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
 		const provider = this.providers.find((p) => p.serviceName === zone.provider);
 		if (!provider) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to delete DNS records',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to delete DNS records',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
-		eventsController.push({
-			type: 'success',
-			title: 'Deleted DNS records',
-			message: `DNS records for ${domain} deleted`
-		});
+		eventsController.pushSuccess('Deleted DNS records', `DNS records for ${domain} deleted`);
 		return await provider.deleteRecords(domain, zone);
 	}
 
@@ -116,27 +106,24 @@ export default class DnsProvidersController {
 		const zones = await this.listAllZones();
 		const zone = zones.find((z) => domain.endsWith(z.name));
 		if (!zone) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to delete DNS record',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to delete DNS record',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
 		const provider = this.providers.find((p) => p.serviceName === zone.provider);
 		if (!provider) {
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to delete DNS record',
-				message: `Could not find a DNS zone for domain ${domain}`
-			});
+			eventsController.pushError(
+				'Failed to delete DNS record',
+				`Could not find a DNS zone for domain ${domain}`
+			);
 			return false;
 		}
-		eventsController.push({
-			type: 'success',
-			title: 'Deleted DNS record',
-			message: `DNS record for ${domain} with address ${address} deleted`
-		});
+		eventsController.pushSuccess(
+			'Deleted DNS record',
+			`DNS record for ${domain} with address ${address} deleted`
+		);
 		return await provider.deleteRecordsByDomainAndAddress(domain, address, zone);
 	}
 }

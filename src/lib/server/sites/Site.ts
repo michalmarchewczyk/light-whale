@@ -20,47 +20,36 @@ export default class Site {
 		logger.logInfo(`Pausing site ${this.id}`);
 		this.data.paused = true;
 		await this.saveFile();
-		eventsController.push({
-			type: 'success',
-			title: 'Disabled site',
-			message: `Site ${this.data.domain} was disabled`
-		});
+		eventsController.pushSuccess('Disabled site', `Site ${this.data.domain} was disabled`);
 	}
 
 	public async unpause() {
 		logger.logInfo(`Unpausing site ${this.id}`);
 		this.data.paused = false;
 		await this.saveFile();
-		eventsController.push({
-			type: 'success',
-			title: 'Enabled site',
-			message: `Site ${this.data.domain} was enabled`
-		});
+		eventsController.pushSuccess('Enabled site', `Site ${this.data.domain} was enabled`);
 	}
 
 	public async enableSsl() {
 		logger.logInfo(`Enabling SSL for site ${this.id}`);
 		this.data.ssl = true;
-		eventsController.push({
-			type: 'info',
-			title: 'Enabling SSL',
-			message: `Generating SSL certificate for domain ${this.data.domain}`
-		});
+		eventsController.pushInfo(
+			'Enabling SSL',
+			`Generating SSL certificate for domain ${this.data.domain}`
+		);
 		const generated = await this.nginxManager.generateSslCertificate(this.data.domain);
 		if (!generated) {
 			logger.logError(`Failed to enable SSL certificate for site ${this.id}`);
-			eventsController.push({
-				type: 'error',
-				title: 'Failed to enable SSL',
-				message: `Failed to generate SSL certificate for domain ${this.data.domain}`
-			});
+			eventsController.pushError(
+				'Failed to enable SSL',
+				`Failed to generate SSL certificate for domain ${this.data.domain}`
+			);
 			this.data.ssl = false;
 		} else {
-			eventsController.push({
-				type: 'success',
-				title: 'SSL enabled',
-				message: `SSL certificate for domain ${this.data.domain} was generated successfully`
-			});
+			eventsController.pushSuccess(
+				'SSL enabled',
+				`SSL certificate for domain ${this.data.domain} was generated successfully`
+			);
 		}
 		await this.saveFile();
 	}
@@ -68,11 +57,7 @@ export default class Site {
 	public async disableSsl() {
 		logger.logInfo(`Disabling SSL for site ${this.id}`);
 		this.data.ssl = false;
-		eventsController.push({
-			type: 'success',
-			title: 'Disabling SSL',
-			message: `Disabling SSL for domain ${this.data.domain}`
-		});
+		eventsController.pushSuccess('Disabling SSL', `Disabling SSL for domain ${this.data.domain}`);
 		await this.saveFile();
 	}
 
@@ -94,10 +79,6 @@ export default class Site {
 	public async remove() {
 		logger.logInfo(`Removing site ${this.id}`);
 		await this.filesManager.removeFile(`sites/site-${this.id}.conf`);
-		eventsController.push({
-			type: 'success',
-			title: 'Site removed',
-			message: `Site ${this.data.domain} was removed`
-		});
+		eventsController.pushSuccess('Site removed', `Site ${this.data.domain} was removed`);
 	}
 }

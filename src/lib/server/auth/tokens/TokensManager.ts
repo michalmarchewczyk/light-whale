@@ -72,11 +72,7 @@ export default class TokensManager {
 		this.tokens.push(newToken);
 		await this.saveTokens(password);
 		logger.logInfo(`Token added for service ${service}`);
-		eventsController.push({
-			type: 'success',
-			title: 'New token added',
-			message: `Token added for service ${service}`
-		});
+		eventsController.pushSuccess('New token added', `Token added for service ${service}`);
 		return true;
 	}
 
@@ -87,11 +83,7 @@ export default class TokensManager {
 		this.tokens = this.tokens.filter((t) => t.id !== id);
 		await this.saveTokens(password);
 		logger.logInfo(`Token removed with id ${id}`);
-		eventsController.push({
-			type: 'success',
-			title: 'Token removed',
-			message: `Token removed with id ${id}`
-		});
+		eventsController.pushSuccess('Token removed', `Token removed with id ${id}`);
 		return true;
 	}
 

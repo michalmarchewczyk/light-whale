@@ -82,6 +82,22 @@ class EventsController {
 		});
 	}
 
+	pushInfo(title: string, message: string) {
+		this.push({ type: 'info', title, message });
+	}
+
+	pushSuccess(title: string, message: string) {
+		this.push({ type: 'success', title, message });
+	}
+
+	pushWarning(title: string, message: string) {
+		this.push({ type: 'warning', title, message });
+	}
+
+	pushError(title: string, message: string) {
+		this.push({ type: 'error', title, message });
+	}
+
 	getReadableStream() {
 		let savedController: ReadableStreamDefaultController;
 		return new ReadableStream({

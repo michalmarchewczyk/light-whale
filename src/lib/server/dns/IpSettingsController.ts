@@ -44,11 +44,10 @@ export default class IpSettingsController {
 			this.ipSettings.v4addresses.push(ip);
 		}
 		await this.saveIpSettings();
-		eventsController.push({
-			type: 'success',
-			title: 'New IP address added',
-			message: `IP address ${ip} has been added to the list of saved IPs`
-		});
+		eventsController.pushSuccess(
+			'New IP address added',
+			`IP address ${ip} has been added to the list of saved IPs`
+		);
 		return true;
 	}
 
@@ -61,11 +60,10 @@ export default class IpSettingsController {
 			return false;
 		}
 		await this.saveIpSettings();
-		eventsController.push({
-			type: 'success',
-			title: 'IP address removed',
-			message: `IP address ${ip} has been removed from the list of saved IPs`
-		});
+		eventsController.pushSuccess(
+			'IP address removed',
+			`IP address ${ip} has been removed from the list of saved IPs`
+		);
 		return true;
 	}
 
