@@ -6,6 +6,7 @@
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import type Repo from '$lib/server/sources/git/Repo';
 	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
+	import Placeholder from '$lib/client/components/Placeholder.svelte';
 
 	export let data: {
 		info: {
@@ -24,7 +25,9 @@
 	<title>Git Repo - Light-Whale</title>
 </svelte:head>
 
-{#await data.info.newCommits then newCommits}
+{#await data.info.newCommits}
+	<Placeholder />
+{:then newCommits}
 	{#if newCommits.length === 0}
 		<CheckCard
 			status="success"

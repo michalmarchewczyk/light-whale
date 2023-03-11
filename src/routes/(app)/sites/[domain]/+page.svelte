@@ -5,6 +5,7 @@
 	import { enhance } from '$app/forms';
 	import PlusIcon from '$icons/plus.svg';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import Placeholder from '$lib/client/components/Placeholder.svelte';
 
 	export let data: {
 		site: SiteData;
@@ -54,7 +55,9 @@
 	</a>
 </div>
 
-{#await Promise.all([data.dns.added, data.dns.missing]) then [added, missing]}
+{#await Promise.all([data.dns.added, data.dns.missing])}
+	<Placeholder />
+{:then [added, missing]}
 	<CheckCard
 		title="DNS"
 		status={missing.length === 0 ? 'success' : added.length === 0 ? 'error' : 'warning'}
