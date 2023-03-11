@@ -13,7 +13,14 @@
 </svelte:head>
 
 <div
-	class="prose w-full max-w-full prose-img:rounded-xl hover:prose-a:text-primary-focus prose-h2:text-[1.75rem]"
+	class="prose w-full max-w-full
+	prose-img:rounded-xl prose-img:border-2 prose-img:border-neutral prose-img:bg-base-100
+	hover:prose-a:text-primary-focus
+	prose-h2:text-[2rem]
+	prose-p:my-1
+	prose-li:my-0.5
+	leading-6
+"
 >
 	{@html htmlCode}
 </div>
