@@ -2,6 +2,7 @@ export default interface Repo {
 	service: string;
 	gitInfo: {
 		remoteUrl: string;
+		tokenId?: string;
 		branchName: string;
 		owner: string;
 		lastCommit: string;

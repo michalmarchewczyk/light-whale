@@ -1,4 +1,5 @@
 import type { SimpleGit } from 'simple-git';
+import { CheckRepoActions } from 'simple-git';
 import type FilesManager from '$lib/server/utils/FilesManager';
 import type Repo from '$lib/server/sources/git/Repo';
 import type TokensManager from '$lib/server/auth/tokens/TokensManager';
@@ -20,31 +21,86 @@ export default class ReposManager {
 		});
 	}
 
-	private async pullRepo(
+	private async getPullUrl(remoteUrl: string, tokenId?: string) {
+		let pullUrl = remoteUrl;
+		if (tokenId) {
+			const [token, serviceToken] = await Promise.all([
+				this.tokensManager.getTokenById(tokenId),
+				this.gitServicesController.getTokenById(tokenId)
+			]);
+			const url = new URL(remoteUrl);
+			url.username = serviceToken?.login ?? '';
+			url.password = token?.token ?? '';
+			if (serviceToken?.login && token?.token.startsWith(serviceToken.login + ':')) {
+				url.password = token?.token.split(':')[1] ?? '';
+			}
+			pullUrl = url.href;
+		}
+		return pullUrl;
+	}
+
+	private async getRepoDirPath(remoteUrl: string) {
+		const repoDir = `sources/git/${encodeURIComponent(remoteUrl)}`;
+		await this.filesManager.readDir(repoDir);
+		return await this.filesManager.getAbsPath(repoDir);
+	}
+
+	private async pullUrl(
 		remoteUrl: string,
 		pullUrl: string,
-		repoDir: string,
+		repoDirPath: string,
 		defaultBranch: string
 	) {
-		const files = await this.filesManager.readDir(repoDir);
-		const absPath = await this.filesManager.getAbsPath(repoDir);
+		const isRepo = await this.git
+			.cwd({ path: repoDirPath })
+			.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
 		try {
-			if (files.length > 0) {
-				await this.git.cwd({ path: absPath }).pull(pullUrl, defaultBranch);
-				await this.git.cwd({ path: absPath }).submoduleUpdate();
+			if (isRepo) {
+				await this.git.cwd({ path: repoDirPath }).pull(pullUrl, defaultBranch);
+				await this.git.cwd({ path: repoDirPath }).submoduleUpdate();
 				return true;
 			} else {
 				await this.git
-					.cwd({ path: absPath })
+					.cwd({ path: repoDirPath })
 					.init()
 					.pull(pullUrl, defaultBranch)
 					.addRemote('origin', remoteUrl);
-				await this.git.cwd({ path: absPath }).submoduleInit().submoduleUpdate();
+				await this.git.cwd({ path: repoDirPath }).submoduleInit().submoduleUpdate();
 				return true;
 			}
 		} catch (e) {
 			return false;
 		}
+	}
+
+	private async saveRepo(
+		remoteUrl: string,
+		repoDirPath: string,
+		service?: string,
+		tokenId?: string
+	): Promise<Repo> {
+		logger.logInfo(`Analyzing repo ${remoteUrl}`);
+		const gitInfo = await this.repoAnalyzer.getRepoGitInfo(repoDirPath);
+		if (!gitInfo.remoteUrl) {
+			gitInfo.remoteUrl = remoteUrl;
+		}
+		if (tokenId) {
+			gitInfo.tokenId = tokenId;
+		}
+		const dockerInfo = await this.repoAnalyzer.getRepoDockerInfo(repoDirPath);
+		const languageInfo = await this.repoAnalyzer.getRepoLanguageInfo(repoDirPath);
+		const repoInfo: Repo = {
+			service: service ?? 'local',
+			gitInfo,
+			dockerInfo,
+			languageInfo
+		};
+		await this.filesManager.writeFile(
+			`sources/git/${encodeURIComponent(remoteUrl)}.json`,
+			JSON.stringify(repoInfo),
+			true
+		);
+		return repoInfo;
 	}
 
 	public async downloadRepo(
@@ -55,45 +111,16 @@ export default class ReposManager {
 	): Promise<Repo | null> {
 		logger.logInfo(`Downloading repo ${remoteUrl}`);
 		eventsController.pushInfo('Downloading repo', `Downloading repo ${remoteUrl}`);
-		const repoDir = `sources/git/${encodeURIComponent(remoteUrl)}`;
-		let pullUrl = remoteUrl;
-		if (tokenId) {
-			const token = this.tokensManager.getTokenById(tokenId);
-			const serviceToken = await this.gitServicesController.getTokenById(tokenId);
-			const url = new URL(remoteUrl);
-			url.username = serviceToken?.login ?? '';
-			url.password = token?.token ?? '';
-			if (serviceToken?.login && token?.token.startsWith(serviceToken.login + ':')) {
-				url.password = token?.token.split(':')[1] ?? '';
-			}
-			pullUrl = url.href;
-		}
-		const pulled = await this.pullRepo(remoteUrl, pullUrl, repoDir, defaultBranch ?? 'master');
+		const repoDirPath = await this.getRepoDirPath(remoteUrl);
+		const pullUrl = await this.getPullUrl(remoteUrl, tokenId);
+		const pulled = await this.pullUrl(remoteUrl, pullUrl, repoDirPath, defaultBranch ?? 'master');
 		if (!pulled) {
 			logger.logError(`Failed to pull repo ${remoteUrl}`);
 			eventsController.pushError('Failed to pull repo', `Failed to pull repo ${remoteUrl}`);
 			return null;
 		}
 		try {
-			logger.logInfo(`Analyzing repo ${remoteUrl}`);
-			const absPath = await this.filesManager.getAbsPath(repoDir);
-			const gitInfo = await this.repoAnalyzer.getRepoGitInfo(absPath);
-			if (!gitInfo.remoteUrl) {
-				gitInfo.remoteUrl = remoteUrl;
-			}
-			const dockerInfo = await this.repoAnalyzer.getRepoDockerInfo(absPath);
-			const languageInfo = await this.repoAnalyzer.getRepoLanguageInfo(absPath);
-			const repoInfo: Repo = {
-				service: service ?? 'local',
-				gitInfo,
-				dockerInfo,
-				languageInfo
-			};
-			await this.filesManager.writeFile(
-				`sources/git/${encodeURIComponent(remoteUrl)}.json`,
-				JSON.stringify(repoInfo),
-				true
-			);
+			const repoInfo = await this.saveRepo(remoteUrl, repoDirPath, service, tokenId);
 			eventsController.pushSuccess('Repo downloaded', `Repo ${remoteUrl} downloaded`);
 			return repoInfo;
 		} catch (e) {
@@ -123,8 +150,7 @@ export default class ReposManager {
 	}
 
 	public async getRepoCommits(repo: Repo) {
-		const repoDir = `sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}`;
-		const absPath = await this.filesManager.getAbsPath(repoDir);
+		const absPath = await this.getRepoDirPath(repo.gitInfo.remoteUrl);
 		const commits = await this.git.cwd({ path: absPath }).log({
 			maxCount: 500,
 			format: {
@@ -136,5 +162,32 @@ export default class ReposManager {
 			}
 		});
 		return commits.all.map((commit) => ({ ...commit }));
+	}
+
+	public async checkNewCommits(repo: Repo) {
+		const absPath = await this.getRepoDirPath(repo.gitInfo.remoteUrl);
+		const pullUrl = await this.getPullUrl(repo.gitInfo.remoteUrl, repo.gitInfo.tokenId);
+		const commits = await this.git
+			.cwd({ path: absPath })
+			.fetch(pullUrl)
+			.log({
+				maxCount: 500,
+				from: repo.gitInfo.branchName,
+				to: 'origin/' + repo.gitInfo.branchName,
+				format: {
+					hash: '%h'
+				}
+			});
+		return commits.all.map((commit) => ({ ...commit }));
+	}
+
+	public async pullRepo(repo: Repo) {
+		logger.logInfo(`Pulling repo ${repo.gitInfo.remoteUrl}`);
+		eventsController.pushInfo('Pulling repo', `Pulling repo ${repo.gitInfo.remoteUrl}`);
+		const absPath = await this.getRepoDirPath(repo.gitInfo.remoteUrl);
+		const pullUrl = await this.getPullUrl(repo.gitInfo.remoteUrl, repo.gitInfo.tokenId);
+		await this.git.cwd({ path: absPath }).pull(pullUrl, repo.gitInfo.branchName);
+		await this.saveRepo(repo.gitInfo.remoteUrl, absPath, repo.service, repo.gitInfo.tokenId);
+		eventsController.pushSuccess('Repo pulled', `Repo ${repo.gitInfo.remoteUrl} pulled`);
 	}
 }

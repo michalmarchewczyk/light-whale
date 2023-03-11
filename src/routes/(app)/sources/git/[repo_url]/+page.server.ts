@@ -1,8 +1,30 @@
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { repoBuilder, reposManager } from '$lib/server/sources/git';
 import { fail, redirect } from '@sveltejs/kit';
 
+export const load = (async ({ params }) => {
+	const { repo_url } = params;
+	const repo = await reposManager.getRepoByUrl(repo_url);
+	if (!repo) {
+		return { newCommits: [] };
+	}
+	return {
+		info: {
+			repo,
+			newCommits: reposManager.checkNewCommits(repo)
+		}
+	};
+}) satisfies PageServerLoad;
+
 export const actions = {
+	pull: async ({ params }) => {
+		const { repo_url } = params;
+		const repo = await reposManager.getRepoByUrl(repo_url);
+		if (!repo) {
+			return fail(404, { error: 'repo not found' });
+		}
+		await reposManager.pullRepo(repo);
+	},
 	build: async ({ request, params }) => {
 		const { repo_url } = params;
 		const data = await request.formData();
