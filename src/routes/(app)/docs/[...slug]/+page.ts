@@ -29,6 +29,10 @@ export const load = (async ({ params }) => {
 		const rawImage: { default: string } = allImages[imagePath] as { default: string };
 		return `![${p0}](${rawImage.default})`;
 	});
+	raw = raw.replaceAll(/\[(.*)\]\((.*)\.(md|MD)\)/g, (match, p0, p1) => {
+		const newPath = p1.replace('/index', '');
+		return `[${p0}](/docs/${slug}${slug ? '/' : ''}${newPath})`;
+	});
 	return {
 		title,
 		raw
