@@ -2,7 +2,7 @@
 	import ItemInfo from '$lib/client/components/ItemInfo.svelte';
 	import CalendarIcon from '$icons/calendar.svg';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
-	import DownloadIcon from '$icons/arrow-down-tray.svg';
+	import SquaresPlusIcon from '$icons/squares-plus.svg';
 	import CodeIcon from '$icons/code-bracket.svg';
 	import UserIcon from '$icons/user.svg';
 	import CommitIcon from '$lib/client/assets/icons/commit.svg';
@@ -90,7 +90,7 @@
 	</div>
 	<div class="block w-28 md:w-28 overflow-hidden flex-shrink-0 self-center">
 		<ActionButton
-			icon={DownloadIcon}
+			icon={SquaresPlusIcon}
 			{loading}
 			class="w-28 h-8 md:h-12 md:w-28 md:mr-2"
 			disabled={repo.dockerInfo.topFile.length === 0}

@@ -29,6 +29,8 @@
 	}
 
 	export let form: { error: string };
+
+	let nameInput: HTMLInputElement;
 </script>
 
 <Portal>
@@ -61,7 +63,13 @@
 					>
 						{#each repo?.dockerInfo.files?.map((file) => file.file) as val}
 							<li>
-								<button on:click={() => (selectedFile = val)} type="button">{val}</button>
+								<button
+									on:click={() => {
+										selectedFile = val;
+										nameInput.focus();
+									}}
+									type="button">{val}</button
+								>
 							</li>
 						{/each}
 					</ul>
@@ -75,6 +83,7 @@
 					placeholder="name"
 					name="name"
 					type="text"
+					bind:this={nameInput}
 				/>
 			</label>
 			{#if envVarsNames.length > 0}
