@@ -4,6 +4,7 @@
 	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
 	import GitIcon from '$lib/client/assets/icons/git.svg';
 	import FolderIcon from '$icons/folder.svg';
+	import CommitIcon from '$lib/client/assets/icons/commit.svg';
 	import { page } from '$app/stores';
 
 	let name = decodeURIComponent($page.params.repo_url);
@@ -32,6 +33,12 @@
 		<PageMenuItem path="/sources/git/{encodeURIComponent($page.params.repo_url)}" icon={GitIcon}
 			>General</PageMenuItem
 		>
+		<PageMenuItem
+			path="/sources/git/{encodeURIComponent($page.params.repo_url)}/commits"
+			icon={CommitIcon}
+		>
+			Commits
+		</PageMenuItem>
 		<PageMenuItem
 			path="/sources/git/{encodeURIComponent($page.params.repo_url)}/files"
 			icon={FolderIcon}

@@ -121,4 +121,20 @@ export default class ReposManager {
 		const repos = await this.listRepos();
 		return repos.find((repo) => repo.gitInfo.remoteUrl === url) ?? null;
 	}
+
+	public async getRepoCommits(repo: Repo) {
+		const repoDir = `sources/git/${encodeURIComponent(repo.gitInfo.remoteUrl)}`;
+		const absPath = await this.filesManager.getAbsPath(repoDir);
+		const commits = await this.git.cwd({ path: absPath }).log({
+			maxCount: 500,
+			format: {
+				hash: '%h',
+				message: '%s',
+				authorName: '%aN',
+				authorEmail: '%aE',
+				date: '%aI'
+			}
+		});
+		return commits.all.map((commit) => ({ ...commit }));
+	}
 }
