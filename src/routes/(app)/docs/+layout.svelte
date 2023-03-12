@@ -19,5 +19,5 @@
 		{/each}
 	</ul>
 	<div class="divider divider-horizontal" />
-	<div class="flex-1 pb-8"><slot /></div>
+	<div class="flex-1 pb-4"><slot /></div>
 </div>

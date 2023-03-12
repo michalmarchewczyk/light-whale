@@ -5,7 +5,7 @@ import pathBrowserify from 'path-browserify';
 const allDocs = import.meta.glob('$lib/docs/**/*.md', { as: 'raw' });
 const allImages = import.meta.glob('$lib/docs/**/*.{png,PNG,jpg,JPG,jpeg,JPEG}', { eager: true });
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, parent }) => {
 	const slug = params.slug;
 	let path = `/src/lib/docs/${slug || 'index'}.md`;
 	if (!allDocs[path]) {
@@ -33,8 +33,16 @@ export const load = (async ({ params }) => {
 		const newPath = p1.replace('/index', '');
 		return `[${p0}](/docs/${slug}${slug ? '/' : ''}${newPath})`;
 	});
+	const { docs } = await parent();
+	const index = docs.findIndex(
+		(d) => d.path === path.replace('/src/lib', '').replace('.md', '').replace('/index', '')
+	);
+	const prev = docs[index - 1];
+	const next = docs[index + 1];
 	return {
 		title,
-		raw
+		raw,
+		prev,
+		next
 	};
 }) satisfies PageLoad;

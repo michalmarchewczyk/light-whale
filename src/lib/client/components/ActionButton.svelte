@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	export let icon;
+	export let iconPosition: 'left' | 'right' = 'left';
 	export let loading = false;
 	export let disabled = false;
 	export let neutral = false;
@@ -17,10 +18,15 @@
 		target={href.startsWith('http') ? '_blank' : undefined}
 		rel={href.startsWith('http') ? 'noreferrer' : undefined}
 	>
-		<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
-		<span class="mt-[-0.25rem]">
+		{#if iconPosition === 'left'}
+			<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
+		{/if}
+		<span class="mt-0">
 			<slot />
 		</span>
+		{#if iconPosition === 'right'}
+			<svelte:component this={icon} class="h-5 w-5 ml-2 stroke-[2.2]" />
+		{/if}
 	</a>
 {:else}
 	<button
@@ -34,11 +40,14 @@
 		{formaction}
 		{type}
 	>
-		{#if !loading}
+		{#if !loading && iconPosition === 'left'}
 			<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
 		{/if}
-		<span class="mt-[-0.25rem]">
+		<span class="mt-0 px-0.5">
 			<slot />
 		</span>
+		{#if !loading && iconPosition === 'right'}
+			<svelte:component this={icon} class="h-5 w-5 ml-2 stroke-[2.2]" />
+		{/if}
 	</button>
 {/if}
