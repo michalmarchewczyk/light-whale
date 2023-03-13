@@ -51,6 +51,10 @@
 				Name:
 				<span class="font-bold">{data.siteContainer?.name}</span>
 			</p>
+			<p>
+				Port:
+				<span class="font-bold">{data.site.containerPort}</span>
+			</p>
 		{/if}
 	</a>
 </div>
