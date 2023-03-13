@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import { containersManager, imagesManager } from '$lib/server/docker';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const load = (async ({ depends }) => {
 	depends('app:docker');
@@ -15,7 +15,7 @@ export const actions = {
 		const image = data.get('image');
 		const tag = data.get('tag');
 		if (!image || !tag || typeof image !== 'string' || typeof tag !== 'string') {
-			return { error: 'Invalid image or tag' };
+			return fail(400, { error: 'Invalid image or tag' });
 		}
 		await imagesManager.pullImage(image, tag);
 		throw redirect(307, '/processes');

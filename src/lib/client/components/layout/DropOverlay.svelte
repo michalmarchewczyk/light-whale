@@ -30,7 +30,7 @@
 		value = '';
 	};
 
-	const handleString = (text) => {
+	const handleString = (text: string) => {
 		if (text.includes('github.com/') || text.includes('gitlab.com/')) {
 			if (text.includes(' ')) {
 				text = text.split(' ')[0];
@@ -40,7 +40,24 @@
 		if (text.endsWith('.git')) {
 			goto('/sources/git?pull=' + decodeURIComponent(text));
 		}
-		// TODO: handle dockerhub links
+		if (text.includes('hub.docker.com/')) {
+			const pathname = text.split('hub.docker.com/')[1];
+			const data = new FormData();
+			if (pathname.startsWith('r/')) {
+				data.append('image', pathname.split('/')[1] + '/' + pathname.split('/')[2]);
+			} else {
+				data.append('image', pathname.split('/')[1]);
+			}
+			data.append('tag', 'latest');
+			fetch('/images?/pull', {
+				method: 'POST',
+				body: data
+			}).then(async (res) => {
+				if (res.status === 200) {
+					await goto('/processes');
+				}
+			});
+		}
 	};
 </script>
 
