@@ -31,6 +31,10 @@
 			<FormError error={form?.error} />
 			<FormInput label="Container name" placeholder="name" name="name" />
 			<FormInput label="Command" placeholder="command" name="command" />
+			<label class="w-full flex flex-row justify-between items-center mt-6 mb-6">
+				<span class="font-semibold text-lg">Automatic restarts</span>
+				<input type="checkbox" name="restart" class="toggle toggle-primary" checked />
+			</label>
 			<div class="card-actions mt-4">
 				<ActionButton {loading} class="w-auto" icon={PlusIcon}>Create</ActionButton>
 			</div>

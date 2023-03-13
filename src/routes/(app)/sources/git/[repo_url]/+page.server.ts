@@ -30,6 +30,7 @@ export const actions = {
 		const data = await request.formData();
 		const name = data.get('name');
 		const selectedFile = data.get('file');
+		const autoRestart = data.has('restart');
 		if (!name || !selectedFile || typeof name !== 'string' || typeof selectedFile !== 'string') {
 			return fail(400, { error: 'invalid data' });
 		}
@@ -43,7 +44,7 @@ export const actions = {
 		if (!repo) {
 			return fail(404, { error: 'repo not found' });
 		}
-		const built = await repoBuilder.buildRepo(repo, name, selectedFile, envVariables);
+		const built = await repoBuilder.buildRepo(repo, name, selectedFile, envVariables, autoRestart);
 		if (!built) {
 			return fail(500, { error: 'error building image' });
 		}

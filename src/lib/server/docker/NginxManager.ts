@@ -42,7 +42,9 @@ export default class NginxManager {
 			connected: Object.keys(containerInspect.NetworkSettings?.Networks || {}).includes(
 				LW_NETWORK_NAME
 			),
-			ports: containerInspect.HostConfig?.PortBindings?.['80/tcp']?.[0]?.HostPort === '80',
+			ports:
+				containerInspect.HostConfig?.PortBindings?.['80/tcp']?.[0]?.HostPort === '80' &&
+				containerInspect.HostConfig?.PortBindings?.['443/tcp']?.[0]?.HostPort === '443',
 			restartPolicy: containerInspect.HostConfig?.RestartPolicy?.Name === 'always'
 		};
 	}

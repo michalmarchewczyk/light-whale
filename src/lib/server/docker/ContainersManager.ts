@@ -68,13 +68,26 @@ export default class ContainersManager {
 		return await this.getContainerByName(idOrName);
 	}
 
-	public async createContainer(imageId: string, name: string, command: string): Promise<boolean> {
+	public async createContainer(
+		imageId: string,
+		name: string,
+		command: string,
+		autoRestart: boolean
+	): Promise<boolean> {
 		logger.logInfo(`Creating container with image id: ${imageId} and name: ${name}`);
 		const query = name ? `name=${name}` : '';
 		const res = await fetch(`${DOCKER_URL}/containers/create?${query}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ Image: imageId, Cmd: command ? command.split(' ') : null })
+			body: JSON.stringify({
+				Image: imageId,
+				Cmd: command ? command.split(' ') : null,
+				HostConfig: {
+					RestartPolicy: {
+						Name: autoRestart ? 'always' : ''
+					}
+				}
+			})
 		});
 		return res.status === 201;
 	}

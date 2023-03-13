@@ -16,7 +16,8 @@ export default class RepoBuilder {
 		repo: Repo,
 		name: string,
 		selectedFile: string,
-		envVariables: Record<string, string>
+		envVariables: Record<string, string>,
+		autoRestart: boolean
 	) {
 		logger.logInfo(
 			`Building repo ${repo.gitInfo.remoteUrl} with name ${name} from file ${selectedFile}`
@@ -28,7 +29,7 @@ export default class RepoBuilder {
 		if (selectedFile.includes('Dockerfile')) {
 			return await this.buildFromDockerfile(repo, name, selectedFile);
 		} else {
-			return await this.buildFromComposeFile(repo, name, selectedFile, envVariables);
+			return await this.buildFromComposeFile(repo, name, selectedFile, envVariables, autoRestart);
 		}
 	}
 
@@ -70,7 +71,8 @@ export default class RepoBuilder {
 		repoInfo: Repo,
 		name: string,
 		selectedFile: string,
-		envVariables: Record<string, string>
+		envVariables: Record<string, string>,
+		autoRestart: boolean
 	): Promise<string> {
 		logger.logInfo(`Building from compose file ${selectedFile}`);
 		const config: ComposeSpecification = YAML.parse(
@@ -87,6 +89,9 @@ export default class RepoBuilder {
 				service.networks.push(LW_NETWORK_NAME);
 			} else {
 				service.networks[LW_NETWORK_NAME] = {};
+			}
+			if (autoRestart) {
+				service.restart = 'always';
 			}
 		});
 		if (!config.networks) {

@@ -103,6 +103,12 @@
 					</label>
 				{/each}
 			{/if}
+			{#if isComposeFile}
+				<label class="w-full flex flex-row justify-between items-center mt-6">
+					<span class="font-semibold text-lg">Automatic restarts</span>
+					<input type="checkbox" name="restart" class="toggle toggle-primary" checked />
+				</label>
+			{/if}
 			<FormError error={form?.error} />
 			<div class="modal-action">
 				<button class="btn" on:click={() => (open = false)} type="button">Cancel</button>

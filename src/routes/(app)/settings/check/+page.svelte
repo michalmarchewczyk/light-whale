@@ -84,7 +84,7 @@
 		title="Ports {$status.lwNginxContainer.ports ? '' : 'not'} configured correctly"
 		msg={$status.lwNginxContainer.ports
 			? "Light-Whale's NGINX container's ports are configured correctly"
-			: 'Ports bindings must be 80:80'}
+			: 'Ports bindings must be 80:80, 443:443'}
 	/>
 
 	<CheckCard
