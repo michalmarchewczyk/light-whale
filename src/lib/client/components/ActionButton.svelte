@@ -21,7 +21,7 @@
 		{#if iconPosition === 'left'}
 			<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
 		{/if}
-		<span class="mt-0">
+		<span class="mt-[-3px]">
 			<slot />
 		</span>
 		{#if iconPosition === 'right'}
@@ -43,7 +43,7 @@
 		{#if !loading && iconPosition === 'left'}
 			<svelte:component this={icon} class="h-5 w-5 mr-2 stroke-[2.2]" />
 		{/if}
-		<span class="mt-0 px-0.5">
+		<span class="mt-[-3px] px-0.5">
 			<slot />
 		</span>
 		{#if !loading && iconPosition === 'right'}

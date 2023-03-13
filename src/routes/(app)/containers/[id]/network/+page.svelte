@@ -108,9 +108,9 @@
 									type="button"
 								>
 									{#if selectedZone === 'Custom'}
-										<span class="text-base bg-base-100 px-0 mt-2.5 italic">Custom</span>
+										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 italic">Custom</span>
 									{:else}
-										<span class="text-base bg-base-100 px-0 mt-2.5">.{selectedZone}</span>
+										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 ">.{selectedZone}</span>
 									{/if}
 								</button>
 								<ul
