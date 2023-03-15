@@ -66,9 +66,13 @@ export default class Site {
 		if (this.data.ssl) {
 			template = siteSslConfigTemplate;
 		}
+		const containerId =
+			this.data.containerId === 'host.docker.internal'
+				? this.data.containerId
+				: this.data.containerId.substring(0, 12);
 		const newContent = template
 			.replaceAll('[site_id]', this.id)
-			.replaceAll('[container_id]', this.data.containerId.substring(0, 12))
+			.replaceAll('[container_id]', containerId)
 			.replaceAll('[container_port]', this.data.containerPort.toString())
 			.replaceAll('[domain]', this.data.domain)
 			.replaceAll('[paused]', this.data.paused.toString())

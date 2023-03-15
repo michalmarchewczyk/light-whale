@@ -97,7 +97,8 @@ export default class NginxManager {
 					},
 					RestartPolicy: {
 						Name: 'always'
-					}
+					},
+					ExtraHosts: ['host.docker.internal:host-gateway']
 				}
 			})
 		});

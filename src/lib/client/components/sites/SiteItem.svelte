@@ -20,7 +20,9 @@
 
 	export let container: ContainerData;
 
-	$: online = !site?.paused && container?.state === 'running';
+	$: online =
+		!site?.paused &&
+		(container?.state === 'running' || site?.containerId === 'host.docker.internal');
 
 	let loading = false;
 
@@ -54,6 +56,8 @@
 					{container?.name.substring(1) ?? ' - '}
 				</ItemInfo>
 			</a>
+		{:else if site.containerId === 'host.docker.internal'}
+			<ItemInfo icon={CubeTransparentIcon}>LW Dashboard</ItemInfo>
 		{:else}
 			<ItemInfo icon={CubeTransparentIcon} class="italic">not found</ItemInfo>
 		{/if}

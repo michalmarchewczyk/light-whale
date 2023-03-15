@@ -32,7 +32,7 @@ export default class SitesManager {
 
 	public async getSitesData(): Promise<SiteData[]> {
 		const sites = await this.getSites();
-		return sites.map((s) => s.data);
+		return sites.map((s) => s.data).filter((s) => s.containerId !== 'host.docker.internal');
 	}
 
 	private isContentSiteConfig(content: string): boolean {
