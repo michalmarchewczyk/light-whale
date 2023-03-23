@@ -11,4 +11,6 @@ RUN apk add dnsmasq
 EXPOSE 80
 EXPOSE 443
 
+RUN echo "server=127.0.0.11" >> /etc/dnsmasq.conf
+
 CMD dnsmasq && nginx -g 'daemon off;'
