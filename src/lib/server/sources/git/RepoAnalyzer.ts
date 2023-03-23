@@ -51,6 +51,8 @@ export default class RepoAnalyzer {
 			let envVars: string[] = [];
 			if (file.includes('compose')) {
 				envVars = await RepoAnalyzer.getEnvVariablesFromComposeFile(fileContent);
+			} else {
+				envVars = await this.getArgsFromDockerfile(fileContent);
 			}
 			files.push({
 				file,
@@ -83,6 +85,24 @@ export default class RepoAnalyzer {
 		});
 		found = found.map((r) => (r[1] === '{' ? r.slice(2, r.length - 1) : r.slice(1)));
 		found = found.map((r) => r.split('-')[0].split(':')[0].split('?')[0]);
+		found = [...new Set(found)];
+		return found;
+	}
+
+	private async getArgsFromDockerfile(fileContent: string): Promise<string[]> {
+		let found: string[] = [];
+		const regex = /ARG (\w+)/gm;
+		fileContent.split('\n').forEach((line) => {
+			let stringToTest = line;
+			while (regex.test(stringToTest)) {
+				const res = stringToTest.match(regex);
+				res?.forEach((r) => {
+					found.push(r);
+				});
+				stringToTest = stringToTest.replaceAll(regex, '');
+			}
+		});
+		found = found.map((r) => r.slice(4));
 		found = [...new Set(found)];
 		return found;
 	}

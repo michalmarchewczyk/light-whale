@@ -27,7 +27,7 @@ export default class RepoBuilder {
 			return '';
 		}
 		if (selectedFile.includes('Dockerfile')) {
-			return await this.buildFromDockerfile(repo, name, selectedFile);
+			return await this.buildFromDockerfile(repo, name, selectedFile, envVariables);
 		} else {
 			return await this.buildFromComposeFile(repo, name, selectedFile, envVariables, autoRestart);
 		}
@@ -36,7 +36,8 @@ export default class RepoBuilder {
 	private async buildFromDockerfile(
 		repoInfo: Repo,
 		name: string,
-		selectedFile: string
+		selectedFile: string,
+		buildArgs: Record<string, string>
 	): Promise<string> {
 		logger.logInfo(`Building from Dockerfile ${selectedFile}`);
 		const process = await this.processesManager.createNewProcess(`Building Dockerfile: ${name}`);
@@ -46,9 +47,12 @@ export default class RepoBuilder {
 		const contextPath = await this.filesManager.getAbsPath(
 			`sources/git/${encodeURIComponent(repoInfo.gitInfo.remoteUrl)}`
 		);
+		const buildArgsString = Object.entries(buildArgs)
+			.reduce((acc, [key, value]) => `${acc} --build-arg ${key}=${value}`, '')
+			.trim();
 		const spawnProcess = spawn(
 			'docker',
-			`build --tag ${name} --file ${dockerfilePath} ${contextPath}`.split(' ')
+			`build --tag ${name} ${buildArgsString} --file ${dockerfilePath} ${contextPath}`.split(' ')
 		);
 		spawnProcess.stderr.on('data', async (data) => {
 			await this.processesManager.updateProcess(process.id, 'running', data.toString());

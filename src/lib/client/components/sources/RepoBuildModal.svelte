@@ -88,7 +88,9 @@
 			</label>
 			{#if envVarsNames.length > 0}
 				<span class="text-lg font-semibold mb-4 mt-6 w-full block"
-					>Set values for detected environment variables:</span
+					>Set values for detected {isComposeFile
+						? 'environment variables'
+						: 'build arguments'}:</span
 				>
 				{#each envVarsNames as envVar}
 					<label class="input-group pl-0 mb-2">
