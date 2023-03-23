@@ -28,7 +28,7 @@ export default class AdminSitesManager {
 				...foundPorts.map((p) => parseInt(p.split(' ')[0], 10))
 			];
 			for (const p of portsToScan) {
-				const res = await fetch(`http://host.docker.internal:${p}/api/ping`)
+				const res = await fetch(`http://localhost:${p}/api/ping`)
 					.then((r) => r.text())
 					.catch(() => '');
 				if (res === 'Light-Whale') {
