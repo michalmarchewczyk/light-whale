@@ -63,6 +63,7 @@ export default class ReposManager {
 				await this.git
 					.cwd({ path: repoDirPath })
 					.init()
+					.addConfig('credential.helper', 'cache --timeout=10')
 					.pull(pullUrl, defaultBranch)
 					.addRemote('origin', remoteUrl);
 				await this.git.cwd({ path: repoDirPath }).submoduleInit().submoduleUpdate();
@@ -169,7 +170,10 @@ export default class ReposManager {
 		const pullUrl = await this.getPullUrl(repo.gitInfo.remoteUrl, repo.gitInfo.tokenId);
 		const commits = await this.git
 			.cwd({ path: absPath })
-			.fetch(pullUrl)
+			.fetch([
+				pullUrl,
+				`refs/heads/${repo.gitInfo.branchName}:refs/remotes/origin/${repo.gitInfo.branchName}`
+			])
 			.log({
 				maxCount: 500,
 				from: repo.gitInfo.branchName,
