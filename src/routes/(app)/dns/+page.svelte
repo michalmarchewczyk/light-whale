@@ -6,9 +6,9 @@
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
-	import type SiteData from '$lib/server/sites/SiteData';
+	import type { PageData } from './$types';
 
-	export let data: { dns: { zones: Promise<DnsZone[]> }; sites: SiteData[]; ipAddresses: string[] };
+	export let data: PageData;
 
 	let zones: DnsZone[] = [];
 

@@ -6,7 +6,7 @@ export const load = (async ({ params }) => {
 	const { repo_url } = params;
 	const repo = await reposManager.getRepoByUrl(repo_url);
 	if (!repo) {
-		return { newCommits: [] };
+		return { info: { repo: null, newCommits: [] } };
 	}
 	return {
 		info: {

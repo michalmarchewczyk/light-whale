@@ -1,13 +1,7 @@
 <script lang="ts">
-	export let data: {
-		commits: {
-			hash: string;
-			authorName: string;
-			authorEmail: string;
-			message: string;
-			date: string;
-		}[];
-	};
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
 <div class="card shadow-md bg-base-100 p-0 max-h-[calc(100vh-18rem)] overflow-hidden">

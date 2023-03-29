@@ -2,12 +2,12 @@
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import type ImageData from '$lib/server/docker/ImageData';
 	import ImageItem from '$lib/client/components/images/ImageItem.svelte';
 	import { hideLwContainer } from '$lib/client/stores/settings';
+	import type { PageData } from './$types';
 
-	export let data: { images: ImageData[]; containers: ContainerData[] };
+	export let data: PageData;
 
 	$: usedCount = data?.images.filter(
 		(i) => data.containers.filter((c) => c.imageId === i.id).length > 0

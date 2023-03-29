@@ -6,10 +6,9 @@
 	import PageMenu from '$lib/client/components/page/PageMenu.svelte';
 	import PageMenuItem from '$lib/client/components/page/PageMenuItem.svelte';
 	import { page } from '$app/stores';
-	import type ContainerData from '$lib/server/docker/ContainerData';
-	import type ImageData from '$lib/server/docker/ImageData';
+	import type { LayoutData } from './$types';
 
-	export let data: { image: ImageData; imageContainers: ContainerData[] };
+	export let data: LayoutData;
 
 	$: countContainers = data?.imageContainers.length;
 </script>

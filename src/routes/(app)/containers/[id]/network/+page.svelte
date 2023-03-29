@@ -1,11 +1,8 @@
 <script lang="ts">
 	import FormError from '$lib/client/components/forms/FormError.svelte';
-	import type { ActionData } from './$types';
-	import type ContainerData from '$lib/server/docker/ContainerData';
+	import type { ActionData, PageData } from './$types';
 	import SiteItem from '$lib/client/components/sites/SiteItem.svelte';
-	import type SiteData from '$lib/server/sites/SiteData';
 	import { enhance } from '$app/forms';
-	import type DnsZone from '$lib/server/dns/DnsZone';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import PlusIcon from '$icons/plus.svg';
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
@@ -13,14 +10,7 @@
 
 	export let form: ActionData;
 
-	export let data: {
-		container: ContainerData;
-		containerSites: SiteData[];
-		info: {
-			zones: Promise<DnsZone[]>;
-			ports: Promise<string[]>;
-		};
-	};
+	export let data: PageData;
 
 	let loading = false;
 

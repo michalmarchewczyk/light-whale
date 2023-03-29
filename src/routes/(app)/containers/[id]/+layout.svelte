@@ -8,10 +8,10 @@
 	import FolderIcon from '$icons/folder.svg';
 	import ListBulletIcon from '$icons/list-bullet.svg';
 	import GlobeAltIcon from '$icons/globe-alt.svg';
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import { page } from '$app/stores';
+	import type { LayoutData } from './$types';
 
-	export let data: { container: ContainerData };
+	export let data: LayoutData;
 </script>
 
 <svelte:head>

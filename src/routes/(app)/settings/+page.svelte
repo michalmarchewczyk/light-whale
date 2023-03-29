@@ -1,20 +1,14 @@
 <script lang="ts">
 	import { theme, animations, hideLwContainer } from '$lib/client/stores/settings';
-	import type SiteData from '$lib/server/sites/SiteData';
 	import SiteItem from '$lib/client/components/sites/SiteItem.svelte';
-	import type DnsZone from '$lib/server/dns/DnsZone';
 	import { enhance } from '$app/forms';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import type { ActionData } from './$types';
 	import PlusIcon from '$icons/plus.svg';
+	import type { PageData } from './$types';
 
-	export let data: {
-		adminSites: SiteData[];
-		info: {
-			zones: Promise<DnsZone[]>;
-		};
-	};
+	export let data: PageData;
 
 	let loading = false;
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import type { LayoutData } from './$types';
 
-	export let data: { docs: { title: string; path: string }[] };
+	export let data: LayoutData;
 </script>
 
 <div class="max-w-5xl mx-auto text-base-content flex pt-8 pb-8">

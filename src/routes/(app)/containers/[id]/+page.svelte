@@ -3,12 +3,12 @@
 	import PauseIcon from '$icons/pause.svg';
 	import PlayIcon from '$icons/play.svg';
 	import TrashIcon from '$icons/trash.svg';
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
 
-	export let data: { container: ContainerData };
+	export let data: PageData;
 
 	let loading = false;
 	let removeModal = false;

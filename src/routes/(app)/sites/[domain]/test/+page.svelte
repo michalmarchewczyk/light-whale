@@ -1,17 +1,9 @@
 <script lang="ts">
-	import type SiteData from '$lib/server/sites/SiteData';
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import Placeholder from '$lib/client/components/Placeholder.svelte';
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
+	import type { PageData } from './$types';
 
-	export let data: {
-		site: SiteData;
-		siteContainer?: ContainerData;
-		dns: {
-			added: Promise<string[]>;
-			missing: Promise<string[]>;
-		};
-	};
+	export let data: PageData;
 </script>
 
 <svelte:head>

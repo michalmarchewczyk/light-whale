@@ -8,8 +8,9 @@
 	import ComposeAppItem from '$lib/client/components/containers/ComposeAppItem.svelte';
 	import { hideLwContainer } from '$lib/client/stores/settings';
 	import { LW_NGINX_CONTAINER_NAME } from '$lib/client/config';
+	import type { PageData } from './$types';
 
-	export let data: { containers: ContainerData[]; apps: ComposeAppData[] };
+	export let data: PageData;
 
 	let appsAndContainers: (ComposeAppData | ContainerData)[] = [];
 

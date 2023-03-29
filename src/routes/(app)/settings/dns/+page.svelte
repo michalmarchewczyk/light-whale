@@ -3,21 +3,13 @@
 	import type { ActionData } from './$types';
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
-	import type DnsProviderToken from '$lib/server/dns/DnsProviderToken';
 	import DnsProviderTokenItem from '$lib/client/components/dns/DnsProviderTokenItem.svelte';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import TrashIcon from '$icons/trash.svg';
 	import { invalidate } from '$app/navigation';
+	import type { PageData } from './$types';
 
-	export let data: {
-		tokens: DnsProviderToken[];
-		ipSettings: {
-			publicIp: Promise<string | null>;
-			v4addresses: string[];
-			v6addresses: string[];
-			autoAddIp: boolean;
-		};
-	};
+	export let data: PageData;
 
 	let publicIp = '';
 

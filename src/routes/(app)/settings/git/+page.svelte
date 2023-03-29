@@ -2,13 +2,13 @@
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
 	import FormError from '$lib/client/components/forms/FormError.svelte';
-	import type GitServiceToken from '$lib/server/sources/git/GitServiceToken';
 	import GitServiceTokenItem from '$lib/client/components/sources/GitServiceTokenItem.svelte';
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
+	import type { PageData } from './$types';
 
-	export let data: { tokens: GitServiceToken[] };
+	export let data: PageData;
 
 	let loading = false;
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import FileBrowser from '$lib/client/components/FileBrowser.svelte';
 	import { browser } from '$app/environment';
+	import type { PageData } from './$types';
 
-	export let data: { container: ContainerData };
+	export let data: PageData;
 
 	const readPath = async (path) => {
 		if (!browser) {

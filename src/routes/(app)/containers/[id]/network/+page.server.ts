@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import { containersManager, nginxManager } from '$lib/server/docker';
-import { fail } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import { sitesManager } from '$lib/server/sites';
 import { dnsProvidersController } from '$lib/server/dns';
 
@@ -8,7 +8,7 @@ export const load = (async ({ params, depends }) => {
 	depends('app:sites');
 	const container = await containersManager.findContainer(params.id);
 	if (!container) {
-		return fail(404, { message: 'Container not found' });
+		throw error(404, { message: 'Container not found' });
 	}
 	const sites = await sitesManager.getSitesByContainerId(container.id);
 	return {

@@ -4,8 +4,9 @@
 	import { createDebouncer } from '$lib/client/utils/debounce';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import type { PageData } from './$types';
 
-	export let data: { results: { images: Promise<unknown[]> } };
+	export let data: PageData;
 
 	let query = $page.url.searchParams.get('search') || '';
 

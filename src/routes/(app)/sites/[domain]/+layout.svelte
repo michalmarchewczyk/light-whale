@@ -5,11 +5,10 @@
 	import GlobeAltIcon from '$icons/globe-alt.svg';
 	import ClipboardCheckIcon from '$icons/clipboard-document-check.svg';
 	import ExternalLinkIcon from '$icons/arrow-top-right-on-square.svg';
-	import type SiteData from '$lib/server/sites/SiteData';
 	import { page } from '$app/stores';
-	import type ContainerData from '$lib/server/docker/ContainerData';
+	import type { LayoutData } from './$types';
 
-	export let data: { site: SiteData; siteContainer?: ContainerData };
+	export let data: LayoutData;
 
 	let online = !data.site.paused && data.siteContainer?.state === 'running';
 </script>

@@ -2,10 +2,11 @@
 	import { afterUpdate } from 'svelte';
 	import { browser } from '$app/environment';
 	import fetchStream from '$lib/client/utils/fetchStream';
+	import type { PageData } from './$types';
 
 	let loading = false;
 
-	export let data: { logs: string[] };
+	export let data: PageData;
 
 	let logs: string[] = [];
 	let logsFiltered: string[] = [];

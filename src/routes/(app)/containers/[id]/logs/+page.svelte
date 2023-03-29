@@ -1,12 +1,13 @@
 <script lang="ts">
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import Convert from 'ansi-to-html';
 	import fetchStream from '$lib/client/utils/fetchStream';
 	import { browser } from '$app/environment';
 	import { afterUpdate } from 'svelte';
+	import type { PageData } from './$types';
+
 	const convert = new Convert();
 
-	export let data: { container: ContainerData };
+	export let data: PageData;
 
 	let logs = [];
 	let scrollContainer;

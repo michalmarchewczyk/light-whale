@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type ContainerData from '$lib/server/docker/ContainerData';
-	import type ImageData from '$lib/server/docker/ImageData';
 	import ContainerItem from '$lib/client/components/containers/ContainerItem.svelte';
 
-	export let data: { image: ImageData; imageContainers: ContainerData[] };
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
 <svelte:head>

@@ -3,13 +3,9 @@
 	import ChevronLeftIcon from '$icons/chevron-left.svg';
 	import ChevronRightIcon from '$icons/chevron-right.svg';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
+	import type { PageData } from './$types';
 
-	export let data: {
-		raw: string;
-		title: string;
-		next: { title: string; path: string };
-		prev: { title: string; path: string };
-	};
+	export let data: PageData;
 
 	$: htmlCode = marked(data?.raw ?? '', {
 		baseUrl: '/docs/'

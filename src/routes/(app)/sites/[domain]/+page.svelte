@@ -1,17 +1,12 @@
 <script lang="ts">
-	import type SiteData from '$lib/server/sites/SiteData';
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
 	import { enhance } from '$app/forms';
 	import PlusIcon from '$icons/plus.svg';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import Placeholder from '$lib/client/components/Placeholder.svelte';
+	import type { PageData } from './$types';
 
-	export let data: {
-		site: SiteData;
-		siteContainer?: ContainerData;
-		dns: { added: Promise<string[]>; missing: Promise<string[]> };
-	};
+	export let data: PageData;
 
 	let loading = false;
 </script>

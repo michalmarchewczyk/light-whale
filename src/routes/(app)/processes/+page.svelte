@@ -4,8 +4,9 @@
 	import SortMenu from '$lib/client/components/lists/SortMenu.svelte';
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 	import ProcessItem from '$lib/client/components/processes/ProcessItem.svelte';
+	import type { PageData } from './$types';
 
-	export let data: { processes: Process[] };
+	export let data: PageData;
 
 	let sort = '';
 	let order = '';

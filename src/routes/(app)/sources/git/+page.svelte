@@ -1,14 +1,11 @@
 <script lang="ts">
-	import type GitServiceRepo from '$lib/server/sources/git/GitServiceRepo';
 	import ListHeader from '$lib/client/components/lists/ListHeader.svelte';
 	import RepoRemoteItem from '$lib/client/components/sources/RepoRemoteItem.svelte';
-	import type Repo from '$lib/server/sources/git/Repo';
 	import RepoSourceItem from '$lib/client/components/sources/RepoSourceItem.svelte';
 	import RepoPullForm from '$lib/client/components/sources/RepoPullForm.svelte';
+	import type { PageData } from './$types';
 
-	export let data: {
-		repos: { remoteRepos: Promise<GitServiceRepo[]>; localRepos: Promise<Repo[]> };
-	};
+	export let data: PageData;
 </script>
 
 <svelte:head>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type ContainerData from '$lib/server/docker/ContainerData';
 	import StatsCard from '$lib/client/components/containers/StatsCard.svelte';
 
 	import ChipIcon from '$icons/cpu-chip.svg';
@@ -11,8 +10,9 @@
 	import { bytesToHuman } from '$lib/client/utils/bytesToHuman';
 	import { browser } from '$app/environment';
 	import fetchStream from '$lib/client/utils/fetchStream';
+	import type { PageData } from './$types';
 
-	export let data: { container: ContainerData };
+	export let data: PageData;
 
 	let stats = {};
 

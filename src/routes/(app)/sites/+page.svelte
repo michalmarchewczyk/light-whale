@@ -4,9 +4,9 @@
 	import FilterMenu from '$lib/client/components/lists/FilterMenu.svelte';
 	import SiteItem from '$lib/client/components/sites/SiteItem.svelte';
 	import type SiteData from '$lib/server/sites/SiteData';
-	import type ContainerData from '$lib/server/docker/ContainerData';
+	import type { PageData } from './$types';
 
-	export let data: { sites: SiteData[]; containers: ContainerData[] };
+	export let data: PageData;
 
 	let sort = '';
 	let order = '';

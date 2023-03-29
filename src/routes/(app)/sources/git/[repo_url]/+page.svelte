@@ -4,16 +4,12 @@
 	import DownloadIcon from '$icons/arrow-down-tray.svg';
 	import SquaresPlusIcon from '$icons/squares-plus.svg';
 	import CheckCard from '$lib/client/components/CheckCard.svelte';
-	import type Repo from '$lib/server/sources/git/Repo';
 	import RepoBuildModal from '$lib/client/components/sources/RepoBuildModal.svelte';
 	import Placeholder from '$lib/client/components/Placeholder.svelte';
+	import type { PageData } from './$types';
 
-	export let data: {
-		info: {
-			repo: Repo;
-			newCommits: Promise<{ hash: string }[]>;
-		};
-	};
+	export let data: PageData;
+
 	$: isComposeFile = data.info.repo?.dockerInfo.topFile?.includes('compose');
 
 	let loading = false;
