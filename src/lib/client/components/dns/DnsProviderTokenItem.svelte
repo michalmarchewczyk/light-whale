@@ -7,6 +7,7 @@
 	import RemoveModal from '$lib/client/components/RemoveModal.svelte';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
 	import OvhCloudIcon from '$lib/client/assets/icons/ovhcloud.svg';
+	import DigitalOceanIcon from '$lib/client/assets/icons/digitalocean.svg';
 	import type DnsProviderToken from '$lib/server/dns/DnsProviderToken';
 
 	export let token: DnsProviderToken;
@@ -36,6 +37,8 @@
 			<CloudflareIcon class="w-24 h-8" />
 		{:else if token.service === 'ovh'}
 			<OvhCloudIcon class="w-24 h-8" />
+		{:else if token.service === 'digitalocean'}
+			<DigitalOceanIcon class="w-24 h-8" />
 		{/if}
 	</td>
 	<td class="w-44">

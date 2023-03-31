@@ -3,6 +3,7 @@
 	import CalendarIcon from '$icons/calendar.svg';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
 	import OvhCloudIcon from '$lib/client/assets/icons/ovhcloud.svg';
+	import DigitalOceanIcon from '$lib/client/assets/icons/digitalocean.svg';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
 	import type SiteData from '$lib/server/sites/SiteData';
@@ -44,6 +45,11 @@
 			<CloudflareIcon class="h-6 w-auto text-neutral-content ml-4 inline-block mt-[-0.5rem]" />
 		{:else if zone.provider === 'ovh'}
 			<OvhCloudIcon
+				class="h-5 w-auto text-neutral-content ml-4 inline-block mt-[-0.4rem]"
+				data-color="light"
+			/>
+		{:else if zone.provider === 'digitalocean'}
+			<DigitalOceanIcon
 				class="h-5 w-auto text-neutral-content ml-4 inline-block mt-[-0.4rem]"
 				data-color="light"
 			/>

@@ -4,6 +4,7 @@
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
 	import OvhCloudIcon from '$lib/client/assets/icons/ovhcloud.svg';
+	import DigitalOceanIcon from '$lib/client/assets/icons/digitalocean.svg';
 	import DnsProviderTokenItem from '$lib/client/components/dns/DnsProviderTokenItem.svelte';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import TrashIcon from '$icons/trash.svg';
@@ -65,6 +66,8 @@
 									<CloudflareIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{:else if selectedService === 'OVH'}
 									<OvhCloudIcon class="w-20 h-8 ml-[-0.25rem]" />
+								{:else if selectedService === 'DigitalOcean'}
+									<DigitalOceanIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{/if}
 							</span>
 						</button>
@@ -91,6 +94,17 @@
 									type="button"
 								>
 									<OvhCloudIcon class="w-24 h-8" /></button
+								>
+							</li>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'DigitalOcean';
+										tokenInput.focus();
+									}}
+									type="button"
+								>
+									<DigitalOceanIcon class="w-24 h-8" /></button
 								>
 							</li>
 						</ul>
