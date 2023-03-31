@@ -14,6 +14,9 @@ const config: UserConfig = {
 						params: {
 							attrs: 'stroke-width'
 						}
+					},
+					{
+						name: 'prefixIds'
 					}
 				]
 			}

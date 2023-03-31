@@ -11,6 +11,10 @@ export default class DnsProvidersController {
 		logger.logVerbose('DnsProvidersController initialized');
 	}
 
+	public getProviderTokenFields() {
+		return Object.fromEntries(this.providers.map((p) => [p.serviceName, p.getTokenFields()]));
+	}
+
 	public async listAllTokens(): Promise<DnsProviderToken[]> {
 		logger.logVerbose('Listing all dns providers tokens');
 		const tokens: DnsProviderToken[] = [];

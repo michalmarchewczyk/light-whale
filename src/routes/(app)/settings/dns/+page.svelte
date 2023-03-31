@@ -3,6 +3,7 @@
 	import type { ActionData } from './$types';
 	import FormError from '$lib/client/components/forms/FormError.svelte';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
+	import OvhCloudIcon from '$lib/client/assets/icons/ovhcloud.svg';
 	import DnsProviderTokenItem from '$lib/client/components/dns/DnsProviderTokenItem.svelte';
 	import ActionButton from '$lib/client/components/ActionButton.svelte';
 	import TrashIcon from '$icons/trash.svg';
@@ -62,6 +63,8 @@
 							<span class="mt-2 text-base">
 								{#if selectedService === 'Cloudflare'}
 									<CloudflareIcon class="w-20 h-8 ml-[-0.25rem]" />
+								{:else if selectedService === 'OVH'}
+									<OvhCloudIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{/if}
 							</span>
 						</button>
@@ -79,19 +82,43 @@
 									<CloudflareIcon class="w-24 h-8" /></button
 								>
 							</li>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'OVH';
+										tokenInput.focus();
+									}}
+									type="button"
+								>
+									<OvhCloudIcon class="w-24 h-8" /></button
+								>
+							</li>
 						</ul>
 					</div>
 				</label>
-				<label class="input-group flex-1">
-					<span>Token: </span>
-					<input
-						name="token"
-						type="text"
-						placeholder="token"
-						class="input input-bordered text-base w-full"
-						bind:this={tokenInput}
-					/>
-				</label>
+				{#each data.tokenFields[selectedService.toLowerCase()] as field, index}
+					<label class="input-group flex-1">
+						<span class="capitalize  whitespace-nowrap">{field}: </span>
+						{#if index === 0}
+							<input
+								name={field}
+								type="text"
+								placeholder={field}
+								class="input input-bordered text-base w-full"
+								bind:this={tokenInput}
+							/>
+						{:else}
+							<input
+								name={field}
+								type="text"
+								placeholder={field}
+								class="input input-bordered text-base w-full"
+							/>
+						{/if}
+					</label>
+				{/each}
+			</div>
+			<div class="flex space-x-4 mt-4 w-full justify-end">
 				<label class="input-group flex-1">
 					<span>Description: </span>
 					<input
@@ -101,8 +128,6 @@
 						class="input input-bordered text-base w-full"
 					/>
 				</label>
-			</div>
-			<div class="flex space-x-4 mt-4 w-full justify-end">
 				<label class="pl-0 flex flex-0 space-x-4">
 					<span class="text-lg mb-0 mt-2 whitespace-nowrap">Confirm Password: </span>
 					<input

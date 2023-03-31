@@ -6,9 +6,14 @@ import type Token from '$lib/server/auth/tokens/Token';
 
 export default abstract class DnsProvider {
 	public serviceName = '';
+	public tokenFields: string[] = [];
 
 	protected constructor(protected tokensManager: TokensManager) {
 		logger.logVerbose(`DnsProvider ${this.serviceName} initialized`);
+	}
+
+	getTokenFields() {
+		return this.tokenFields.length > 0 ? this.tokenFields : ['token'];
 	}
 
 	abstract getTokens(): Promise<DnsProviderToken[]>;

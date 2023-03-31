@@ -2,6 +2,7 @@
 	import type DnsZone from '$lib/server/dns/DnsZone';
 	import CalendarIcon from '$icons/calendar.svg';
 	import CloudflareIcon from '$lib/client/assets/icons/cloudflare.svg';
+	import OvhCloudIcon from '$lib/client/assets/icons/ovhcloud.svg';
 	import DnsRecordItem from '$lib/client/components/dns/DnsRecordItem.svelte';
 	import type DnsRecord from '$lib/server/dns/DnsRecord';
 	import type SiteData from '$lib/server/sites/SiteData';
@@ -41,6 +42,11 @@
 		<span class="text-xl font-bold ml-2 text-neutral-content">{zone.name}</span>
 		{#if zone.provider === 'cloudflare'}
 			<CloudflareIcon class="h-6 w-auto text-neutral-content ml-4 inline-block mt-[-0.5rem]" />
+		{:else if zone.provider === 'ovh'}
+			<OvhCloudIcon
+				class="h-5 w-auto text-neutral-content ml-4 inline-block mt-[-0.4rem]"
+				data-color="light"
+			/>
 		{/if}
 		<div
 			class="block h-7 w-auto float-right mb-0.5 tooltip tooltip-left text-neutral-content text-base font-bold mt-0.5 mr-4"
@@ -53,7 +59,7 @@
 			<span
 				class="inline-block float-left overflow-hidden overflow-ellipsis whitespace-nowrap ml-1.5 text-right"
 			>
-				{new Date(zone.modifiedDate).toLocaleDateString()}
+				{zone.modifiedDate.getTime() ? new Date(zone.modifiedDate).toLocaleDateString() : '-'}
 			</span>
 		</div>
 	</div>

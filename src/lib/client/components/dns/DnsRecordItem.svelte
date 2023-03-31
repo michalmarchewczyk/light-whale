@@ -33,7 +33,7 @@
 	</div>
 	<div class="block w-24 flex-auto overflow-hidden mr-2 sm:mr-3 pr-1 sm:pr-4">
 		<ItemInfo icon={CalendarIcon}>
-			{new Date(record.modifiedDate).toLocaleDateString()}
+			{record.modifiedDate.getTime() ? new Date(record.modifiedDate).toLocaleDateString() : '-'}
 		</ItemInfo>
 		<ItemInfo icon={DocumentTextIcon}>
 			Type: {record.type}

@@ -8,6 +8,7 @@ export const load = (async ({ depends }) => {
 	depends('app:dns');
 	return {
 		tokens: await dnsProvidersController.listAllTokens(),
+		tokenFields: dnsProvidersController.getProviderTokenFields(),
 		ipSettings: {
 			v4addresses: ipSettingsController.listV4Addresses(),
 			v6addresses: ipSettingsController.listV6Addresses(),
@@ -20,19 +21,23 @@ export const load = (async ({ depends }) => {
 export const actions = {
 	addToken: async ({ request }) => {
 		const data = await request.formData();
-		const token = data.get('token');
-		const description = data.get('description');
 		const service = data.get('service');
-		if (!token || typeof token !== 'string') {
-			return fail(400, { error: 'Invalid token' });
-		}
-		if (!['cloudflare'].includes(<string>service)) {
+		const tokenFields = dnsProvidersController.getProviderTokenFields();
+		if (!Object.keys(tokenFields).includes(<string>service)) {
 			return fail(400, { error: 'Invalid service' });
 		}
 		const password = data.get('password');
+		for (const field of tokenFields[<string>service]) {
+			const value = data.get(field);
+			if (!value || typeof value !== 'string') {
+				return fail(400, { error: `Invalid ${field}` });
+			}
+		}
+		const token = tokenFields[<string>service].map((field) => data.get(field)).join(':');
 		if (!password || typeof password !== 'string') {
 			return fail(400, { error: 'Invalid password' });
 		}
+		const description = data.get('description');
 		const added = await tokensManager.addToken(
 			token,
 			password,
