@@ -6,9 +6,14 @@ import { logger } from '$lib/server/utils/Logger';
 
 export default abstract class GitService {
 	public serviceName = '';
+	public tokenFields: string[] = [];
 
 	protected constructor(protected tokensManager: TokensManager) {
 		logger.logVerbose(`GitService ${this.serviceName} initialized`);
+	}
+
+	getTokenFields() {
+		return this.tokenFields.length > 0 ? this.tokenFields : ['token'];
 	}
 
 	abstract getTokens(): Promise<GitServiceToken[]>;

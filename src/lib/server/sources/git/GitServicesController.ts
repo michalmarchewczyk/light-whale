@@ -8,6 +8,10 @@ export default class GitServicesController {
 		logger.logVerbose('GitServicesController initialized');
 	}
 
+	public getServiceTokenFields() {
+		return Object.fromEntries(this.services.map((s) => [s.serviceName, s.getTokenFields()]));
+	}
+
 	public async listAllTokens(): Promise<GitServiceToken[]> {
 		logger.logVerbose('Listing all git service tokens');
 		const tokens: GitServiceToken[] = [];

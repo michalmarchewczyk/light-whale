@@ -6,6 +6,7 @@
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
+	import JetBrainsSpaceIcon from '$lib/client/assets/icons/space.svg';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -61,6 +62,8 @@
 									<GitlabIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{:else if selectedService === 'Bitbucket'}
 									<BitbucketIcon class="w-20 h-8 ml-[-0.25rem]" />
+								{:else if selectedService === 'JetBrainsSpace'}
+									<JetBrainsSpaceIcon class="w-20 h-8 ml-[-0.25rem]" />
 								{/if}
 							</span>
 						</button>
@@ -100,30 +103,41 @@
 									<BitbucketIcon class="w-24 h-8" /></button
 								>
 							</li>
+							<li>
+								<button
+									on:click={() => {
+										selectedService = 'JetBrainsSpace';
+										tokenInput.focus();
+									}}
+									type="button"
+								>
+									<JetBrainsSpaceIcon class="w-24 h-10 my-[-0.25rem]" /></button
+								>
+							</li>
 						</ul>
 					</div>
 				</label>
-				{#if selectedService === 'Bitbucket'}
+				{#each data.tokenFields[selectedService.toLowerCase()] as field, index}
 					<label class="input-group flex-1">
-						<span>Username: </span>
-						<input
-							name="username"
-							type="text"
-							placeholder="username"
-							class="input input-bordered text-base w-full"
-						/>
+						<span class="capitalize  whitespace-nowrap">{field}: </span>
+						{#if index === 0}
+							<input
+								name={field}
+								type="text"
+								placeholder={field}
+								class="input input-bordered text-base w-full"
+								bind:this={tokenInput}
+							/>
+						{:else}
+							<input
+								name={field}
+								type="text"
+								placeholder={field}
+								class="input input-bordered text-base w-full"
+							/>
+						{/if}
 					</label>
-				{/if}
-				<label class="input-group flex-1">
-					<span>Token: </span>
-					<input
-						name="token"
-						type="text"
-						placeholder="token"
-						class="input input-bordered text-base w-full"
-						bind:this={tokenInput}
-					/>
-				</label>
+				{/each}
 			</div>
 			<div class="flex space-x-4 mt-4 w-full justify-end">
 				<label class="input-group flex-1">

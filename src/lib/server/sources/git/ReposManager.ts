@@ -33,6 +33,8 @@ export default class ReposManager {
 			url.password = token?.token ?? '';
 			if (serviceToken?.login && token?.token.startsWith(serviceToken.login + ':')) {
 				url.password = token?.token.split(':')[1] ?? '';
+			} else if (token?.token.includes(':')) {
+				url.password = token?.token.split(':')[1] ?? '';
 			}
 			pullUrl = url.href;
 		}

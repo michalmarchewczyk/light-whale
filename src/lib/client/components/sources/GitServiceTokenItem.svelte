@@ -10,6 +10,7 @@
 	import GithubIcon from '$lib/client/assets/icons/github.svg';
 	import GitlabIcon from '$lib/client/assets/icons/gitlab.svg';
 	import BitbucketIcon from '$lib/client/assets/icons/bitbucket.svg';
+	import JetBrainsSpaceIcon from '$lib/client/assets/icons/space.svg';
 
 	export let token: GitServiceToken;
 
@@ -47,6 +48,8 @@
 			<GitlabIcon class="w-24 h-8 mt-1" />
 		{:else if token.service === 'bitbucket'}
 			<BitbucketIcon class="w-24 h-8 mt-1" />
+		{:else if token.service === 'jetbrainsspace'}
+			<JetBrainsSpaceIcon class="w-28 h-12 mt-0 ml-[-0.5rem]" />
 		{/if}
 	</td>
 	<td>

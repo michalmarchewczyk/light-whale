@@ -7,6 +7,7 @@ import { logger } from '$lib/server/utils/Logger';
 
 export default class BitbucketService extends GitService {
 	public serviceName = 'bitbucket';
+	public tokenFields = ['username', 'token'];
 
 	constructor(tokensManager: TokensManager) {
 		super(tokensManager);

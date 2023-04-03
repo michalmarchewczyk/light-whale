@@ -17,6 +17,9 @@
 	if (name.includes('@bitbucket.org/')) {
 		name = name.split('bitbucket.org/')[1];
 	}
+	if (name.startsWith('https://git.jetbrains.space/')) {
+		name = name.split('https://git.jetbrains.space/')[1];
+	}
 	if (name.endsWith('.git')) {
 		name = name.slice(0, -4);
 	}
