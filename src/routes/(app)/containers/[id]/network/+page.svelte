@@ -82,7 +82,7 @@
 			<div class="form-control mb-0 w-full">
 				<div class="flex space-x-4 mt-4 w-full">
 					<label class="pl-0 flex flex-1 space-x-4">
-						<span class="text-lg mb-0 mt-2 ">Domain: </span>
+						<span class="text-lg mb-0 mt-2">Domain: </span>
 						<label class="input-group">
 							<input
 								class="input input-bordered w-full text-base"
@@ -100,7 +100,7 @@
 									{#if selectedZone === 'Custom'}
 										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 italic">Custom</span>
 									{:else}
-										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 ">.{selectedZone}</span>
+										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5">.{selectedZone}</span>
 									{/if}
 								</button>
 								<ul
@@ -137,7 +137,7 @@
 							</div>
 						</label>
 					</label>
-					<div class="dropdown  dropdown-end">
+					<div class="dropdown dropdown-end">
 						<label class="pl-0 flex space-x-4" tabindex="0">
 							<span class="text-lg mb-0 mt-2 whitespace-nowrap">Application port: </span>
 							<input

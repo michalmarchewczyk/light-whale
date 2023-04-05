@@ -36,7 +36,7 @@
 			<div class="form-control mb-0 w-full">
 				<div class="flex space-x-4 mt-4 w-full">
 					<label class="pl-0 flex flex-1 space-x-4">
-						<span class="text-lg mb-0 mt-2 ">Address: </span>
+						<span class="text-lg mb-0 mt-2">Address: </span>
 						<input
 							bind:value={address}
 							on:input={() => (error = '')}

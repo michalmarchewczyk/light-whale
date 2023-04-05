@@ -53,7 +53,7 @@
 			>
 			<label class="pl-0 flex flex-1 space-x-2 mr-2 mb-4">
 				<input type="hidden" name="file" bind:value={selectedFile} />
-				<span class="text-lg mb-0 mt-2 ">File: </span>
+				<span class="text-lg mb-0 mt-2">File: </span>
 				<div class="dropdown flex-1">
 					<button class="select select-bordered bg-base-100 align-middle ml-2 w-full" type="button">
 						<span class="mt-2 text-base">{selectedFile}</span>
@@ -76,7 +76,7 @@
 				</div>
 			</label>
 			<label class="pl-0 flex flex-1 space-x-4">
-				<span class="text-lg mb-0 mt-2 ">Name: </span>
+				<span class="text-lg mb-0 mt-2">Name: </span>
 				<input
 					bind:value={name}
 					class="input input-bordered w-full text-base"

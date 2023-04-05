@@ -18,7 +18,7 @@
 </script>
 
 <div class="card shadow-lg my-4 bg-base-100 p-3 flex flex-row pl-0 h-28 overflow-hidden">
-	<div class="block flex-auto w-64 overflow-hidden ml-5 mr-1 sm:mr-3 pr-1 sm:pr-4 ">
+	<div class="block flex-auto w-64 overflow-hidden ml-5 mr-1 sm:mr-3 pr-1 sm:pr-4">
 		<span
 			class="block w-full overflow-hidden overflow-ellipsis whitespace-nowrap font-bold text-xl"
 		>

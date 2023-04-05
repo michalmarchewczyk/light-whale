@@ -57,7 +57,7 @@
 <div class="card shadow-md bg-base-100 mb-6">
 	<div class="card-body p-6 pt-5">
 		<label class="flex align-middle items-center justify-between">
-			<span class="text-lg w-40  whitespace-nowrap">Hide LW Container</span>
+			<span class="text-lg w-40 whitespace-nowrap">Hide LW Container</span>
 			<input
 				type="checkbox"
 				class="toggle mt-1"
@@ -88,7 +88,7 @@
 			<div class="form-control mb-0 w-full">
 				<div class="flex space-x-4 mt-4 w-full">
 					<label class="pl-0 flex flex-1 space-x-4">
-						<span class="text-lg mb-0 mt-2 ">Domain: </span>
+						<span class="text-lg mb-0 mt-2">Domain: </span>
 						<label class="input-group">
 							<input
 								class="input input-bordered w-full text-base"
@@ -106,7 +106,7 @@
 									{#if selectedZone === 'Custom'}
 										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 italic">Custom</span>
 									{:else}
-										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5 ">.{selectedZone}</span>
+										<span class="text-base bg-base-100 px-0 mt-2.5 mb-2.5">.{selectedZone}</span>
 									{/if}
 								</button>
 								<ul

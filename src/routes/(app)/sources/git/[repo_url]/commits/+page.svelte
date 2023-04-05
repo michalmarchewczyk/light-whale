@@ -23,12 +23,12 @@
 					<tr class="max-w-full w-full">
 						<td class="pl-4"><span>{commit.hash}</span></td>
 						<td class="relative p-0">
-							<span class="absolute top-2 left-0 overflow-hidden overflow-ellipsis w-full ">
+							<span class="absolute top-2 left-0 overflow-hidden overflow-ellipsis w-full">
 								{commit.authorName} &lt;{commit.authorEmail}&gt;
 							</span>
 						</td>
 						<td class="relative p-0">
-							<span class="absolute top-2 left-4 overflow-hidden overflow-ellipsis w-full ">
+							<span class="absolute top-2 left-4 overflow-hidden overflow-ellipsis w-full">
 								{commit.message}
 							</span>
 						</td>

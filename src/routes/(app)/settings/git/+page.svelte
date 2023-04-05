@@ -119,7 +119,7 @@
 				</label>
 				{#each data.tokenFields[selectedService.toLowerCase()] as field, index}
 					<label class="input-group flex-1">
-						<span class="capitalize  whitespace-nowrap">{field}: </span>
+						<span class="capitalize whitespace-nowrap">{field}: </span>
 						{#if index === 0}
 							<input
 								name={field}

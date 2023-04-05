@@ -55,7 +55,7 @@
 				{:else if progress === -1}
 					<progress class="progress progress-primary" />
 				{:else}
-					<progress class="progress  progress-primary" value={progress} max="100" />
+					<progress class="progress progress-primary" value={progress} max="100" />
 				{/if}
 			</ItemInfo>
 			<span class="text-md mb-4 font-semibold w-full block">Progress data:</span>

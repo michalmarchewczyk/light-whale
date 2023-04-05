@@ -86,7 +86,7 @@
 			{repo.lastCommitDate}
 		</ItemInfo>
 	</div>
-	<div class="block w-24 flex-0 overflow-hidden mr-2 sm:mr-6  flex items-middle">
+	<div class="block w-24 flex-0 overflow-hidden mr-2 sm:mr-6 flex items-middle">
 		{#if repo.service === 'github'}
 			<GithubIcon class="w-20 my-auto ml-2" />
 		{:else if repo.service === 'gitlab'}

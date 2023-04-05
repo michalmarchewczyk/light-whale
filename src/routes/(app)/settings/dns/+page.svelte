@@ -42,7 +42,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<div class="divider mb-1 mt-0  mx-[-1.5rem]" />
+		<div class="divider mb-1 mt-0 mx-[-1.5rem]" />
 		<form
 			method="POST"
 			action="?/addToken"
@@ -112,7 +112,7 @@
 				</label>
 				{#each data.tokenFields[selectedService.toLowerCase()] as field, index}
 					<label class="input-group flex-1">
-						<span class="capitalize  whitespace-nowrap">{field}: </span>
+						<span class="capitalize whitespace-nowrap">{field}: </span>
 						{#if index === 0}
 							<input
 								name={field}
@@ -185,7 +185,7 @@
 				/>
 			</label>
 		</form>
-		<div class="divider mb-1 mt-2  mx-[-1.5rem]" />
+		<div class="divider mb-1 mt-2 mx-[-1.5rem]" />
 		<span class="text-lg font-semibold mb-0 block">Saved IP addresses:</span>
 		<table class="table w-full mt-2 mb-4">
 			<tbody>
