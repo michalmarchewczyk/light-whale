@@ -34,7 +34,7 @@
 	};
 
 	const open = (file: File) => {
-		currentPath = path.join(currentPath, file.name);
+		currentPath = path.join(currentPath, file.name.trim());
 		read();
 	};
 
