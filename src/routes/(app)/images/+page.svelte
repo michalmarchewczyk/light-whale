@@ -23,7 +23,7 @@
 		filteredImages = data.images;
 		if ($hideLwContainer) {
 			filteredImages = filteredImages.filter(
-				(i) => !i.tags[0].startsWith('mmarchewczyk/light-whale-nginx')
+				(i) => !i.tags[0]?.startsWith('mmarchewczyk/light-whale-nginx')
 			);
 		}
 		if (used === 'used') {
